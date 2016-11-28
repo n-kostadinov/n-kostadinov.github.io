@@ -1,0 +1,10 @@
+excerpt_separator: ""
+pygments: true
+markdown: kramdown
+url: http://n-kostadinov.github.io
+title: AI_BL0G
+email: nkkostadinov@gmail.com
+author: Kostadinov
+description: I am passionate about everything around AI and machine learning. Feel free to contact me.
+paginate: 10
+google_analytics: UA-26182347-1
