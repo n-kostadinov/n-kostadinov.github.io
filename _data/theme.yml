@@ -11,7 +11,7 @@ social:
   #stackexchange: 348619
   #stackoverflow: 348619
   #twitter: NKKostadinov
-  facebook: outedata
+  #facebook: outedata
   #tumblr: animalygifs
   #linkedin: philipjagielski
   #gplus: 110552447039675960964
@@ -21,7 +21,7 @@ social:
 # "Hi, I'm Nikolay Kostadinov"
 name: Nikolay Kostadinov
 email: nkkostadinov@gmail.com
-tagline: "Only high tech can bring you higher"
+tagline: "Only high tech can bring you higher."
 
 # Google Analytics key, leave blank to ignore
 google_analytics_key: UA-26182347-1
