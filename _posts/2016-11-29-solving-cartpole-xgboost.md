@@ -1,6 +1,6 @@
 ---
 layout: post
-title: [OpenAI] Solving CartPole-v0 with xgboost
+title: Solving CartPole-v0 with xgboost
 categories:
 - blog
 ---
