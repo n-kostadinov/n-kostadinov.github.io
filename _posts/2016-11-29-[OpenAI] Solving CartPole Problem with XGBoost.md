@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Sample post
+title: Another sample
 categories:
 - blog
 ---
