@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Another sample
+title: Nikolay Kostadinov
 categories:
 - blog
 ---
