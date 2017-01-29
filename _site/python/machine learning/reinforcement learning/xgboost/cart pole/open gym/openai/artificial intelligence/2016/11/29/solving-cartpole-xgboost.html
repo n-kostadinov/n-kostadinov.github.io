@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="shortcut icon" href="/static/img/favicon.ico" />
+        <title>Solving CartPole-v0 with xgboost - MACHINE MEMOS</title>
+        <meta name="author" content="Nikolay Kostadinov" />
+        <meta name="description" content="Solving CartPole-v0 with xgboost" />
+        <meta name="keywords" content="Solving CartPole-v0 with xgboost, MACHINE MEMOS, python, machine learning, reinforcement learning, xgboost, cart pole, open gym, openai, artificial intelligence" />
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
+
+        <meta content="" property="fb:app_id">
+        <meta content="MACHINE MEMOS" property="og:site_name">
+        
+          <meta content="Solving CartPole-v0 with xgboost" property="og:title">
+        
+        
+          <meta content="article" property="og:type">
+        
+        
+          <meta content="description" property="og:description">
+        
+        
+          <meta content="http://localhost:4000/python/machine%20learning/reinforcement%20learning/xgboost/cart%20pole/open%20gym/openai/artificial%20intelligence/2016/11/29/solving-cartpole-xgboost.html" property="og:url">
+        
+        
+          <meta content="2016-11-29T00:00:00-08:00" property="article:published_time">
+          <meta content="http://localhost:4000/about/" property="article:author">
+        
+        
+          <meta content="http://localhost:4000/static/img/logo-high-resolution.png" property="og:image">
+        
+        
+          
+          <meta content="python" property="article:section">
+          
+        
+        
+          
+        
+
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@NKKostadinov">
+        <meta name="twitter:creator" content="@NKKostadinov">
+        
+          <meta name="twitter:title" content="Solving CartPole-v0 with xgboost">
+        
+        
+          <meta name="twitter:url" content="http://localhost:4000/python/machine%20learning/reinforcement%20learning/xgboost/cart%20pole/open%20gym/openai/artificial%20intelligence/2016/11/29/solving-cartpole-xgboost.html">
+        
+        
+          <meta name="twitter:description" content="description">
+        
+        
+
+        <!-- Font awesome icons -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/static/css/syntax.css">
+
+        <!-- Bootstrap core CSS -->
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Fonts -->
+        <link href="//fonts.googleapis.com/css?family=Roboto+Condensed:400,300italic,300,400italic,700&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+        <!-- Custom CSS -->        
+        <link rel="stylesheet" href="/static/css/super-search.css">
+        <link rel="stylesheet" href="/static/css/thickbox.css">
+        <link rel="stylesheet" href="/static/css/projects.css">
+        <link rel="stylesheet" href="/static/css/main.css">
+
+        <!-- Google Analytics -->
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+          
+          ga('create', 'UA-26182347-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="col-sm-3">
+              <div class="fixed-condition">
+                <a href="/"><img id="about" src="/static/img/logo.png" height="150px" width="150px" /></a>
+                <h1 class="author-name">Nikolay Kostadinov</h1>
+                
+                <div id="about">
+                    I am freelance developer passionate about Machine Learning and AI in general.
+                </div>
+                
+
+                <div class="social">
+                    <ul>
+                        
+                            <li><a href="https://twitter.com/NKKostadinov" target="_blank"><i class="fa fa-twitter"></i></a></li>
+                        
+                            <li><a href="https://www.linkedin.com/in/nikolay-kostadinov-27a15975" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+                        
+                    </ul>
+                </div>
+
+                <div class="search" id="js-search">
+                  <input type="text" placeholder="(sitemap)~$ type to search" class="search__input form-control" id="js-search__input">
+                  <ul class="search__results" id="js-search__results"></ul>
+                </div>
+                <hr />
+
+                <strong>Navigation</strong><br />
+                    &nbsp;&raquo; <a href="/">Home</a> <br />
+                
+                    &nbsp;&raquo; <a class="about" href="/about/">About Me</a><br />
+                
+                    &nbsp;&raquo; <a class="about" href="https://github.com/n-kostadinov">Github</a><br />
+                
+              </div><!-- end /.fixed-condition -->
+            </div>
+
+            <div class="col-sm-8 col-offset-1">
+                <h1>Solving CartPole-v0 with xgboost</h1>
+<span class="time">29 Nov 2016</span>
+
+<span class="categories">
+    &raquo; <a href="/category/python">python</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/reinforcement learning">reinforcement learning</a>, <a href="/category/xgboost">xgboost</a>, <a href="/category/cart pole">cart pole</a>, <a href="/category/open gym">open gym</a>, <a href="/category/openai">openai</a>, <a href="/category/artificial intelligence">artificial intelligence</a>
+</span>
+
+
+<div class="content">
+    <div class="post"><p>Recently, I found the <a href="https://gym.openai.com/" target="_blank">OpenAI Gym</a> and started playing with some of the environments. It certainly is a nice way of getting your head off kaggle.com for a while. This is a start of a series of posts describing solutions to some of the problems posted there.</p>
+
+<p>As suggested on the <a href="https://gym.openai.com/docs" target="_blank">Getting stared page</a> I got my hands on one of the easier problems, called <a href="https://gym.openai.com/envs/CartPole-v0" target="_blank">CartPole-v0</a>. Basically, you have to balance a pole on a cart. Each time frame you have to choose between one of two “actions” <code class="highlighter-rouge">[1;-1]</code> and thereby move the pole either left or right. Note, the actual action set <code class="highlighter-rouge">[0;1]</code>.</p>
+
+<p>The first problem you have to solve is figuring out how to structure the data. Obviously, your input data should contain the four observations. Interestingly enough, since we are solving this problem by applying supervised learning, the semantics of this data is not important (black box approach). The tricky part is what comes next. You add the action <code class="highlighter-rouge">[0;1]</code> taken based on these observations as a fifth input variable. Deciding on how to represent the output variable is probably even more trickier. As an output variable you take the count of time frames it takes for the episode to finish - either the pole falls on its side or you reach the maximum of 200 time frames. Ok, lets start by defining a simple class called <code class="highlighter-rouge">Cache</code>:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Cache</span><span class="p">:</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+   
+    <span class="k">def</span> <span class="nf">cache_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">time_frame</span><span class="p">):</span>
+        <span class="n">cache_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">observation</span><span class="p">,[</span><span class="n">action</span><span class="p">,</span><span class="n">time_frame</span><span class="p">])</span>
+        <span class="n">indexed_cache_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">cache_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">indexed_cache_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+    
+    <span class="k">def</span> <span class="nf">get_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">df_cache</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">FRAME_COLUMNS</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">)</span>
+        
+        <span class="c"># Normalize reward</span>
+        <span class="n">future_reward</span> <span class="o">=</span> <span class="n">df_cache</span><span class="p">[</span><span class="s">'future_reward'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">max_future_reward</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nb">max</span><span class="p">(</span><span class="n">future_reward</span><span class="p">)</span>
+        <span class="n">df_cache</span><span class="p">[</span><span class="s">'future_reward'</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_future_reward</span> <span class="o">-</span> <span class="n">future_reward</span>
+        
+        <span class="k">return</span> <span class="n">df_cache</span></code></pre></figure>
+
+<p>As the episode starts, for each time frame <code class="highlighter-rouge">cache_data</code> is called to store the observation, the action taken and the time frame index. At the end of the episode the <code class="highlighter-rouge">get_frame</code> creates a data frame - the valuable peace of data that is later to be learned by a model. Notice the transformation of the output variable (here called <code class="highlighter-rouge">future_reward</code>) into the count of time frames it takes for the episode to finish. Next we create a class <code class="highlighter-rouge">Memory</code>:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Memory</span><span class="p">:</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">FRAME_COLUMNS</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">add_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cache</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">df_data</span><span class="p">,</span> <span class="n">cache</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()])</span></code></pre></figure>
+
+<p>The <code class="highlighter-rouge">Memory</code> class holds all the data that our “AI agent” is going to use when learning. After each episode the “cache” or the short-term memory is added to the “memory” or the long-term memory. The last peace of the puzzle is adding the brain:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Brain</span><span class="p">:</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regressor</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">memory</span>
+        
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="n">msk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">df_data</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">0.90</span> <span class="c"># 10% of data is used for early stopping</span>
+        <span class="n">train</span><span class="p">,</span> <span class="n">validation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">df_data</span><span class="p">[</span><span class="n">msk</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">df_data</span><span class="p">[</span><span class="o">~</span><span class="n">msk</span><span class="p">]</span>
+        
+        <span class="n">train_xgdmat</span> <span class="o">=</span>  <span class="n">xgb</span><span class="o">.</span><span class="n">DMatrix</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">FEATURES</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">train</span><span class="p">[</span><span class="s">'future_reward'</span><span class="p">])</span>
+        <span class="n">validation_xgdmat</span> <span class="o">=</span>  <span class="n">xgb</span><span class="o">.</span><span class="n">DMatrix</span><span class="p">(</span><span class="n">validation</span><span class="p">[</span><span class="n">FEATURES</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">validation</span><span class="p">[</span><span class="s">'future_reward'</span><span class="p">])</span>
+        <span class="n">watchlist</span> <span class="o">=</span> <span class="p">[(</span><span class="n">validation_xgdmat</span><span class="p">,</span> <span class="s">'test'</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regressor</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">XGB_PARAMS</span><span class="p">,</span> <span class="n">train_xgdmat</span><span class="p">,</span> <span class="n">MAX_ITERATIONS</span><span class="p">,</span> <span class="n">watchlist</span><span class="p">,</span> <span class="n">verbose_eval</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">is_exploration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">episode</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">episode</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="ow">or</span> <span class="p">(</span><span class="n">episode</span> <span class="o">&lt;</span> <span class="mi">15</span> <span class="ow">and</span> <span class="n">episode</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">decide_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observations</span><span class="p">,</span> <span class="n">episode</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_exploration</span><span class="p">(</span><span class="n">episode</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">observations</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+            <span class="n">x_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">observations</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+            <span class="n">future_reward_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">xgb</span><span class="o">.</span><span class="n">DMatrix</span><span class="p">(</span><span class="n">x_0</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="n">FEATURES</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">future_reward_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">xgb</span><span class="o">.</span><span class="n">DMatrix</span><span class="p">(</span><span class="n">x_1</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="n">FEATURES</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">future_reward_0</span> <span class="o">&gt;</span> <span class="n">future_reward_1</span> <span class="k">else</span> <span class="mi">1</span></code></pre></figure>
+
+<p>After each episode the ‘train’ function is called - a model is fitted to the data collected so far. I won’t get into details, as there is plenty of material online on xgboost or other learning algos. However, it took me quite a lot of time in order to fine tune xgboost to perform well, probably a little more than a couple of hours. Next to learning, the brain also has to decide for an action based on observation. For the first few episodes, the brain should behave randomly. Afterwards, it gradually switches to fully conscious decisions by using the regression model. Basically, the regressions model tries to predict which one of the two actions will lead to a higher count of time frames before the episode ends. The whole code is posted below, feel free to reproduce it. This <a href="https://gym.openai.com/evaluations/eval_XxwHyBGS22PX3ha0bLJ9A" target="_blank">solution</a> did quite well and solved the environment after 15 episodes and only 8 seconds.</p>
+
+<hr />
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xgboost</span> <span class="kn">as</span> <span class="nn">xgb</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="n">FEATURES</span> <span class="o">=</span> <span class="p">[</span><span class="s">'observation_1'</span><span class="p">,</span><span class="s">'observation_2'</span><span class="p">,</span> <span class="s">'observation_3'</span><span class="p">,</span> <span class="s">'observation_4'</span><span class="p">,</span> <span class="s">'action'</span><span class="p">]</span>
+<span class="n">FRAME_COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'index'</span><span class="p">]</span> <span class="o">+</span> <span class="n">FEATURES</span> <span class="o">+</span> <span class="p">[</span><span class="s">'future_reward'</span><span class="p">]</span>
+<span class="n">XGB_PARAMS</span> <span class="o">=</span> <span class="p">{</span>
+              <span class="s">'eta'</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+              <span class="s">'max_depth'</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+              <span class="s">'silent'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+              <span class="s">'gamma'</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span>
+              <span class="s">'lambda'</span><span class="p">:</span> <span class="mi">10</span>
+            <span class="p">}</span>
+<span class="n">MAX_ITERATIONS</span> <span class="o">=</span> <span class="mi">2000</span>
+<span class="n">MAX_TIME_FRAMES</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">MAX_EPISODES</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">FINAL_FRAME</span> <span class="o">=</span> <span class="mi">200</span>
+
+
+<span class="k">class</span> <span class="nc">Cache</span><span class="p">:</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+   
+    <span class="k">def</span> <span class="nf">cache_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">time_frame</span><span class="p">):</span>
+        <span class="n">cache_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">observation</span><span class="p">,[</span><span class="n">action</span><span class="p">,</span><span class="n">time_frame</span><span class="p">])</span>
+        <span class="n">indexed_cache_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">cache_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">indexed_cache_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+    
+    <span class="k">def</span> <span class="nf">get_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">df_cache</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">FRAME_COLUMNS</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">)</span>
+        
+        <span class="c"># Normalize reward</span>
+        <span class="n">future_reward</span> <span class="o">=</span> <span class="n">df_cache</span><span class="p">[</span><span class="s">'future_reward'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">max_future_reward</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nb">max</span><span class="p">(</span><span class="n">future_reward</span><span class="p">)</span>
+        <span class="n">df_cache</span><span class="p">[</span><span class="s">'future_reward'</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_future_reward</span> <span class="o">-</span> <span class="n">future_reward</span>
+        
+        <span class="k">return</span> <span class="n">df_cache</span>
+    
+    
+<span class="k">class</span> <span class="nc">Memory</span><span class="p">:</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">FRAME_COLUMNS</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">add_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cache</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">df_data</span><span class="p">,</span> <span class="n">cache</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()])</span>
+        
+
+<span class="k">class</span> <span class="nc">Brain</span><span class="p">:</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regressor</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">memory</span>
+        
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="n">msk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">df_data</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">0.90</span> <span class="c"># 10% of data is used for early stopping</span>
+        <span class="n">train</span><span class="p">,</span> <span class="n">validation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">df_data</span><span class="p">[</span><span class="n">msk</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">df_data</span><span class="p">[</span><span class="o">~</span><span class="n">msk</span><span class="p">]</span>
+        
+        <span class="n">train_xgdmat</span> <span class="o">=</span>  <span class="n">xgb</span><span class="o">.</span><span class="n">DMatrix</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">FEATURES</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">train</span><span class="p">[</span><span class="s">'future_reward'</span><span class="p">])</span>
+        <span class="n">validation_xgdmat</span> <span class="o">=</span>  <span class="n">xgb</span><span class="o">.</span><span class="n">DMatrix</span><span class="p">(</span><span class="n">validation</span><span class="p">[</span><span class="n">FEATURES</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">validation</span><span class="p">[</span><span class="s">'future_reward'</span><span class="p">])</span>
+        <span class="n">watchlist</span> <span class="o">=</span> <span class="p">[(</span><span class="n">validation_xgdmat</span><span class="p">,</span> <span class="s">'test'</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regressor</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">XGB_PARAMS</span><span class="p">,</span> <span class="n">train_xgdmat</span><span class="p">,</span> <span class="n">MAX_ITERATIONS</span><span class="p">,</span> <span class="n">watchlist</span><span class="p">,</span> <span class="n">verbose_eval</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">is_exploration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">episode</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">episode</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="ow">or</span> <span class="p">(</span><span class="n">episode</span> <span class="o">&lt;</span> <span class="mi">15</span> <span class="ow">and</span> <span class="n">episode</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">decide_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observations</span><span class="p">,</span> <span class="n">episode</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_exploration</span><span class="p">(</span><span class="n">episode</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">observations</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+            <span class="n">x_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">observations</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+            <span class="n">future_reward_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">xgb</span><span class="o">.</span><span class="n">DMatrix</span><span class="p">(</span><span class="n">x_0</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="n">FEATURES</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">future_reward_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">xgb</span><span class="o">.</span><span class="n">DMatrix</span><span class="p">(</span><span class="n">x_1</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="n">FEATURES</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">future_reward_0</span> <span class="o">&gt;</span> <span class="n">future_reward_1</span> <span class="k">else</span> <span class="mi">1</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s">'CartPole-v0'</span><span class="p">)</span>
+
+<span class="n">memory</span> <span class="o">=</span> <span class="n">Memory</span><span class="p">()</span>
+<span class="n">brain</span><span class="o">=</span><span class="n">Brain</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">episode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">MAX_EPISODES</span><span class="p">):</span>
+    
+    <span class="n">observation</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+    <span class="n">cache</span> <span class="o">=</span> <span class="n">Cache</span><span class="p">()</span>
+    
+    <span class="n">done</span> <span class="o">=</span> <span class="bp">False</span>
+    
+    <span class="k">for</span> <span class="n">time_frame</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">MAX_TIME_FRAMES</span><span class="p">):</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">brain</span><span class="o">.</span><span class="n">decide_action</span><span class="p">(</span><span class="n">observation</span><span class="p">,</span> <span class="n">episode</span><span class="p">)</span>
+        <span class="n">cache</span><span class="o">.</span><span class="n">cache_data</span><span class="p">(</span><span class="n">observation</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">time_frame</span><span class="p">)</span>
+        <span class="n">observation</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"Episode </span><span class="si">%</span><span class="s">d finished after </span><span class="si">%</span><span class="s">d timesteps"</span> <span class="o">%</span> <span class="p">(</span><span class="n">episode</span><span class="p">,</span> <span class="n">time_frame</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+            <span class="k">break</span>
+     
+    <span class="n">memory</span><span class="o">.</span><span class="n">add_cache</span><span class="p">(</span><span class="n">cache</span><span class="p">)</span>
+    <span class="n">brain</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">episode</span><span class="p">)</span></code></pre></figure>
+
+</div>
+    <div class="share-page">
+    <span style="float: left;">Share this on &rarr;&nbsp;&nbsp;</span>
+    
+    <!-- Twitter -->
+     <a href="https://twitter.com/share" class="twitter-share-button" data-via="NKKostadinov">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+    <!-- Google + -->
+    <div class="g-plus" data-action="share" data-annotation="bubble"></div>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <!-- Facebook -->
+    <div class="fb-share-button" data-href="http://localhost:4000/python/machine%20learning/reinforcement%20learning/xgboost/cart%20pole/open%20gym/openai/artificial%20intelligence/2016/11/29/solving-cartpole-xgboost.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
+</div>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+</div>
+
+
+
+    
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+
+
+
+<div class="PageNavigation">
+  
+  
+</div>
+
+
+<div class="disqus-comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* <![CDATA[ */
+
+        var disqus_shortname = "machinememos-com";
+        var disqus_identifier = "http://localhost:4000_Solving CartPole-v0 with xgboost";
+        var disqus_title = "Solving CartPole-v0 with xgboost";
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    /* ]]> */
+    </script>
+</div>
+
+                <footer>
+                    &copy; Nikolay Kostadinov
+                     
+                    - <a href="https://github.com/n-kostadinov">https://github.com/n-kostadinov</a> - Powered by Jekyll.
+                    
+                </footer>
+            </div><!-- end /.col-sm-8 -->
+        </div><!-- end /.container -->
+
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+        <script src="/static/js/super-search.js"></script>
+        <script src="/static/js/thickbox-compressed.js"></script>
+        <script src="/static/js/projects.js"></script>
+    </body>
+</html>

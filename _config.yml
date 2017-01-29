@@ -1,0 +1,40 @@
+title: MACHINE MEMOS
+description: description
+author: Nikolay Kostadinov
+github: https://github.com/n-kostadinov
+about: I am freelance developer passionate about Machine Learning and AI in general.
+disqus_shortname: machinememos-com
+google_analytics: UA-26182347-1
+
+enableTags: true
+tagarray: []
+
+collections:
+  project:
+    output: true
+    permalink: /project/:path/
+
+social:
+    - icon: fa-twitter
+      link: "https://twitter.com/NKKostadinov"
+    - icon: fa-linkedin
+      link: "https://www.linkedin.com/in/nikolay-kostadinov-27a15975"
+
+share:
+  twitter_username: NKKostadinov
+
+urls:
+    - text: About Me
+      url: /about/
+    - text: Github
+      url: https://github.com/n-kostadinov
+
+url: "https://machinememos.com"
+baseurl: ""
+paginate: 20
+per_page: 20
+paginate_path: "/page:num/"
+markdown: kramdown
+gems:
+  - jekyll-paginate
+  - jekyll-gist
