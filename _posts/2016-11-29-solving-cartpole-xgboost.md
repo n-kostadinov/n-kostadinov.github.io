@@ -79,9 +79,11 @@ class Brain:
             return 0 if future_reward_0 > future_reward_1 else 1
 {% endhighlight %}
 
-After each episode the 'train' function is called - a model is fitted to the data collected so far. I won't get into details, as there is plenty of material online on xgboost or other learning algos. However, it took me quite a lot of time in order to fine tune xgboost to perform well, probably a little more than a couple of hours. Next to learning, the brain also has to decide for an action based on observation. For the first few episodes, the brain should behave randomly. Afterwards, it gradually switches to fully conscious decisions by using the regression model. Basically, the regressions model tries to predict which one of the two actions will lead to a higher count of time frames before the episode ends. The whole code is posted below, feel free to reproduce it. This <a href="https://gym.openai.com/evaluations/eval_XxwHyBGS22PX3ha0bLJ9A" target="_blank">solution</a> did quite well and solved the environment after 15 episodes and only 8 seconds.
+After each episode the 'train' function is called - a model is fitted to the data collected so far. I won't get into details, as there is plenty of material online on xgboost or other learning algos. However, it took me quite a lot of time in order to fine tune xgboost to perform well, probably a little more than a couple of hours. Next to learning, the brain also has to decide for an action based on observation. For the first few episodes, the brain should behave randomly. Afterwards, it gradually switches to fully conscious decisions by using the regression model. Basically, the regressions model tries to predict which one of the two actions will lead to a higher count of time frames before the episode ends. The whole code is posted below, feel free to reproduce it. This <a href="https://gym.openai.com/evaluations/eval_XxwHyBGS22PX3ha0bLJ9A" target="_blank">solution</a> did quite well and solved the environment after 15 episodes and only 9 seconds. You can see the behaviour of the cart pole on the video below:
 
+<iframe width="600" height="400" src="https://openai-kubernetes-prod-scoreboard.s3.amazonaws.com/v1/evaluations/eval_XxwHyBGS22PX3ha0bLJ9A/training_episode_batch_video.mp4" frameborder="0"></iframe>
 ---
+And here is the complete source code for the cart pole solution:
 
 {% highlight python %}
 import gym
