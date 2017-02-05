@@ -3,13 +3,13 @@ layout: post
 title: Implementing a neural network from scratch
 categories: [python, machine learning, deep learning, neural networks, sigmoid, hidden layer, activation function, tensorflow]
 ---
-When designing a neural network machine learning engineers will usually use a high level library like <a href="https://www.tensorflow.org/" target="_blank">tensorflow</a> (my personal favorite) or a wrapper on top of tensorflow like <a href="https://keras.io/" target="_blank">keras</a>. And yes, old school ML engineers are still using <a href="http://deeplearning.net/software/theano/index.html" target="_blank">theano</a>. Having all these tools at your disposal it is rather tempting to view neural networks as a black box and not spend too much time thinking on low level implementation details like back propagation, the chain rule, weights initialization, etc. However understanding these concepts might be crucial when fine tuning a neural network. Choosing the optimal count of the hidden layers, the optimal size of each layer, the right activation function, the learning rate, the regularization weights, dropout rate, etc. is not an easy task. Knowing how deep learning works will certainly help you debug and optimize your network. Otherwise you will be left shooting in the dark, trying to guess the optimal configuration. 
+When designing a neural network machine learning engineers will usually use a high level library like <a href="https://www.tensorflow.org/" target="_blank">tensorflow</a> (my personal favorite) or a wrapper on top of tensorflow like <a href="https://keras.io/" target="_blank">keras</a>. And yes, old school ML engineers are still using <a href="http://deeplearning.net/software/theano/index.html" target="_blank">theano</a>. Having all these tools at your disposal it is rather tempting to view neural networks as a black box and not spend too much time thinking on low level implementation details like backpropagation, the chain rule, weights initialization, etc. However understanding these concepts might be crucial when fine tuning a neural network. Choosing the optimal count of the hidden layers, the optimal size of each layer, the right activation function, the learning rate, the regularization weights, dropout rate, etc. is not an easy task. Knowing how deep learning works will certainly help you debug and optimize your network. Otherwise you will be left shooting in the dark, trying to guess the optimal configuration. 
 
-In this post I will discuss the my solution to the first assignment in the excellent <a href="https://www.udacity.com/" target="_blank">Udacity</a> program "Deep Learning Nanodegree Foundation". Before reading any further I strongly recommend watching the video below. It is a very well structured Stanford Lecture on Neural Networks, which is discussing back propagation and the chain rule:
+In this post I will discuss the my solution to the first assignment in the excellent <a href="https://www.udacity.com/" target="_blank">Udacity</a> program "Deep Learning Nanodegree Foundation". Before reading any further I strongly recommend watching the video below. It is a very well structured Stanford Lecture on Neural Networks, which is discussing backpropagation and the chain rule:
 
 <iframe width="640" height="360" src="https://www.youtube.com/embed/59Hbtz7XgjM" frameborder="0" allowfullscreen></iframe>
 
-At <a href="https://youtu.be/59Hbtz7XgjM?t=59m7s" target="_blank">59:07</a> you can see a very small implementation of aa neural network. It is as simple as it gets, it has only an input and an output layer and a single hidden layer between them. Without restricting us to 11 codes of python code, let's implement a neural network from scratch and run it.
+At <a href="https://youtu.be/59Hbtz7XgjM?t=59m7s" target="_blank">59:07</a> you can see a very small implementation of a neural network. It is as simple as it gets, it has only an input and an output layer and a single hidden layer between them. Without restricting us to 11 codes of python code, let's implement a neural network from scratch and run it.
 
 First, we need some data. Start by downloading the <a href="https://archive.ics.uci.edu/ml/machine-learning-databases/00275" target="_blank">Bike Sharing Dataset</a>. Let's take a look at the data:
 {% highlight python %}
@@ -58,7 +58,7 @@ quant_features = ['casual', 'registered', 'cnt', 'temp', 'hum', 'windspeed']
 data.loc[:, quant_features] = StandardScaler().fit_transform(data[quant_features])
 {% endhighlight %}
 
-Let's save the last 21 days of the data to use as a test set after the network is trained. The test set is goint to be used to make predictions and compare them with the actual number of riders.
+Let's save the last 21 days of the data to use as a test set after the network is trained. The test set is going to be used to make predictions and compare them with the actual number of riders.
 
 {% highlight python %} 
 # Save the last 21 days 
