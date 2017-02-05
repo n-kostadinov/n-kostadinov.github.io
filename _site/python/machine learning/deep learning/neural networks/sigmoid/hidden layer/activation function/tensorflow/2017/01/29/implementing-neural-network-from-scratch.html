@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="shortcut icon" href="/static/img/favicon.ico" />
+        <title>Implementing a neural network from scratch - MACHINE MEMOS</title>
+        <meta name="author" content="Nikolay Kostadinov" />
+        <meta name="description" content="Implementing a neural network from scratch" />
+        <meta name="keywords" content="Implementing a neural network from scratch, MACHINE MEMOS, python, machine learning, deep learning, neural networks, sigmoid, hidden layer, activation function, tensorflow" />
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
+
+        <meta content="" property="fb:app_id">
+        <meta content="MACHINE MEMOS" property="og:site_name">
+        
+          <meta content="Implementing a neural network from scratch" property="og:title">
+        
+        
+          <meta content="article" property="og:type">
+        
+        
+          <meta content="description" property="og:description">
+        
+        
+          <meta content="http://localhost:4000/python/machine%20learning/deep%20learning/neural%20networks/sigmoid/hidden%20layer/activation%20function/tensorflow/2017/01/29/implementing-neural-network-from-scratch.html" property="og:url">
+        
+        
+          <meta content="2017-01-29T00:00:00-08:00" property="article:published_time">
+          <meta content="http://localhost:4000/about/" property="article:author">
+        
+        
+          <meta content="http://localhost:4000/static/img/logo-high-resolution.png" property="og:image">
+        
+        
+          
+          <meta content="python" property="article:section">
+          
+        
+        
+          
+        
+
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@NKKostadinov">
+        <meta name="twitter:creator" content="@NKKostadinov">
+        
+          <meta name="twitter:title" content="Implementing a neural network from scratch">
+        
+        
+          <meta name="twitter:url" content="http://localhost:4000/python/machine%20learning/deep%20learning/neural%20networks/sigmoid/hidden%20layer/activation%20function/tensorflow/2017/01/29/implementing-neural-network-from-scratch.html">
+        
+        
+          <meta name="twitter:description" content="description">
+        
+        
+
+        <!-- Font awesome icons -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/static/css/syntax.css">
+
+        <!-- Bootstrap core CSS -->
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Fonts -->
+        <link href="//fonts.googleapis.com/css?family=Roboto+Condensed:400,300italic,300,400italic,700&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+        <!-- Custom CSS -->        
+        <link rel="stylesheet" href="/static/css/super-search.css">
+        <link rel="stylesheet" href="/static/css/thickbox.css">
+        <link rel="stylesheet" href="/static/css/projects.css">
+        <link rel="stylesheet" href="/static/css/main.css">
+
+        <!-- Google Analytics -->
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+          
+          ga('create', 'UA-26182347-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="col-sm-3">
+              <div class="fixed-condition">
+                <a href="/"><img id="about" src="/static/img/logo.png" height="150px" width="150px" /></a>
+                <h1 class="author-name">Nikolay Kostadinov</h1>
+                
+                <div id="about">
+                    I am freelance developer passionate about Machine Learning and AI in general.
+                </div>
+                
+
+                <div class="social">
+                    <ul>
+                        
+                            <li><a href="https://twitter.com/NKKostadinov" target="_blank"><i class="fa fa-twitter"></i></a></li>
+                        
+                            <li><a href="https://www.linkedin.com/in/nikolay-kostadinov-27a15975" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+                        
+                    </ul>
+                </div>
+
+                <div class="search" id="js-search">
+                  <input type="text" placeholder="(sitemap)~$ type to search" class="search__input form-control" id="js-search__input">
+                  <ul class="search__results" id="js-search__results"></ul>
+                </div>
+                <hr />
+
+                <strong>Navigation</strong><br />
+                    &nbsp;&raquo; <a href="/">Home</a> <br />
+                
+                    &nbsp;&raquo; <a class="about" href="/about/">About Me</a><br />
+                
+                    &nbsp;&raquo; <a class="about" href="https://github.com/n-kostadinov">Github</a><br />
+                
+              </div><!-- end /.fixed-condition -->
+            </div>
+
+            <div class="col-sm-8 col-offset-1">
+                <h1>Implementing a neural network from scratch</h1>
+<span class="time">29 Jan 2017</span>
+
+<span class="categories">
+    &raquo; <a href="/category/python">python</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/deep learning">deep learning</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/sigmoid">sigmoid</a>, <a href="/category/hidden layer">hidden layer</a>, <a href="/category/activation function">activation function</a>, <a href="/category/tensorflow">tensorflow</a>
+</span>
+
+
+<div class="content">
+    <div class="post"><p>When designing a neural network machine learning engineers will usually use a high level library like <a href="https://www.tensorflow.org/" target="_blank">tensorflow</a> (my personal favorite) or a wrapper on top of tensorflow like <a href="https://keras.io/" target="_blank">keras</a>. And yes, old school ML engineers are still using <a href="http://deeplearning.net/software/theano/index.html" target="_blank">theano</a>. Having all these tools at your disposal it is rather tempting to view neural networks as a black box and not spend too much time thinking on low level implementation details like back propagation, the chain rule, weights initialization, etc. However understanding these concepts might be crucial when fine tuning a neural network. Choosing the optimal count of the hidden layers, the optimal size of each layer, the right activation function, the learning rate, the regularization weights, dropout rate, etc. is not an easy task. Knowing how deep learning works will certainly help you debug and optimize your network. Otherwise you will be left shooting in the dark, trying to guess the optimal configuration.</p>
+
+<p>In this post I will discuss the my solution to the first assignment in the excellent <a href="https://www.udacity.com/" target="_blank">Udacity</a> program “Deep Learning Nanodegree Foundation”. Before reading any further I strongly recommend watching the video below. It is a very well structured Stanford Lecture on Neural Networks, which is discussing back propagation and the chain rule:</p>
+
+<iframe width="640" height="360" src="https://www.youtube.com/embed/59Hbtz7XgjM" frameborder="0" allowfullscreen=""></iframe>
+
+<p>At <a href="https://youtu.be/59Hbtz7XgjM?t=59m7s" target="_blank">59:07</a> you can see a very small implementation of aa neural network. It is as simple as it gets, it has only an input and an output layer and a single hidden layer between them. Without restricting us to 11 codes of python code, let’s implement a neural network from scratch and run it.</p>
+
+<p>First, we need some data. Start by downloading the <a href="https://archive.ics.uci.edu/ml/machine-learning-databases/00275" target="_blank">Bike Sharing Dataset</a>. Let’s take a look at the data:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="n">data_path</span> <span class="o">=</span> <span class="s">'Bike-Sharing-Dataset/hour.csv'</span>
+<span class="n">bike_rides</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span>
+<span class="n">bike_rides</span><span class="o">.</span><span class="n">head</span><span class="p">()</span></code></pre></figure>
+
+<p><img src="/assets/images/bike_share_data_overview.jpg" alt="Bike Share Data Overview" class="img-responsive" /></p>
+
+<p>This dataset has the number of riders for each hour of each day from January 1 2011 to December 31 2012. The number of riders is split between casual and registered, summed up in the cnt column. You can see the first few rows of the data on the image above.</p>
+
+<p>Let’s plot the number of bike riders over the first 20 days in the data set.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">rides</span><span class="p">[:</span><span class="mi">24</span><span class="o">*</span><span class="mi">20</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'dteday'</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">'cnt'</span><span class="p">)</span></code></pre></figure>
+
+<p><img src="/assets/images/bike_share_data_rides.jpg" alt="Bike Share Data Rides per Hour" class="img-responsive" /></p>
+
+<p>You can see the hourly rentals here. This data is pretty complicated! The weekends have lower over all ridership and there are spikes when people are biking to and from work during the week. Looking at the data above, we also have information about temperature, humidity, and windspeed, all of these likely affecting the number of riders. The neural network will by trying to capture all these.</p>
+
+<p>Let’s convert categorical data into binary, so that it can be used as input in the neural network:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">dummy_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">'season'</span><span class="p">,</span> <span class="s">'weathersit'</span><span class="p">,</span> <span class="s">'mnth'</span><span class="p">,</span> <span class="s">'hr'</span><span class="p">,</span> <span class="s">'weekday'</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">dummy_fields</span><span class="p">:</span>
+    <span class="n">dummies</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">bike_rides</span><span class="p">[</span><span class="n">each</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="n">each</span><span class="p">,</span> <span class="n">drop_first</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">bike_rides</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">bike_rides</span><span class="p">,</span> <span class="n">dummies</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">fields_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="s">'instant'</span><span class="p">,</span> <span class="s">'dteday'</span><span class="p">,</span> <span class="s">'season'</span><span class="p">,</span> <span class="s">'weathersit'</span><span class="p">,</span> 
+                  <span class="s">'weekday'</span><span class="p">,</span> <span class="s">'atemp'</span><span class="p">,</span> <span class="s">'mnth'</span><span class="p">,</span> <span class="s">'workingday'</span><span class="p">,</span> <span class="s">'hr'</span><span class="p">]</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">bike_rides</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">fields_to_drop</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span></code></pre></figure>
+
+<p>To make the neural network converge faster, let’s standardize each of the continuous variables. That is, we’ll shift and scale the variables such that they have zero mean and a standard deviation of 1. Also known as standard scaling.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"> 
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="n">quant_features</span> <span class="o">=</span> <span class="p">[</span><span class="s">'casual'</span><span class="p">,</span> <span class="s">'registered'</span><span class="p">,</span> <span class="s">'cnt'</span><span class="p">,</span> <span class="s">'temp'</span><span class="p">,</span> <span class="s">'hum'</span><span class="p">,</span> <span class="s">'windspeed'</span><span class="p">]</span>
+<span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">quant_features</span><span class="p">]</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">quant_features</span><span class="p">])</span></code></pre></figure>
+
+<p>Let’s save the last 21 days of the data to use as a test set after the network is trained. The test set is goint to be used to make predictions and compare them with the actual number of riders.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"> 
+<span class="c"># Save the last 21 days </span>
+<span class="n">test_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">21</span><span class="o">*</span><span class="mi">24</span><span class="p">:]</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:</span><span class="o">-</span><span class="mi">21</span><span class="o">*</span><span class="mi">24</span><span class="p">]</span>
+
+<span class="c"># Separate the data into features and targets</span>
+<span class="n">target_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">'cnt'</span><span class="p">,</span> <span class="s">'casual'</span><span class="p">,</span> <span class="s">'registered'</span><span class="p">]</span>
+<span class="n">features</span><span class="p">,</span> <span class="n">targets</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">target_fields</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">data</span><span class="p">[</span><span class="n">target_fields</span><span class="p">]</span>
+<span class="n">test_features</span><span class="p">,</span> <span class="n">test_targets</span> <span class="o">=</span> <span class="n">test_data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">target_fields</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">test_data</span><span class="p">[</span><span class="n">target_fields</span><span class="p">]</span></code></pre></figure>
+
+<p>Usually you would like to make one more split and create a validation set in order to observe and control the bias and variance of the neural network. Although this is EXTREMELY important, I will skip this step here, as I want to focus on the network implementation. If you want to learn more about identifying and controlling bias and variance you can take a look at andrew ng’s lecture <a href="https://youtu.be/tTSssB9OuI4" target="_blank">Machine learning W6 4 Diagnosing Bias vs Variance</a>.</p>
+
+<p>So let’s implement the neural network:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">NeuralNetwork</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_nodes</span><span class="p">,</span> <span class="n">hidden_nodes</span><span class="p">,</span> <span class="n">output_nodes</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">):</span>
+        <span class="c"># Set number of nodes in input, hidden and output layers.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_nodes</span> <span class="o">=</span> <span class="n">input_nodes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_nodes</span> <span class="o">=</span> <span class="n">hidden_nodes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_nodes</span> <span class="o">=</span> <span class="n">output_nodes</span>
+
+        <span class="c"># Initialize weights</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights_input_to_hidden</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_nodes</span><span class="o">**-</span><span class="mf">0.5</span><span class="p">,</span> 
+                                                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_nodes</span><span class="p">))</span>
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights_hidden_to_output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_nodes</span><span class="o">**-</span><span class="mf">0.5</span><span class="p">,</span> 
+                                                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_nodes</span><span class="p">))</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="n">learning_rate</span>
+        
+        <span class="c">#### Set this to your implemented sigmoid function ####</span>
+        <span class="c"># Activation function is the sigmoid function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation_function</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span> 
+    
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs_list</span><span class="p">,</span> <span class="n">targets_list</span><span class="p">):</span>
+        <span class="c"># Convert inputs list to 2d array</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inputs_list</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">targets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">targets_list</span><span class="p">,</span> <span class="n">ndmin</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        
+        <span class="c">#### Implement the forward pass here ####</span>
+        <span class="c">### Forward pass ###</span>
+        <span class="c"># Hidden layer</span>
+        <span class="c"># signals into hidden layer</span>
+        <span class="n">hidden_inputs</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">weights_input_to_hidden</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>  
+        <span class="c"># signals from hidden layer</span>
+        <span class="n">hidden_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_function</span><span class="p">(</span><span class="n">hidden_inputs</span><span class="p">)</span>  
+        
+        <span class="c"># Output layer</span>
+        <span class="c"># signals into final output layer</span>
+        <span class="n">final_inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights_hidden_to_output</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">hidden_outputs</span><span class="p">)</span> 
+        <span class="c"># signals from final output layer</span>
+        <span class="n">final_outputs</span> <span class="o">=</span> <span class="n">final_inputs</span> 
+
+        <span class="c">#### Implement the backward pass here ####</span>
+        <span class="c">### Backward pass ###</span>
+        
+        <span class="c"># Output error</span>
+        <span class="c"># Output layer error is the difference between desired target and actual output.</span>
+        <span class="n">output_errors</span> <span class="o">=</span> <span class="n">targets</span> <span class="o">-</span> <span class="n">final_outputs</span> 
+        
+        <span class="c"># This is the most IMPORTANT part!</span>
+        <span class="c"># The error is been backpropagated to the hidden layer</span>
+        <span class="c"># By using the chain rule one can calculate the </span>
+        <span class="c"># errors propagated to the hidden layer and then the</span>
+        <span class="c"># hidden layer gradients</span>
+        <span class="n">hidden_errors</span> <span class="o">=</span> <span class="n">output_errors</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights_hidden_to_output</span><span class="p">)</span> 
+        <span class="n">hidden_grad</span> <span class="o">=</span> <span class="n">hidden_errors</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">hidden_outputs</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">hidden_outputs</span><span class="p">)</span> 
+        
+        <span class="c"># :Update the weights</span>
+        <span class="c"># update hidden-to-output weights with gradient descent step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights_hidden_to_output</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="n">output_errors</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">hidden_outputs</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="c"># update input-to-hidden weights with gradient descent step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights_input_to_hidden</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="n">hidden_grad</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs_list</span><span class="p">):</span>
+        <span class="c"># Run a forward pass through the network</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inputs_list</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        
+        <span class="c">#### Implement the forward pass here ####</span>
+        <span class="c"># Hidden layer</span>
+        <span class="c"># signals into hidden layer</span>
+        <span class="n">hidden_inputs</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">weights_input_to_hidden</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>  
+        <span class="c"># signals from hidden layer)</span>
+        <span class="n">hidden_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_function</span><span class="p">(</span><span class="n">hidden_inputs</span><span class="p">)</span> 
+        
+        <span class="c"># Output layer</span>
+        <span class="c"># signals into final output layer</span>
+        <span class="n">final_inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights_hidden_to_output</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">hidden_outputs</span><span class="p">)</span> 
+        <span class="c"># signals from final output layer</span>
+        <span class="n">final_outputs</span> <span class="o">=</span> <span class="n">final_inputs</span> 
+        
+        <span class="k">return</span> <span class="n">final_outputs</span></code></pre></figure>
+
+<p>Let’s train the network. It takes a couple of minutes…</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">### You can change the hyperparameters here ###</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="mi">5000</span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">hidden_nodes</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">output_nodes</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">N_i</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">NeuralNetwork</span><span class="p">(</span><span class="n">N_i</span><span class="p">,</span> <span class="n">hidden_nodes</span><span class="p">,</span> <span class="n">output_nodes</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">)</span>
+
+<span class="n">train_loss_progress</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+    <span class="c"># Go through a random batch of 128 records from the training data set</span>
+    <span class="n">batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">record</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">batch</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> 
+                              <span class="n">targets</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">batch</span><span class="p">][</span><span class="s">'cnt'</span><span class="p">]):</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">e</span><span class="o">%</span><span class="p">(</span><span class="n">epochs</span><span class="o">/</span><span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c"># Calculate losses for the training and test sets</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">MSE</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">features</span><span class="p">),</span> <span class="n">targets</span><span class="p">[</span><span class="s">'cnt'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">train_loss_progress</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'Training loss: {:.4f}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">loss</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">losses</span><span class="p">[</span><span class="s">'train'</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s">'Training loss'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span></code></pre></figure>
+
+<p><img src="/assets/images/bike_share_data_loss.jpg" alt="Neural Network Loss over Time" class="img-responsive" /></p>
+
+<p>Let’s check how well the data is being predicted:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="n">mean</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">scaled_features</span><span class="p">[</span><span class="s">'cnt'</span><span class="p">]</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">test_features</span><span class="p">)</span><span class="o">*</span><span class="n">std</span> <span class="o">+</span> <span class="n">mean</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s">'Prediction'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">((</span><span class="n">test_targets</span><span class="p">[</span><span class="s">'cnt'</span><span class="p">]</span><span class="o">*</span><span class="n">std</span> <span class="o">+</span> <span class="n">mean</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Data'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">right</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">dates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">bike_rides</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">test_data</span><span class="o">.</span><span class="n">index</span><span class="p">][</span><span class="s">'dteday'</span><span class="p">])</span>
+<span class="n">dates</span> <span class="o">=</span> <span class="n">dates</span><span class="o">.</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'</span><span class="si">%</span><span class="s">b </span><span class="si">%</span><span class="s">d'</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dates</span><span class="p">))[</span><span class="mi">12</span><span class="p">::</span><span class="mi">24</span><span class="p">])</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">dates</span><span class="p">[</span><span class="mi">12</span><span class="p">::</span><span class="mi">24</span><span class="p">],</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span></code></pre></figure>
+
+<p><img src="/assets/images/bike_share_data_predictions.jpg" alt="Neural Network Predictions" class="img-responsive" /></p>
+
+<p>As you can see, you can easily implement a neural network from scratch that could get you pretty descent predictions for some real world problems.</p>
+
+</div>
+    <div class="share-page">
+    <span style="float: left;">Share this on &rarr;&nbsp;&nbsp;</span>
+    
+    <!-- Twitter -->
+     <a href="https://twitter.com/share" class="twitter-share-button" data-via="NKKostadinov">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+    <!-- Google + -->
+    <div class="g-plus" data-action="share" data-annotation="bubble"></div>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <!-- Facebook -->
+    <div class="fb-share-button" data-href="http://localhost:4000/python/machine%20learning/deep%20learning/neural%20networks/sigmoid/hidden%20layer/activation%20function/tensorflow/2017/01/29/implementing-neural-network-from-scratch.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
+</div>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+</div>
+
+
+
+    
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+
+    
+    
+        
+            
+                
+                <div class="panel-body">
+                <h4>Related Posts</h4>
+                <ul>
+                
+                <li class="relatedPost">
+                    <a href="http://localhost:4000/python/machine%20learning/reinforcement%20learning/xgboost/cart%20pole/open%20gym/openai/artificial%20intelligence/2016/11/29/solving-cartpole-xgboost.html">Solving CartPole-v0 with xgboost</a>
+                    
+                        (Categories: <a href="/category/python">python</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/reinforcement learning">reinforcement learning</a>, <a href="/category/xgboost">xgboost</a>, <a href="/category/cart pole">cart pole</a>, <a href="/category/open gym">open gym</a>, <a href="/category/openai">openai</a>, <a href="/category/artificial intelligence">artificial intelligence</a>)
+                    
+                </li>
+                
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+
+
+    </ul>
+    </div>
+
+
+<div class="PageNavigation">
+  
+    <a class="prev" href="/python/machine%20learning/reinforcement%20learning/xgboost/cart%20pole/open%20gym/openai/artificial%20intelligence/2016/11/29/solving-cartpole-xgboost.html">&laquo; Solving CartPole-v0 with xgboost</a>
+  
+  
+</div>
+
+
+<div class="disqus-comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* <![CDATA[ */
+
+        var disqus_shortname = "machinememos-com";
+        var disqus_identifier = "http://localhost:4000_Implementing a neural network from scratch";
+        var disqus_title = "Implementing a neural network from scratch";
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    /* ]]> */
+    </script>
+</div>
+
+                <footer>
+                    &copy; Nikolay Kostadinov
+                     
+                    - <a href="https://github.com/n-kostadinov">https://github.com/n-kostadinov</a> - Powered by Jekyll.
+                    
+                </footer>
+            </div><!-- end /.col-sm-8 -->
+        </div><!-- end /.container -->
+
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+        <script src="/static/js/super-search.js"></script>
+        <script src="/static/js/thickbox-compressed.js"></script>
+        <script src="/static/js/projects.js"></script>
+    </body>
+</html>

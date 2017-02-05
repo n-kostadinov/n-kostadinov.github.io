@@ -29,7 +29,7 @@ urls:
     - text: Github
       url: https://github.com/n-kostadinov
 
-url: "https://machinememos.com"
+url: "http://machinememos.com"
 baseurl: ""
 paginate: 20
 per_page: 20
