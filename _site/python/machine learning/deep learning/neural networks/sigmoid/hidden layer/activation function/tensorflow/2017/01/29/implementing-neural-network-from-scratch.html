@@ -74,7 +74,7 @@
         <link rel="stylesheet" href="/static/css/projects.css">
         <link rel="stylesheet" href="/static/css/main.css">
 
-        <!-- Google Analytics -->
+        <!-- Google Analytics -->2
         <script>
           (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
           (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -87,14 +87,15 @@
     </head>
 
     <body>
-        <div class="container">
+	
+        <div class="container-fluid" style="padding-left: 230px; padding-right: 220px;">
+	 <div class="row justify-content-md-center">
             <div class="col-sm-3">
-              <div class="fixed-condition">
-                <a href="/"><img id="about" src="/static/img/logo.png" height="150px" width="150px" /></a>
+              <div class="fixed-condition" >
                 <h1 class="author-name">Nikolay Kostadinov</h1>
                 
                 <div id="about">
-                    I am freelance developer passionate about Machine Learning and AI in general.
+                    I am freelance developer passionate about machine learning and AI.
                 </div>
                 
 
@@ -124,7 +125,7 @@
               </div><!-- end /.fixed-condition -->
             </div>
 
-            <div class="col-sm-8 col-offset-1">
+            <div class="col-sm-7">
                 <h1>Implementing a neural network from scratch</h1>
 <span class="time">29 Jan 2017</span>
 
@@ -134,13 +135,13 @@
 
 
 <div class="content">
-    <div class="post"><p>When designing a neural network machine learning engineers will usually use a high level library like <a href="https://www.tensorflow.org/" target="_blank">tensorflow</a> (my personal favorite) or a wrapper on top of tensorflow like <a href="https://keras.io/" target="_blank">keras</a>. And yes, old school ML engineers are still using <a href="http://deeplearning.net/software/theano/index.html" target="_blank">theano</a>. Having all these tools at your disposal it is rather tempting to view neural networks as a black box and not spend too much time thinking on low level implementation details like back propagation, the chain rule, weights initialization, etc. However understanding these concepts might be crucial when fine tuning a neural network. Choosing the optimal count of the hidden layers, the optimal size of each layer, the right activation function, the learning rate, the regularization weights, dropout rate, etc. is not an easy task. Knowing how deep learning works will certainly help you debug and optimize your network. Otherwise you will be left shooting in the dark, trying to guess the optimal configuration.</p>
+    <div class="post"><p>When designing a neural network machine learning engineers will usually use a high level library like <a href="https://www.tensorflow.org/" target="_blank">tensorflow</a> (my personal favorite) or a wrapper on top of tensorflow like <a href="https://keras.io/" target="_blank">keras</a>. And yes, old school ML engineers are still using <a href="http://deeplearning.net/software/theano/index.html" target="_blank">theano</a>. Having all these tools at your disposal it is rather tempting to view neural networks as a black box and not spend too much time thinking on low level implementation details like backpropagation, the chain rule, weights initialization, etc. However understanding these concepts might be crucial when fine tuning a neural network. Choosing the optimal count of the hidden layers, the optimal size of each layer, the right activation function, the learning rate, the regularization weights, dropout rate, etc. is not an easy task. Knowing how deep learning works will certainly help you debug and optimize your network. Otherwise you will be left shooting in the dark, trying to guess the optimal configuration.</p>
 
-<p>In this post I will discuss the my solution to the first assignment in the excellent <a href="https://www.udacity.com/" target="_blank">Udacity</a> program “Deep Learning Nanodegree Foundation”. Before reading any further I strongly recommend watching the video below. It is a very well structured Stanford Lecture on Neural Networks, which is discussing back propagation and the chain rule:</p>
+<p>In this post I will discuss the my solution to the first assignment in the excellent <a href="https://www.udacity.com/" target="_blank">Udacity</a> program “Deep Learning Nanodegree Foundation”. Before reading any further I strongly recommend watching the video below. It is a very well structured Stanford Lecture on Neural Networks, which is discussing backpropagation and the chain rule:</p>
 
 <iframe width="640" height="360" src="https://www.youtube.com/embed/59Hbtz7XgjM" frameborder="0" allowfullscreen=""></iframe>
 
-<p>At <a href="https://youtu.be/59Hbtz7XgjM?t=59m7s" target="_blank">59:07</a> you can see a very small implementation of aa neural network. It is as simple as it gets, it has only an input and an output layer and a single hidden layer between them. Without restricting us to 11 codes of python code, let’s implement a neural network from scratch and run it.</p>
+<p>At <a href="https://youtu.be/59Hbtz7XgjM?t=59m7s" target="_blank">59:07</a> you can see a very small implementation of a neural network. It is as simple as it gets, it has only an input and an output layer and a single hidden layer between them. Without restricting us to 11 codes of python code, let’s implement a neural network from scratch and run it.</p>
 
 <p>First, we need some data. Start by downloading the <a href="https://archive.ics.uci.edu/ml/machine-learning-databases/00275" target="_blank">Bike Sharing Dataset</a>. Let’s take a look at the data:</p>
 
@@ -183,7 +184,7 @@
 <span class="n">quant_features</span> <span class="o">=</span> <span class="p">[</span><span class="s">'casual'</span><span class="p">,</span> <span class="s">'registered'</span><span class="p">,</span> <span class="s">'cnt'</span><span class="p">,</span> <span class="s">'temp'</span><span class="p">,</span> <span class="s">'hum'</span><span class="p">,</span> <span class="s">'windspeed'</span><span class="p">]</span>
 <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">quant_features</span><span class="p">]</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">quant_features</span><span class="p">])</span></code></pre></figure>
 
-<p>Let’s save the last 21 days of the data to use as a test set after the network is trained. The test set is goint to be used to make predictions and compare them with the actual number of riders.</p>
+<p>Let’s save the last 21 days of the data to use as a test set after the network is trained. The test set is going to be used to make predictions and compare them with the actual number of riders.</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"> 
 <span class="c"># Save the last 21 days </span>
@@ -359,6 +360,131 @@
     
         
             
+                
+                <div class="panel-body">
+                <h4>Related Posts</h4>
+                <ul>
+                
+                <li class="relatedPost">
+                    <a href="http://localhost:4000/python/artificial%20intelligence/depth%20search/sudoku/diagonal%20sudoku/naked%20twins/2017/02/27/cracking-the-worlds-hardest-sudoku.html">Cracking the world hardest sudoku</a>
+                    
+                        (Categories: <a href="/category/python">python</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/depth search">depth search</a>, <a href="/category/sudoku">sudoku</a>, <a href="/category/diagonal sudoku">diagonal sudoku</a>, <a href="/category/naked twins">naked twins</a>)
+                    
+                </li>
+                
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+
+    
+    
+        
+            
         
             
         
@@ -506,10 +632,6 @@
     
         
             
-                
-                <div class="panel-body">
-                <h4>Related Posts</h4>
-                <ul>
                 
                 <li class="relatedPost">
                     <a href="http://localhost:4000/python/machine%20learning/reinforcement%20learning/xgboost/cart%20pole/open%20gym/openai/artificial%20intelligence/2016/11/29/solving-cartpole-xgboost.html">Solving CartPole-v0 with xgboost</a>
@@ -673,6 +795,8 @@
     <a class="prev" href="/python/machine%20learning/reinforcement%20learning/xgboost/cart%20pole/open%20gym/openai/artificial%20intelligence/2016/11/29/solving-cartpole-xgboost.html">&laquo; Solving CartPole-v0 with xgboost</a>
   
   
+    <a class="next" href="/python/artificial%20intelligence/depth%20search/sudoku/diagonal%20sudoku/naked%20twins/2017/02/27/cracking-the-worlds-hardest-sudoku.html">Cracking the world hardest sudoku &raquo;</a>
+  
 </div>
 
 
@@ -702,6 +826,12 @@
                     
                 </footer>
             </div><!-- end /.col-sm-8 -->
+	    <div class="col-sm-2">
+		<div class="fixed-condition">
+		 <a href="/"><img id="about" src="/static/img/logo.png" height="760px" width="380px"/></a>
+		</div>
+	    </div>
+	 </div>
         </div><!-- end /.container -->
 
         <!-- Bootstrap core JavaScript
