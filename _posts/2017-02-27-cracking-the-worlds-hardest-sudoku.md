@@ -3,11 +3,11 @@ layout: post
 title: Cracking the world hardest sudoku
 categories: [python, artificial intelligence, depth search, sudoku, diagonal sudoku, naked twins]
 ---
-Artificial intelligence is all about designing computer systems that are able to perform tasks that normally require human intelligence. We already know computers can do some arithmetic tasks like multiplying large numbers much faster than any human will ever do. But what about non-arithmetic tasks? Well, by now everyone knows that Tesla, Google, Apple and many other tech companies are working on autonomous driving. And yet, they haven't completely cracked it yet. On the other side, it is now 20 years since IBM's Deep Blue won both a chess game and a chess match against Garry Kasparov - the reigning world champion at the time. To sum it up - driving a car is obviously an easy task for humans, two billion people are driving to work every day, but it is very hard for a computer system to manage. At the same time, computer systems can beat the world champion at chess - a task that hardly any human can achieve. Makes you wonder, doesn't it?
+Artificial intelligence is all about designing computer systems able to perform tasks that normally require human intelligence. We already know computers can do some arithmetic tasks like multiplying large numbers much faster than any human will ever do. But what about non-arithmetic tasks? Well, by now everyone knows that Tesla, Google, Apple and many other tech companies are working on autonomous driving. And yet, they haven't completely cracked it yet. On the other side, it is now 20 years since IBM's Deep Blue won both a chess game and a chess match against Garry Kasparov - the reigning world champion at the time. To sum it up - driving a car is obviously an easy task for humans, two billion people are driving to work every day, but it is very hard for a computer system to manage. At the same time, computer systems can beat the world champion at chess - a task that hardly any human can achieve. Makes you wonder, doesn't it?
 
 Another non-arithmetic and seemingly human task at which computers excel is solving a sudoku. The use of constraint propagation and search is illustrated in this great <a href="http://norvig.com/sudoku.html" target="_blank">blog post by Peter Norvig</a>. In this post I will go one step further by introducing a small, but powerful optimisation for Norvig's solution. My whole sudoku solver implementation can be found in this repo: <a href="https://github.com/n-kostadinov/AIND-Sudoku" target="_blank">AIND-Sudoku</a>. 
 
-First, Norvig's solution can be extended to solve a diagonal sudoku by just adding the diagonals to the units, used in the constraint propagation steps:
+In a sudoku, the rows, columns and 3x3 squares all contain digits from 1 to 9 exactly once. Norvig introduces a very flexible design, which is easily extended to a diagonal sudoku. Indeed, Norvig's solution can be extended to solve a diagonal sudoku by just adding the diagonals to the units, used in the constraint propagation steps:
 
 {% highlight python %}
 MODE_NO_DIAGONAL = 1
@@ -42,7 +42,7 @@ def get_units_peers(mode):
     return unitlist, units, peers
 {% endhighlight %}
 
-In solution_performance_test.py I added a small performance test to measure the time needed to solve 20 hard sudoku puzzles. I furthermore modified the code to print the amount of search attempts the solver needs for solving each sudoku puzzle. When executed the test output looks like this:
+In solution_performance_test.py I added a small performance test to measure the time needed to solve 20 hard sudoku puzzles. I furthermore modified the code to print the amount of search attempts the solver needs for solving each sudoku puzzle. A search attempt is made whenever the potential of constraint propagation is exhausted and the algorithm has to try different digits for the same box. When executed the test output looks like this:
 
 ![Sudoku original solution](/assets/images/sudoku_1.png){:class="img-responsive"}
 
@@ -79,15 +79,15 @@ def naked_twins(values):
     return values
 {% endhighlight %}
 
-Adding just this single constraint led to significant performance boost. The time needed to solve twenty sudoku puzzles was cut in half:
+Adding just this single constraint led to significant performance boost. The time needed to solve twenty sudoku puzzles was cut in half. You can clearly see the algorithm is making far less attempts than before:
 
 ![Sudoku original solution](/assets/images/sudoku_2.png){:class="img-responsive"}
 
-One can even go further and implement additional constraints. In the sudoku world those constraints are called <a href="http://www.sudokudragon.com/sudokustrategy.htm" target="_blank">sudoku strategies</a>. So how good is a computer at solving a sudoku? In this <a href="http://www.telegraph.co.uk/news/science/science-news/9359579/Worlds-hardest-sudoku-can-you-crack-it.html" target="_blank">Telegraph article</a> I found a sudoku puzzle which was designed by japanese scientists to be especially hard to solve. It is suppoused to take hours if not days to solve. And here is a slow motion video of the algorithm solving the sudoku:
+One can even go further and implement additional constraints. In the sudoku world those constraints are called <a href="http://www.sudokudragon.com/sudokustrategy.htm" target="_blank">sudoku strategies</a>. So how good is a computer at solving a sudoku? In this <a href="http://www.telegraph.co.uk/news/science/science-news/9359579/Worlds-hardest-sudoku-can-you-crack-it.html" target="_blank">Telegraph article</a> I found a sudoku puzzle which was designed by japanese scientists to be especially hard to solve. It is suppoused to take hours if not days to solve. Below is a slow motion video of the algorithm solving the sudoku. Note, the video would be much longer if not for the <a href="http://www.sudokudragon.com/tutorialnakedtwins.htm" target="_blank">naked twins</a> strategy that is significantly reducing the amount of unsuccessful attempts. 
 
 <iframe width="640" height="360" src="https://www.youtube.com/embed/qp0xRjJL5HU" frameborder="0" allowfullscreen></iframe>
 
-As you can see on the video, the algorithm is making quite a few unsuccessful attempts and consequent steps back. One thing is sure - an AI engineer will be faster at writing the code that solves a sudoku than actually solving a puzzle that hard!
+As you can see on the video, the algorithm is making quite a few unsuccessful attempts and consequent steps back. One thing is sure - an AI engineer will be faster at writing the code that solves a sudoku than actually solving a puzzle that hard.
 
 
 
