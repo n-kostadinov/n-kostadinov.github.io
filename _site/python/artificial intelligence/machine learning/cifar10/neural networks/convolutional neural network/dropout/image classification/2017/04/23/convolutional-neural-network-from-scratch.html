@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="shortcut icon" href="/static/img/favicon.ico" />
+        <title>Convolutional neural network for image classification from scratch - MACHINE MEMOS</title>
+        <meta name="author" content="Nikolay Kostadinov" />
+        <meta name="description" content="Convolutional neural network for image classification from scratch" />
+        <meta name="keywords" content="Convolutional neural network for image classification from scratch, MACHINE MEMOS, python, artificial intelligence, machine learning, cifar10, neural networks, convolutional neural network, dropout, image classification" />
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
+
+        <meta content="" property="fb:app_id">
+        <meta content="MACHINE MEMOS" property="og:site_name">
+        
+          <meta content="Convolutional neural network for image classification from scratch" property="og:title">
+        
+        
+          <meta content="article" property="og:type">
+        
+        
+          <meta content="description" property="og:description">
+        
+        
+          <meta content="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html" property="og:url">
+        
+        
+          <meta content="2017-04-23T00:00:00-07:00" property="article:published_time">
+          <meta content="http://localhost:4000/about/" property="article:author">
+        
+        
+          <meta content="http://localhost:4000/static/img/logo-high-resolution.png" property="og:image">
+        
+        
+          
+          <meta content="python" property="article:section">
+          
+        
+        
+          
+        
+
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@NKKostadinov">
+        <meta name="twitter:creator" content="@NKKostadinov">
+        
+          <meta name="twitter:title" content="Convolutional neural network for image classification from scratch">
+        
+        
+          <meta name="twitter:url" content="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">
+        
+        
+          <meta name="twitter:description" content="description">
+        
+        
+
+        <!-- Font awesome icons -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/static/css/syntax.css">
+
+        <!-- Bootstrap core CSS -->
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Fonts -->
+        <link href="//fonts.googleapis.com/css?family=Roboto+Condensed:400,300italic,300,400italic,700&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+        <!-- Custom CSS -->        
+        <link rel="stylesheet" href="/static/css/super-search.css">
+        <link rel="stylesheet" href="/static/css/thickbox.css">
+        <link rel="stylesheet" href="/static/css/projects.css">
+        <link rel="stylesheet" href="/static/css/main.css">
+
+        <!-- Google Analytics -->2
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+          
+          ga('create', 'UA-26182347-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+    </head>
+
+    <body>
+	
+        <div class="container-fluid" style="padding-left: 190px; padding-right: 270px;">
+	 <div class="row justify-content-md-center">
+            <div class="col-sm-3">
+              <div class="fixed-condition" >
+                <h1 class="author-name">Nikolay Kostadinov</h1>
+                
+                <div id="about">
+                    I am freelance developer passionate about machine learning and AI.
+                </div>
+                
+
+                <div class="social">
+                    <ul>
+                        
+                            <li><a href="https://twitter.com/NKKostadinov" target="_blank"><i class="fa fa-twitter"></i></a></li>
+                        
+                            <li><a href="https://www.linkedin.com/in/nikolay-kostadinov-27a15975" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+                        
+                    </ul>
+                </div>
+
+                <div class="search" id="js-search">
+                  <input type="text" placeholder="(sitemap)~$ type to search" class="search__input form-control" id="js-search__input">
+                  <ul class="search__results" id="js-search__results"></ul>
+                </div>
+                <hr />
+
+                <strong>Navigation</strong><br />
+                    &nbsp;&raquo; <a href="/">Home</a> <br />
+                
+                    &nbsp;&raquo; <a class="about" href="/about/">About Me</a><br />
+                
+                    &nbsp;&raquo; <a class="about" href="https://github.com/n-kostadinov">Github</a><br />
+                
+              </div><!-- end /.fixed-condition -->
+            </div>
+
+            <div class="col-sm-7">
+                <h1>Convolutional neural network for image classification from scratch</h1>
+<span class="time">23 Apr 2017</span>
+
+<span class="categories">
+    &raquo; <a href="/category/python">python</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/cifar10">cifar10</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/convolutional neural network">convolutional neural network</a>, <a href="/category/dropout">dropout</a>, <a href="/category/image classification">image classification</a>
+</span>
+
+
+<div class="content">
+    <div class="post"><h1 id="image-classification-with-cnn">Image Classification with CNN</h1>
+
+<p>In this project we will build a convolutional neural network (CNN) to classify images from the <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR-10 dataset</a>. My goal is to demonstrate how easy one can construct a neural network with descent accuracy (around 70%). Thereby, I used only my laptop’s i7 processor and a couple of hours training time.</p>
+
+<h1 id="image-dataset">Image Dataset</h1>
+
+<p>The <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR-10 dataset</a> consists of 60000 32x32 colour images in 10 categories - airplanes, dogs, cats, and other objects. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class. Here are the classes in the dataset, as well as 10 random images from each:
+<img src="files/dataset_overview.jpg" />
+The classes are completely mutually exclusive. There is no overlap between automobiles and trucks. “Automobile” includes sedans, SUVs, things of that sort. “Truck” includes only big trucks. Neither includes pickup trucks.</p>
+
+<p>In the following we will preprocess the images, then train a convolutional neural network on all the samples. The images need to be normalized and the labels need to be one-hot encoded.  Next we will build a convolutional, max pooling, dropout, and fully connected layers. At the end, we will train the network ang get to see it’s predictions on the sample images.</p>
+
+<h2 id="download-the-dataset">Download the dataset</h2>
+<p>First, few lines of code will download the <a href="https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz">CIFAR-10 dataset for python</a>.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlretrieve</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">isdir</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">tarfile</span>
+
+<span class="n">cifar10_dataset_folder_path</span> <span class="o">=</span> <span class="s">'cifar-10-batches-py'</span>
+
+<span class="k">class</span> <span class="nc">DLProgress</span><span class="p">(</span><span class="n">tqdm</span><span class="p">):</span>
+    <span class="n">last_block</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">block_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">total_size</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="n">total_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="n">block_num</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_block</span><span class="p">)</span> <span class="o">*</span> <span class="n">block_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_block</span> <span class="o">=</span> <span class="n">block_num</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">isfile</span><span class="p">(</span><span class="s">'cifar-10-python.tar.gz'</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">DLProgress</span><span class="p">(</span><span class="n">unit</span><span class="o">=</span><span class="s">'B'</span><span class="p">,</span> <span class="n">unit_scale</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">miniters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s">'CIFAR-10 Dataset'</span><span class="p">)</span> <span class="k">as</span> <span class="n">pbar</span><span class="p">:</span>
+        <span class="n">urlretrieve</span><span class="p">(</span>
+            <span class="s">'https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz'</span><span class="p">,</span>
+            <span class="s">'cifar-10-python.tar.gz'</span><span class="p">,</span>
+            <span class="n">pbar</span><span class="o">.</span><span class="n">hook</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">cifar10_dataset_folder_path</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="s">'cifar-10-python.tar.gz'</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar</span><span class="p">:</span>
+        <span class="n">tar</span><span class="o">.</span><span class="n">extractall</span><span class="p">()</span>
+        <span class="n">tar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<h2 id="data-overview">Data Overview</h2>
+<p>The dataset is broken into batches - this is especially useful if one is to train the network on a laptop as it will probably prevent it from running out of memory. I only had 12 GB on mine and a single batch used around 3.2 GB - it wouldn’t be possible to load everything at once. Nevertheless, the CIFAR-10 dataset consists of 5 batches, named <code class="highlighter-rouge">data_batch_1</code>, <code class="highlighter-rouge">data_batch_2</code>, etc.. Each batch contains the labels and images that are one of the following:</p>
+
+<ul>
+  <li>airplane</li>
+  <li>automobile</li>
+  <li>bird</li>
+  <li>cat</li>
+  <li>deer</li>
+  <li>dog</li>
+  <li>frog</li>
+  <li>horse</li>
+  <li>ship</li>
+  <li>truck</li>
+</ul>
+
+<p>Understanding a dataset is part of making predictions on the data. Following functions can be used to view different images by changing the <code class="highlighter-rouge">batch_id</code> and <code class="highlighter-rouge">sample_id</code>. The <code class="highlighter-rouge">batch_id</code> is the id for a batch (1-5). The <code class="highlighter-rouge">sample_id</code> is the id for a image and label pair in the batch.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="n">LABEL_NAMES</span> <span class="o">=</span> <span class="p">[</span><span class="s">'airplane'</span><span class="p">,</span> <span class="s">'automobile'</span><span class="p">,</span> <span class="s">'bird'</span><span class="p">,</span> <span class="s">'cat'</span><span class="p">,</span> <span class="s">'deer'</span><span class="p">,</span> <span class="s">'dog'</span><span class="p">,</span> <span class="s">'frog'</span><span class="p">,</span> <span class="s">'horse'</span><span class="p">,</span> <span class="s">'ship'</span><span class="p">,</span> <span class="s">'truck'</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">load_cfar10_batch</span><span class="p">(</span><span class="n">batch_id</span><span class="p">):</span>
+    <span class="s">"""
+    Load a batch of the dataset
+    """</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cifar10_dataset_folder_path</span> <span class="o">+</span> <span class="s">'/data_batch_'</span> 
+              <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">batch_id</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+        <span class="n">batch</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s">'latin1'</span><span class="p">)</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s">'data'</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s">'data'</span><span class="p">]),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s">'labels'</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">features</span><span class="p">,</span> <span class="n">labels</span>
+
+
+<span class="k">def</span> <span class="nf">display_stats</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">sample_id</span><span class="p">):</span>
+    <span class="s">"""
+    Display Stats of the the dataset
+    """</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">sample_id</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'{} samples in batch {}.  {} is out of range.'</span>
+              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">),</span> <span class="n">batch_id</span><span class="p">,</span> <span class="n">sample_id</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">Stats of batch {}:'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">batch_id</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Samples: {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Label Counts: {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="bp">True</span><span class="p">)))))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'First 20 Labels: {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">labels</span><span class="p">[:</span><span class="mi">20</span><span class="p">]))</span>
+
+    <span class="n">sample_image</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="n">sample_id</span><span class="p">]</span>
+    <span class="n">sample_label</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">sample_id</span><span class="p">]</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">Example of Image {}:'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sample_id</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Image - Min Value: {} Max Value: {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sample_image</span><span class="o">.</span><span class="nb">min</span><span class="p">(),</span> <span class="n">sample_image</span><span class="o">.</span><span class="nb">max</span><span class="p">()))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Image - Shape: {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sample_image</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Label - Label Id: {} Name: {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sample_label</span><span class="p">,</span> <span class="n">LABEL_NAMES</span><span class="p">[</span><span class="n">sample_label</span><span class="p">]))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s">'off'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sample_image</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Let’s check the first couple of images of each batch. The lines below can be easily modified to show an arbitary image from any batch.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="o">%</span><span class="n">config</span> <span class="n">InlineBackend</span><span class="o">.</span><span class="n">figure_format</span> <span class="o">=</span> <span class="s">'retina'</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="k">for</span> <span class="n">batch_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">):</span>
+    <span class="n">features</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">load_cfar10_batch</span><span class="p">(</span><span class="n">batch_id</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">image_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">display_stats</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">image_id</span><span class="p">)</span>
+
+<span class="k">del</span> <span class="n">features</span><span class="p">,</span> <span class="n">labels</span> <span class="c"># free memory       </span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 1:
+Samples: 10000
+Label Counts: {0: 1005, 1: 974, 2: 1032, 3: 1016, 4: 999, 5: 937, 6: 1030, 7: 1001, 8: 1025, 9: 981}
+First 20 Labels: [6, 9, 9, 4, 1, 1, 2, 7, 8, 3, 4, 7, 7, 2, 9, 9, 9, 3, 2, 6]
+
+Example of Image 0:
+Image - Min Value: 0 Max Value: 255
+Image - Shape: (32, 32, 3)
+Label - Label Id: 6 Name: frog
+</code></pre>
+</div>
+
+<p><img src="/assets/images/output_5_1.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 1:
+Samples: 10000
+Label Counts: {0: 1005, 1: 974, 2: 1032, 3: 1016, 4: 999, 5: 937, 6: 1030, 7: 1001, 8: 1025, 9: 981}
+First 20 Labels: [6, 9, 9, 4, 1, 1, 2, 7, 8, 3, 4, 7, 7, 2, 9, 9, 9, 3, 2, 6]
+
+Example of Image 1:
+Image - Min Value: 5 Max Value: 254
+Image - Shape: (32, 32, 3)
+Label - Label Id: 9 Name: truck
+</code></pre>
+</div>
+
+<p><img src="/assets/images/output_5_3.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 2:
+Samples: 10000
+Label Counts: {0: 984, 1: 1007, 2: 1010, 3: 995, 4: 1010, 5: 988, 6: 1008, 7: 1026, 8: 987, 9: 985}
+First 20 Labels: [1, 6, 6, 8, 8, 3, 4, 6, 0, 6, 0, 3, 6, 6, 5, 4, 8, 3, 2, 6]
+
+Example of Image 0:
+Image - Min Value: 5 Max Value: 225
+Image - Shape: (32, 32, 3)
+Label - Label Id: 1 Name: automobile
+</code></pre>
+</div>
+
+<p><img src="/assets/images/output_5_5.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 2:
+Samples: 10000
+Label Counts: {0: 984, 1: 1007, 2: 1010, 3: 995, 4: 1010, 5: 988, 6: 1008, 7: 1026, 8: 987, 9: 985}
+First 20 Labels: [1, 6, 6, 8, 8, 3, 4, 6, 0, 6, 0, 3, 6, 6, 5, 4, 8, 3, 2, 6]
+
+Example of Image 1:
+Image - Min Value: 2 Max Value: 247
+Image - Shape: (32, 32, 3)
+Label - Label Id: 6 Name: frog
+</code></pre>
+</div>
+
+<p><img src="/assets/images/output_5_7.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 3:
+Samples: 10000
+Label Counts: {0: 994, 1: 1042, 2: 965, 3: 997, 4: 990, 5: 1029, 6: 978, 7: 1015, 8: 961, 9: 1029}
+First 20 Labels: [8, 5, 0, 6, 9, 2, 8, 3, 6, 2, 7, 4, 6, 9, 0, 0, 7, 3, 7, 2]
+
+Example of Image 0:
+Image - Min Value: 0 Max Value: 254
+Image - Shape: (32, 32, 3)
+Label - Label Id: 8 Name: ship
+</code></pre>
+</div>
+
+<p><img src="/assets/images/output_5_9.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 3:
+Samples: 10000
+Label Counts: {0: 994, 1: 1042, 2: 965, 3: 997, 4: 990, 5: 1029, 6: 978, 7: 1015, 8: 961, 9: 1029}
+First 20 Labels: [8, 5, 0, 6, 9, 2, 8, 3, 6, 2, 7, 4, 6, 9, 0, 0, 7, 3, 7, 2]
+
+Example of Image 1:
+Image - Min Value: 15 Max Value: 249
+Image - Shape: (32, 32, 3)
+Label - Label Id: 5 Name: dog
+</code></pre>
+</div>
+
+<p><img src="/assets/images/output_5_11.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 4:
+Samples: 10000
+Label Counts: {0: 1003, 1: 963, 2: 1041, 3: 976, 4: 1004, 5: 1021, 6: 1004, 7: 981, 8: 1024, 9: 983}
+First 20 Labels: [0, 6, 0, 2, 7, 2, 1, 2, 4, 1, 5, 6, 6, 3, 1, 3, 5, 5, 8, 1]
+
+Example of Image 0:
+Image - Min Value: 34 Max Value: 203
+Image - Shape: (32, 32, 3)
+Label - Label Id: 0 Name: airplane
+</code></pre>
+</div>
+
+<p><img src="/assets/images/output_5_13.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 4:
+Samples: 10000
+Label Counts: {0: 1003, 1: 963, 2: 1041, 3: 976, 4: 1004, 5: 1021, 6: 1004, 7: 981, 8: 1024, 9: 983}
+First 20 Labels: [0, 6, 0, 2, 7, 2, 1, 2, 4, 1, 5, 6, 6, 3, 1, 3, 5, 5, 8, 1]
+
+Example of Image 1:
+Image - Min Value: 0 Max Value: 246
+Image - Shape: (32, 32, 3)
+Label - Label Id: 6 Name: frog
+</code></pre>
+</div>
+
+<p><img src="/assets/images/output_5_15.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 5:
+Samples: 10000
+Label Counts: {0: 1014, 1: 1014, 2: 952, 3: 1016, 4: 997, 5: 1025, 6: 980, 7: 977, 8: 1003, 9: 1022}
+First 20 Labels: [1, 8, 5, 1, 5, 7, 4, 3, 8, 2, 7, 2, 0, 1, 5, 9, 6, 2, 0, 8]
+
+Example of Image 0:
+Image - Min Value: 2 Max Value: 255
+Image - Shape: (32, 32, 3)
+Label - Label Id: 1 Name: automobile
+</code></pre>
+</div>
+
+<p><img src="/assets/images/output_5_17.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 5:
+Samples: 10000
+Label Counts: {0: 1014, 1: 1014, 2: 952, 3: 1016, 4: 997, 5: 1025, 6: 980, 7: 977, 8: 1003, 9: 1022}
+First 20 Labels: [1, 8, 5, 1, 5, 7, 4, 3, 8, 2, 7, 2, 0, 1, 5, 9, 6, 2, 0, 8]
+
+Example of Image 1:
+Image - Min Value: 1 Max Value: 244
+Image - Shape: (32, 32, 3)
+Label - Label Id: 8 Name: ship
+</code></pre>
+</div>
+
+<p><img src="/assets/images/output_5_19.png" alt="png" /></p>
+
+<h2 id="preprocess-data">Preprocess data</h2>
+
+<h3 id="normalization-function">Normalization function</h3>
+
+<p>In the cell below, the <code class="highlighter-rouge">normalize</code> function takes in image data, <code class="highlighter-rouge">x</code>, and return it as a normalized Numpy array. The values are in the range of 0 to 1, inclusive. The return object has the same shape as <code class="highlighter-rouge">x</code>.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c"># Each pixel has three channels - Red, Green and Blue. </span>
+    <span class="c"># Each channel is an int between 0 and 255 (8-bit color scheme). </span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.0</span>
+</code></pre>
+</div>
+
+<h3 id="one-hot-encoding">One-hot-encoding</h3>
+<p>Not only the input data, but also the labels have to be preprocessed. When dealing with categorical data one has to one-hot-encode the labels. Normally, I would use the <a href="http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html">OneHotEncoder from the sklearn.preprocessing library</a>. For the sake of example, I implemented it by myself.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">one_hot_encode</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">one_hot_encoded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)):</span>
+        <span class="n">one_hot_encoded</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="k">return</span> <span class="n">one_hot_encoded</span>
+</code></pre>
+</div>
+
+<h2 id="preprocess-all-the-data-and-save-it">Preprocess all the data and save it</h2>
+<p>Running the code cell below will preprocess all the CIFAR-10 data and save it to file. The code below also uses 10% of the training data for validation. Remember, we do not want to load all the data in the memory simulanously.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="s">"""
+Preprocess Training and Validation and Test Data
+"""</span>
+
+<span class="k">def</span> <span class="nf">preprocess_and_save</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="s">"""
+    Preprocess data and save it to file
+    Both functions have been defined above
+    """</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">features</span><span class="p">)</span> 
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">one_hot_encode</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">((</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">),</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">'wb'</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">preprocess_and_save_all_data</span><span class="p">():</span>
+    <span class="s">"""
+    Preprocess Training and Validation Data
+    """</span>
+    <span class="n">n_batches</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">valid_features</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">valid_labels</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">batch_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_batches</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">features</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">load_cfar10_batch</span><span class="p">(</span><span class="n">batch_i</span><span class="p">)</span>
+        <span class="n">validation_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">)</span>
+
+        <span class="c"># Prprocess and save a batch of training data</span>
+        <span class="n">preprocess_and_save</span><span class="p">(</span>
+            <span class="n">features</span><span class="p">[:</span><span class="o">-</span><span class="n">validation_count</span><span class="p">],</span>
+            <span class="n">labels</span><span class="p">[:</span><span class="o">-</span><span class="n">validation_count</span><span class="p">],</span>
+            <span class="s">'preprocess_batch_'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">batch_i</span><span class="p">)</span> <span class="o">+</span> <span class="s">'.p'</span><span class="p">)</span>
+
+        <span class="c"># Use a portion of training batch for validation</span>
+        <span class="n">valid_features</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="o">-</span><span class="n">validation_count</span><span class="p">:])</span>
+        <span class="n">valid_labels</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="o">-</span><span class="n">validation_count</span><span class="p">:])</span>
+
+    <span class="c"># Preprocess and Save all validation data</span>
+    <span class="n">preprocess_and_save</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">valid_features</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">valid_labels</span><span class="p">),</span>
+        <span class="s">'preprocess_validation.p'</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cifar10_dataset_folder_path</span> <span class="o">+</span> <span class="s">'/test_batch'</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+        <span class="n">batch</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s">'latin1'</span><span class="p">)</span>
+
+    <span class="c"># load the training data</span>
+    <span class="n">test_features</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s">'data'</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s">'data'</span><span class="p">]),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">test_labels</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s">'labels'</span><span class="p">]</span>
+
+    <span class="c"># Preprocess and Save all training data</span>
+    <span class="n">preprocess_and_save</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_features</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_labels</span><span class="p">),</span>
+        <span class="s">'preprocess_training.p'</span><span class="p">)</span>
+
+<span class="c"># Run preprocessing and saving on disk</span>
+<span class="n">preprocess_and_save_all_data</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<h2 id="building-the-neural-network">Building the neural network</h2>
+<p>For the neural network, I will build each type of layer into a function. Encapsulating tensorflow logic in such functions allows you to easily modify the architectire without having to rewrite the boilerplate tensorflow code. Furthermore, the functions built can be later reused for other datasets containing images with different size and different labels.</p>
+
+<h3 id="input">Input</h3>
+<p>The neural network needs to read the image data, one-hot encoded labels, and dropout keep probability.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+
+<span class="k">def</span> <span class="nf">neural_net_image_input</span><span class="p">(</span><span class="n">image_shape</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">image_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">image_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">image_shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="n">name</span><span class="o">=</span><span class="s">'x'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">neural_net_label_input</span><span class="p">(</span><span class="n">n_classes</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s">'y'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">neural_net_keep_prob_input</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">'keep_prob'</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<h3 id="convolution-and-max-pooling-layer">Convolution and Max Pooling Layer</h3>
+<p>Convolution layers have a lot of success with images. The following block of code implements the function <code class="highlighter-rouge">conv2d_maxpool</code> to apply convolution and then max pooling. Applying convolutions and then max pooling has become a “de facto” standard for constructing neural networks for image recognition. It is generally a nice idea to log the layer’s input and output dimensions - the two print functions at the end will be useful when fine tuning the network architecture.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">conv2d_maxpool</span><span class="p">(</span><span class="n">x_tensor</span><span class="p">,</span> <span class="n">conv_num_outputs</span><span class="p">,</span> <span class="n">conv_ksize</span><span class="p">,</span> <span class="n">conv_strides</span><span class="p">,</span> <span class="n">pool_ksize</span><span class="p">,</span> <span class="n">pool_strides</span><span class="p">):</span>
+   
+    <span class="c"># Create filter dimensions</span>
+    <span class="n">filter_height</span><span class="p">,</span> <span class="n">filter_width</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">,</span> <span class="n">out_channels</span> <span class="o">=</span> \
+        <span class="n">conv_ksize</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">conv_ksize</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>  <span class="n">x_tensor</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">3</span><span class="p">],</span> <span class="n">conv_num_outputs</span>
+    <span class="n">conv_filter</span> <span class="o">=</span> <span class="p">[</span><span class="n">filter_height</span><span class="p">,</span> <span class="n">filter_width</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">]</span>
+    
+    <span class="c"># Create weights and bias</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">(</span><span class="n">conv_filter</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.05</span><span class="p">))</span>
+    <span class="n">bias</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">([</span><span class="n">conv_num_outputs</span><span class="p">],</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.05</span><span class="p">))</span>
+    
+    <span class="c"># Create strides</span>
+    <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">conv_strides</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">conv_strides</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c"># Bind all together to create the layer</span>
+    <span class="n">conv</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">x_tensor</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s">'SAME'</span><span class="p">)</span>
+    <span class="n">conv</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">bias_add</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">bias</span><span class="p">)</span>
+    
+    <span class="c"># Create ksize </span>
+    <span class="n">ksize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">pool_ksize</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pool_ksize</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c"># Create strides</span>
+    <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">pool_strides</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pool_strides</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">pool</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">max_pool</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">ksize</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s">'SAME'</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">'Convolutional layer with conv_num_outputs:'</span><span class="p">,</span><span class="n">conv_num_outputs</span><span class="p">,</span>
+          <span class="s">'conv_ksize:'</span><span class="p">,</span> <span class="n">conv_ksize</span><span class="p">,</span>
+          <span class="s">'conv_strides:'</span><span class="p">,</span> <span class="n">conv_strides</span><span class="p">,</span>
+          <span class="s">'pool_ksize:'</span><span class="p">,</span><span class="n">pool_ksize</span><span class="p">,</span>
+          <span class="s">'pool_strides'</span><span class="p">,</span> <span class="n">pool_strides</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'layer input shape'</span><span class="p">,</span> <span class="n">x_tensor</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">(),</span>
+          <span class="s">'layer output shape'</span><span class="p">,</span> <span class="n">pool</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">())</span>
+    
+    <span class="k">return</span> <span class="n">pool</span>
+</code></pre>
+</div>
+
+<h3 id="flatten-layer-and-fully-connected-layers">Flatten Layer and Fully Connected Layers</h3>
+<p>After stacking up the convolution layers one usually flattens the network and applies at least one, but usually several fully connected layers. Dropout is also applied at this point. As a matter of fact, dropout is one of the great discoveries in the last years. It is used to prevent the network from overfitting.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="n">x_tensor</span><span class="p">):</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">channels</span> <span class="o">=</span> <span class="n">x_tensor</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x_tensor</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">height</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="n">channels</span><span class="p">])</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'flatten shape'</span><span class="p">,</span> <span class="n">net</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">net</span>
+
+<span class="k">def</span> <span class="nf">fully_conn</span><span class="p">(</span><span class="n">x_tensor</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">):</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">x_tensor</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">([</span><span class="n">size</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">],</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.05</span><span class="p">))</span>
+    <span class="n">bias</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">([</span><span class="n">num_outputs</span><span class="p">],</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.05</span><span class="p">))</span>
+    
+    <span class="n">fully_connected</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">x_tensor</span><span class="p">,</span> <span class="n">weights</span><span class="p">),</span> <span class="n">bias</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">'layer input shape'</span><span class="p">,</span> <span class="n">x_tensor</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">(),</span>
+         <span class="s">'layer output shape'</span><span class="p">,</span> <span class="n">fully_connected</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">())</span>
+    
+    <span class="k">return</span> <span class="n">fully_connected</span>
+</code></pre>
+</div>
+
+<h3 id="the-neural-network-architecture">The Neural Network architecture</h3>
+<p>In the function <code class="highlighter-rouge">conv_net</code> we create the actual convolutional neural network model. The function takes in a batch of images, <code class="highlighter-rouge">x</code>, and outputs logits. The layers introduced above are bound together. This is where one actually defines the architecture of the neural network. As a matter of fact, I changed the architecture more than a dozen of times, until I reached a reasonable accuracy. Indeed, it is very hard to choose a proper architecture and blind trail and error is not the way to go here. There are multiple methodologies for finetuning a neural network described in various papers by the scientific community. For the sake of simplicity I will not dive into the details here, but would definetly recommend this reading: <a href="http://benanne.github.io/2014/04/05/galaxy-zoo.html">1st place on the Galaxy Zoo Challenge</a></p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">conv_net</span><span class="p">(</span><span class="n">input_x</span><span class="p">,</span> <span class="n">keep_probability</span><span class="p">):</span>
+    
+    <span class="n">net</span> <span class="o">=</span> <span class="n">conv2d_maxpool</span><span class="p">(</span><span class="n">input_x</span><span class="p">,</span>   <span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">conv2d_maxpool</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">conv2d_maxpool</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    
+    <span class="n">net</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">keep_probability</span><span class="p">)</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">fully_conn</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">keep_probability</span><span class="p">)</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">fully_conn</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">fully_conn</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">net</span>
+</code></pre>
+</div>
+
+<h3 id="building-the-neural-network-1">Building the Neural Network</h3>
+<p>In the code block below we use tensorflow to train the neural network. I found the AdamOptimizer to be the least sensitive to the learning rate. The learning rate is another parameter one has to tune. For an overview of diffent optimizers check <a href="http://sebastianruder.com/optimizing-gradient-descent/">An overview of gradient descent optimization algorithms.</a></p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">##############################</span>
+<span class="c">## Build the Neural Network ##</span>
+<span class="c">##############################</span>
+
+<span class="c"># Remove previous weights, bias, inputs, etc..</span>
+<span class="n">tf</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+
+<span class="n">IMAGE_SHAPE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">LABELS_COUNT</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="c"># Inputs</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">neural_net_image_input</span><span class="p">(</span><span class="n">IMAGE_SHAPE</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">neural_net_label_input</span><span class="p">(</span><span class="n">LABELS_COUNT</span><span class="p">)</span>
+<span class="n">keep_prob</span> <span class="o">=</span> <span class="n">neural_net_keep_prob_input</span><span class="p">()</span>
+
+<span class="c"># Model</span>
+<span class="n">logits</span> <span class="o">=</span> <span class="n">conv_net</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">keep_prob</span><span class="p">)</span>
+
+<span class="c"># Name logits Tensor, so that is can be loaded from disk after training</span>
+<span class="n">logits</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">'logits'</span><span class="p">)</span>
+
+<span class="c"># Loss and Optimizer</span>
+<span class="n">cost</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax_cross_entropy_with_logits</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="n">logits</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">y</span><span class="p">))</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+
+<span class="c"># Accuracy</span>
+<span class="n">correct_pred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">correct_pred</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s">'accuracy'</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Convolutional layer with conv_num_outputs: 32 conv_ksize: (7, 7) conv_strides: (2, 2) pool_ksize: (2, 2) pool_strides (2, 2)
+layer input shape [None, 32, 32, 3] layer output shape [None, 8, 8, 32]
+Convolutional layer with conv_num_outputs: 64 conv_ksize: (3, 3) conv_strides: (1, 1) pool_ksize: (2, 2) pool_strides (2, 2)
+layer input shape [None, 8, 8, 32] layer output shape [None, 4, 4, 64]
+Convolutional layer with conv_num_outputs: 128 conv_ksize: (2, 2) conv_strides: (1, 1) pool_ksize: (2, 2) pool_strides (2, 2)
+layer input shape [None, 4, 4, 64] layer output shape [None, 2, 2, 128]
+flatten shape [None, 512]
+layer input shape [None, 512] layer output shape [None, 1024]
+layer input shape [None, 1024] layer output shape [None, 128]
+layer input shape [None, 128] layer output shape [None, 10]
+</code></pre>
+</div>
+
+<h3 id="show-stats">Show Stats</h3>
+<p>We also need to implement a function to print loss and validation accuracy. Additionally, we define the global variables <code class="highlighter-rouge">valid_features</code> and <code class="highlighter-rouge">valid_labels</code> to calculate validation accuracy. Remember to always use a keep probability of <code class="highlighter-rouge">1.0</code> to calculate the loss and validation accuracy.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">valid_features</span><span class="p">,</span> <span class="n">valid_labels</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">'preprocess_validation.p'</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">'rb'</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">print_stats</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">feature_batch</span><span class="p">,</span> <span class="n">label_batch</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">):</span>
+    <span class="n">batch_loss</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span>\
+                    <span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="n">feature_batch</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">label_batch</span><span class="p">,</span> <span class="n">keep_prob</span><span class="p">:</span><span class="mf">1.0</span><span class="p">})</span>
+    <span class="n">batch_accuracy</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span>\
+                    <span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="n">valid_features</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">valid_labels</span><span class="p">,</span> <span class="n">keep_prob</span><span class="p">:</span><span class="mf">1.0</span><span class="p">})</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">'batch loss is : '</span><span class="p">,</span> <span class="n">batch_loss</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'batch_accuracy accuracy is :'</span><span class="p">,</span><span class="n">batch_accuracy</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<h3 id="hyperparameters">Hyperparameters</h3>
+
+<p>A few more parameters need to be tuned:
+* We set <code class="highlighter-rouge">epochs</code> to the number of iterations until the network stops learning or starts overfitting
+* We Set <code class="highlighter-rouge">batch_size</code> to the highest number that your machine has memory for.  Most people set them to common sizes of memory like 64, 128, etc. The bigger the batch size, the less epochs are needed for the network to be trained.</p>
+
+<ul>
+  <li>We set <code class="highlighter-rouge">keep_probability</code> to the probability of keeping a node using dropout. Hence, keep_probability prevents overfitting of the neural network. Usually values between 0.4 and 0.8 produce good results.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># For my laptop I selected:</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">256</span>
+
+<span class="c"># keep probability of 70% </span>
+<span class="n">keep_probability</span> <span class="o">=</span> <span class="mf">0.5</span>
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># a couple of helper functions for loading a single batch</span>
+<span class="k">def</span> <span class="nf">batch_features_labels</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+    <span class="s">"""
+    Split features and labels into batches
+    """</span>
+    <span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">):</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">))</span>
+        <span class="k">yield</span> <span class="n">features</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">],</span> <span class="n">labels</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+        
+<span class="k">def</span> <span class="nf">load_preprocess_training_batch</span><span class="p">(</span><span class="n">batch_id</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+    <span class="s">"""
+    Load the Preprocessed Training data and return them in batches of &lt;batch_size&gt; or less
+    """</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s">'preprocess_batch_'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">batch_id</span><span class="p">)</span> <span class="o">+</span> <span class="s">'.p'</span>
+    <span class="n">features</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">'rb'</span><span class="p">))</span>
+
+    <span class="c"># Return the training data in batches of size &lt;batch_size&gt; or less</span>
+    <span class="k">return</span> <span class="n">batch_features_labels</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<h3 id="train-on-a-single-cifar-10-batch">Train on a Single CIFAR-10 Batch</h3>
+<p>Instead of training the neural network on all the CIFAR-10 batches of data, let’s use a single batch. This saved me a lot of time while iterating the parameters of the model to get a better accuracy. Once I found the final validation accuracy to be satisfying I ran the model on all the data.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="s">'Checking the Training on a Single Batch...'</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+    <span class="c"># Initializing the variables</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+    
+    <span class="c"># Training cycle</span>
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+        <span class="n">batch_i</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">batch_features</span><span class="p">,</span> <span class="n">batch_labels</span> <span class="ow">in</span> \
+            <span class="n">load_preprocess_training_batch</span><span class="p">(</span><span class="n">batch_i</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span>\
+                        <span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="n">batch_features</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">batch_labels</span><span class="p">,</span> <span class="n">keep_prob</span><span class="p">:</span><span class="n">keep_probability</span><span class="p">})</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'Epoch {:&gt;2}, CIFAR-10 Batch {}:  '</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">batch_i</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+        <span class="n">print_stats</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">batch_features</span><span class="p">,</span> <span class="n">batch_labels</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Checking the Training on a Single Batch...
+Epoch  1, CIFAR-10 Batch 1:  batch loss is :  2.04934
+batch_accuracy accuracy is : 0.3524
+Epoch  2, CIFAR-10 Batch 1:  batch loss is :  1.80641
+batch_accuracy accuracy is : 0.4126
+Epoch  3, CIFAR-10 Batch 1:  batch loss is :  1.54692
+batch_accuracy accuracy is : 0.4486
+Epoch  4, CIFAR-10 Batch 1:  batch loss is :  1.27744
+batch_accuracy accuracy is : 0.4792
+Epoch  5, CIFAR-10 Batch 1:  batch loss is :  1.13442
+batch_accuracy accuracy is : 0.4928
+Epoch  6, CIFAR-10 Batch 1:  batch loss is :  0.92034
+batch_accuracy accuracy is : 0.496
+Epoch  7, CIFAR-10 Batch 1:  batch loss is :  0.806121
+batch_accuracy accuracy is : 0.4896
+Epoch  8, CIFAR-10 Batch 1:  batch loss is :  0.745746
+batch_accuracy accuracy is : 0.5048
+Epoch  9, CIFAR-10 Batch 1:  batch loss is :  0.615836
+batch_accuracy accuracy is : 0.531
+Epoch 10, CIFAR-10 Batch 1:  batch loss is :  0.497367
+batch_accuracy accuracy is : 0.5288
+Epoch 11, CIFAR-10 Batch 1:  batch loss is :  0.442382
+batch_accuracy accuracy is : 0.531
+Epoch 12, CIFAR-10 Batch 1:  batch loss is :  0.381339
+batch_accuracy accuracy is : 0.55
+Epoch 13, CIFAR-10 Batch 1:  batch loss is :  0.365281
+batch_accuracy accuracy is : 0.5634
+Epoch 14, CIFAR-10 Batch 1:  batch loss is :  0.307827
+batch_accuracy accuracy is : 0.5432
+Epoch 15, CIFAR-10 Batch 1:  batch loss is :  0.26708
+batch_accuracy accuracy is : 0.571
+Epoch 16, CIFAR-10 Batch 1:  batch loss is :  0.222317
+batch_accuracy accuracy is : 0.577
+Epoch 17, CIFAR-10 Batch 1:  batch loss is :  0.191946
+batch_accuracy accuracy is : 0.5728
+Epoch 18, CIFAR-10 Batch 1:  batch loss is :  0.142695
+batch_accuracy accuracy is : 0.5794
+Epoch 19, CIFAR-10 Batch 1:  batch loss is :  0.176674
+batch_accuracy accuracy is : 0.5508
+Epoch 20, CIFAR-10 Batch 1:  batch loss is :  0.163542
+batch_accuracy accuracy is : 0.579
+Epoch 21, CIFAR-10 Batch 1:  batch loss is :  0.171183
+batch_accuracy accuracy is : 0.5622
+Epoch 22, CIFAR-10 Batch 1:  batch loss is :  0.132356
+batch_accuracy accuracy is : 0.5728
+Epoch 23, CIFAR-10 Batch 1:  batch loss is :  0.10712
+batch_accuracy accuracy is : 0.5704
+Epoch 24, CIFAR-10 Batch 1:  batch loss is :  0.101802
+batch_accuracy accuracy is : 0.5618
+Epoch 25, CIFAR-10 Batch 1:  batch loss is :  0.108635
+batch_accuracy accuracy is : 0.5678
+Epoch 26, CIFAR-10 Batch 1:  batch loss is :  0.112882
+batch_accuracy accuracy is : 0.5596
+Epoch 27, CIFAR-10 Batch 1:  batch loss is :  0.0682271
+batch_accuracy accuracy is : 0.5884
+Epoch 28, CIFAR-10 Batch 1:  batch loss is :  0.0640762
+batch_accuracy accuracy is : 0.5856
+Epoch 29, CIFAR-10 Batch 1:  batch loss is :  0.0570013
+batch_accuracy accuracy is : 0.5866
+Epoch 30, CIFAR-10 Batch 1:  batch loss is :  0.0763902
+batch_accuracy accuracy is : 0.583
+Epoch 31, CIFAR-10 Batch 1:  batch loss is :  0.0564564
+batch_accuracy accuracy is : 0.571
+Epoch 32, CIFAR-10 Batch 1:  batch loss is :  0.0532774
+batch_accuracy accuracy is : 0.588
+Epoch 33, CIFAR-10 Batch 1:  batch loss is :  0.0437081
+batch_accuracy accuracy is : 0.5838
+Epoch 34, CIFAR-10 Batch 1:  batch loss is :  0.0328673
+batch_accuracy accuracy is : 0.5664
+Epoch 35, CIFAR-10 Batch 1:  batch loss is :  0.0359792
+batch_accuracy accuracy is : 0.5884
+Epoch 36, CIFAR-10 Batch 1:  batch loss is :  0.0376761
+batch_accuracy accuracy is : 0.5898
+Epoch 37, CIFAR-10 Batch 1:  batch loss is :  0.0326239
+batch_accuracy accuracy is : 0.5694
+Epoch 38, CIFAR-10 Batch 1:  batch loss is :  0.0366496
+batch_accuracy accuracy is : 0.589
+Epoch 39, CIFAR-10 Batch 1:  batch loss is :  0.0224001
+batch_accuracy accuracy is : 0.582
+Epoch 40, CIFAR-10 Batch 1:  batch loss is :  0.0224597
+batch_accuracy accuracy is : 0.5896
+Epoch 41, CIFAR-10 Batch 1:  batch loss is :  0.0199231
+batch_accuracy accuracy is : 0.5834
+Epoch 42, CIFAR-10 Batch 1:  batch loss is :  0.0231632
+batch_accuracy accuracy is : 0.5878
+Epoch 43, CIFAR-10 Batch 1:  batch loss is :  0.0191447
+batch_accuracy accuracy is : 0.5932
+Epoch 44, CIFAR-10 Batch 1:  batch loss is :  0.0206479
+batch_accuracy accuracy is : 0.5776
+Epoch 45, CIFAR-10 Batch 1:  batch loss is :  0.0263408
+batch_accuracy accuracy is : 0.5718
+Epoch 46, CIFAR-10 Batch 1:  batch loss is :  0.0125673
+batch_accuracy accuracy is : 0.5802
+Epoch 47, CIFAR-10 Batch 1:  batch loss is :  0.0197601
+batch_accuracy accuracy is : 0.5828
+Epoch 48, CIFAR-10 Batch 1:  batch loss is :  0.0156334
+batch_accuracy accuracy is : 0.5908
+Epoch 49, CIFAR-10 Batch 1:  batch loss is :  0.011323
+batch_accuracy accuracy is : 0.5846
+Epoch 50, CIFAR-10 Batch 1:  batch loss is :  0.0132246
+batch_accuracy accuracy is : 0.5784
+</code></pre>
+</div>
+
+<h3 id="fully-train-the-model">Fully Train the Model</h3>
+<p>Now that we got a good accuracy with a single CIFAR-10 batch, we train the model again by using all five batches. This takes quite a lot of time. At the end the model is saved on the hard disk in order to be reused in the future.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">save_model_path</span> <span class="o">=</span> <span class="s">'./image_classification'</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'Training...'</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+    <span class="c"># Initializing the variables</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+    
+    <span class="c"># Training cycle</span>
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+        <span class="c"># Loop over all batches</span>
+        <span class="n">n_batches</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="k">for</span> <span class="n">batch_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_batches</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">batch_features</span><span class="p">,</span> <span class="n">batch_labels</span> <span class="ow">in</span> \
+                <span class="n">load_preprocess_training_batch</span><span class="p">(</span><span class="n">batch_i</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span>\
+                    <span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="n">batch_features</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">batch_labels</span><span class="p">,</span> <span class="n">keep_prob</span><span class="p">:</span><span class="n">keep_probability</span><span class="p">})</span>
+            
+    <span class="c"># Save Model</span>
+    <span class="n">saver</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Saver</span><span class="p">()</span>
+    <span class="n">save_path</span> <span class="o">=</span> <span class="n">saver</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">save_model_path</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Training...
+</code></pre>
+</div>
+
+<h2 id="test-model">Test Model</h2>
+<p>At the end we load the model from the disk and use it to test against the test dataset. This will produce our final accuracy estimation.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="o">%</span><span class="n">config</span> <span class="n">InlineBackend</span><span class="o">.</span><span class="n">figure_format</span> <span class="o">=</span> <span class="s">'retina'</span>
+
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelBinarizer</span>
+
+<span class="k">def</span> <span class="nf">display_image_predictions</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">):</span>
+    <span class="n">label_binarizer</span> <span class="o">=</span> <span class="n">LabelBinarizer</span><span class="p">()</span>
+    <span class="n">label_binarizer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">LABELS_COUNT</span><span class="p">))</span>
+    <span class="n">label_ids</span> <span class="o">=</span> <span class="n">label_binarizer</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axies</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s">'Softmax Predictions'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.1</span><span class="p">)</span>
+
+    <span class="n">n_predictions</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">margin</span> <span class="o">=</span> <span class="mf">0.05</span>
+    <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_predictions</span><span class="p">)</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">margin</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_predictions</span>
+
+    <span class="k">for</span> <span class="n">image_i</span><span class="p">,</span> <span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">label_id</span><span class="p">,</span> <span class="n">pred_indicies</span><span class="p">,</span> <span class="n">pred_values</span><span class="p">)</span> \
+        <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">label_ids</span><span class="p">,</span> <span class="n">predictions</span><span class="o">.</span><span class="n">indices</span><span class="p">,</span> <span class="n">predictions</span><span class="o">.</span><span class="n">values</span><span class="p">)):</span>
+        <span class="n">pred_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">LABEL_NAMES</span><span class="p">[</span><span class="n">pred_i</span><span class="p">]</span> <span class="k">for</span> <span class="n">pred_i</span> <span class="ow">in</span> <span class="n">pred_indicies</span><span class="p">]</span>
+        <span class="n">correct_name</span> <span class="o">=</span> <span class="n">LABEL_NAMES</span><span class="p">[</span><span class="n">label_id</span><span class="p">]</span>
+
+        <span class="n">axies</span><span class="p">[</span><span class="n">image_i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+        <span class="n">axies</span><span class="p">[</span><span class="n">image_i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">correct_name</span><span class="p">)</span>
+        <span class="n">axies</span><span class="p">[</span><span class="n">image_i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+
+        <span class="n">axies</span><span class="p">[</span><span class="n">image_i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">ind</span> <span class="o">+</span> <span class="n">margin</span><span class="p">,</span> <span class="n">pred_values</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">width</span><span class="p">)</span>
+        <span class="n">axies</span><span class="p">[</span><span class="n">image_i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">ind</span> <span class="o">+</span> <span class="n">margin</span><span class="p">)</span>
+        <span class="n">axies</span><span class="p">[</span><span class="n">image_i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">pred_names</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">axies</span><span class="p">[</span><span class="n">image_i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+
+<span class="n">save_model_path</span> <span class="o">=</span> <span class="s">'./image_classification'</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">top_n_predictions</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="k">def</span> <span class="nf">test_model</span><span class="p">():</span>
+    <span class="s">"""
+    Test the saved model against the test dataset
+    """</span>
+
+    <span class="n">test_features</span><span class="p">,</span> <span class="n">test_labels</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">'preprocess_training.p'</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">'rb'</span><span class="p">))</span>
+    <span class="n">loaded_graph</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+
+    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">loaded_graph</span><span class="p">)</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+        <span class="c"># Load model</span>
+        <span class="n">loader</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">import_meta_graph</span><span class="p">(</span><span class="n">save_model_path</span> <span class="o">+</span> <span class="s">'.meta'</span><span class="p">)</span>
+        <span class="n">loader</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">save_model_path</span><span class="p">)</span>
+
+        <span class="c"># Get Tensors from loaded model</span>
+        <span class="n">loaded_x</span> <span class="o">=</span> <span class="n">loaded_graph</span><span class="o">.</span><span class="n">get_tensor_by_name</span><span class="p">(</span><span class="s">'x:0'</span><span class="p">)</span>
+        <span class="n">loaded_y</span> <span class="o">=</span> <span class="n">loaded_graph</span><span class="o">.</span><span class="n">get_tensor_by_name</span><span class="p">(</span><span class="s">'y:0'</span><span class="p">)</span>
+        <span class="n">loaded_keep_prob</span> <span class="o">=</span> <span class="n">loaded_graph</span><span class="o">.</span><span class="n">get_tensor_by_name</span><span class="p">(</span><span class="s">'keep_prob:0'</span><span class="p">)</span>
+        <span class="n">loaded_logits</span> <span class="o">=</span> <span class="n">loaded_graph</span><span class="o">.</span><span class="n">get_tensor_by_name</span><span class="p">(</span><span class="s">'logits:0'</span><span class="p">)</span>
+        <span class="n">loaded_acc</span> <span class="o">=</span> <span class="n">loaded_graph</span><span class="o">.</span><span class="n">get_tensor_by_name</span><span class="p">(</span><span class="s">'accuracy:0'</span><span class="p">)</span>
+        
+        <span class="c"># Get accuracy in batches for memory limitations</span>
+        <span class="n">test_batch_acc_total</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">test_batch_count</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="k">for</span> <span class="n">train_feature_batch</span><span class="p">,</span> <span class="n">train_label_batch</span> <span class="ow">in</span> \
+            <span class="n">batch_features_labels</span><span class="p">(</span><span class="n">test_features</span><span class="p">,</span> <span class="n">test_labels</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+            <span class="n">test_batch_acc_total</span> <span class="o">+=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                <span class="n">loaded_acc</span><span class="p">,</span>
+                <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">loaded_x</span><span class="p">:</span> <span class="n">train_feature_batch</span><span class="p">,</span> \
+                           <span class="n">loaded_y</span><span class="p">:</span> <span class="n">train_label_batch</span><span class="p">,</span> <span class="n">loaded_keep_prob</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">})</span>
+            <span class="n">test_batch_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">print</span><span class="p">(</span><span class="s">'Testing Accuracy: {}</span><span class="se">\n</span><span class="s">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_batch_acc_total</span><span class="o">/</span><span class="n">test_batch_count</span><span class="p">))</span>
+
+        <span class="c"># Print Random Samples</span>
+        <span class="n">random_test_features</span><span class="p">,</span> <span class="n">random_test_labels</span> <span class="o">=</span> \
+            <span class="nb">tuple</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">test_features</span><span class="p">,</span> <span class="n">test_labels</span><span class="p">)),</span> <span class="n">n_samples</span><span class="p">)))</span>
+        
+        <span class="n">random_test_predictions</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">top_k</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">loaded_logits</span><span class="p">),</span> <span class="n">top_n_predictions</span><span class="p">),</span>
+            <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">loaded_x</span><span class="p">:</span> <span class="n">random_test_features</span><span class="p">,</span> \
+                       <span class="n">loaded_y</span><span class="p">:</span> <span class="n">random_test_labels</span><span class="p">,</span> <span class="n">loaded_keep_prob</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">})</span>
+        <span class="n">display_image_predictions</span><span class="p">(</span><span class="n">random_test_features</span><span class="p">,</span> \
+                                  <span class="n">random_test_labels</span><span class="p">,</span> <span class="n">random_test_predictions</span><span class="p">)</span>
+
+
+<span class="n">test_model</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Testing Accuracy: 0.6734375
+</code></pre>
+</div>
+
+<p><img src="/assets/images/output_32_1.png" alt="png" /></p>
+
+<h2 id="outlook">Outlook</h2>
+<p>This post gives a general idea how one could build and train a confolutional neural network. Nonetheless, more than a few details were not discussed. So, deer reader, as always feel free to contant me and let me know if you have any questions. The whole Python Notebook can be found here: <a href="https://github.com/n-kostadinov/cnn-image-classification-cifar-10-from-scratch/blob/master/cnn-image-classification-cifar-10-from-scratch.ipynb">cnn-image-classification-cifar-10-from-scratch.ipynb</a>.</p>
+</div>
+    <div class="share-page">
+    <span style="float: left;">Share this on &rarr;&nbsp;&nbsp;</span>
+    
+    <!-- Twitter -->
+     <a href="https://twitter.com/share" class="twitter-share-button" data-via="NKKostadinov">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+    <!-- Google + -->
+    <div class="g-plus" data-action="share" data-annotation="bubble"></div>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <!-- Facebook -->
+    <div class="fb-share-button" data-href="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
+</div>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+</div>
+
+
+
+    
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+
+    
+    
+        
+            
+                
+                <div class="panel-body">
+                <h4>Related Posts</h4>
+                <ul>
+                
+                <li class="relatedPost">
+                    <a href="http://localhost:4000/python/artificial%20intelligence/depth%20search/sudoku/diagonal%20sudoku/naked%20twins/2017/02/27/cracking-the-worlds-hardest-sudoku.html">Cracking the world hardest sudoku</a>
+                    
+                        (Categories: <a href="/category/python">python</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/depth search">depth search</a>, <a href="/category/sudoku">sudoku</a>, <a href="/category/diagonal sudoku">diagonal sudoku</a>, <a href="/category/naked twins">naked twins</a>)
+                    
+                </li>
+                
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+
+    
+    
+        
+            
+                
+                <li class="relatedPost">
+                    <a href="http://localhost:4000/python/machine%20learning/deep%20learning/neural%20networks/sigmoid/hidden%20layer/activation%20function/tensorflow/2017/01/29/implementing-neural-network-from-scratch.html">Implementing a neural network from scratch</a>
+                    
+                        (Categories: <a href="/category/python">python</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/deep learning">deep learning</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/sigmoid">sigmoid</a>, <a href="/category/hidden layer">hidden layer</a>, <a href="/category/activation function">activation function</a>, <a href="/category/tensorflow">tensorflow</a>)
+                    
+                </li>
+                
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+
+    
+    
+        
+            
+                
+                <li class="relatedPost">
+                    <a href="http://localhost:4000/python/machine%20learning/reinforcement%20learning/xgboost/cart%20pole/open%20gym/openai/artificial%20intelligence/2016/11/29/solving-cartpole-xgboost.html">Solving CartPole-v0 with xgboost</a>
+                    
+                        (Categories: <a href="/category/python">python</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/reinforcement learning">reinforcement learning</a>, <a href="/category/xgboost">xgboost</a>, <a href="/category/cart pole">cart pole</a>, <a href="/category/open gym">open gym</a>, <a href="/category/openai">openai</a>, <a href="/category/artificial intelligence">artificial intelligence</a>)
+                    
+                </li>
+                
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+
+
+    </ul>
+    </div>
+
+
+<div class="PageNavigation">
+  
+    <a class="prev" href="/python/artificial%20intelligence/depth%20search/sudoku/diagonal%20sudoku/naked%20twins/2017/02/27/cracking-the-worlds-hardest-sudoku.html">&laquo; Cracking the world hardest sudoku</a>
+  
+  
+</div>
+
+
+<div class="disqus-comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* <![CDATA[ */
+
+        var disqus_shortname = "machinememos-com";
+        var disqus_identifier = "http://localhost:4000_Convolutional neural network for image classification from scratch";
+        var disqus_title = "Convolutional neural network for image classification from scratch";
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    /* ]]> */
+    </script>
+</div>
+
+                <footer>
+                    &copy; Nikolay Kostadinov
+                     
+                    - <a href="https://github.com/n-kostadinov">https://github.com/n-kostadinov</a> - Powered by Jekyll.
+                    
+                </footer>
+            </div><!-- end /.col-sm-8 -->
+	    <div class="col-sm-2">
+		<div class="fixed-condition">
+		 <a href="/"><img id="about" src="/static/img/logo.png" height="760px" width="380px"/></a>
+		</div>
+	    </div>
+	 </div>
+        </div><!-- end /.container -->
+
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+        <script src="/static/js/super-search.js"></script>
+        <script src="/static/js/thickbox-compressed.js"></script>
+        <script src="/static/js/projects.js"></script>
+    </body>
+</html>
