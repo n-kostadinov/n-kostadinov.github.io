@@ -11,7 +11,9 @@ In this project we will build a convolutional neural network (CNN) to classify i
 # Image Dataset
 
 The [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html) consists of 60000 32x32 colour images in 10 categories - airplanes, dogs, cats, and other objects. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class. Here are the classes in the dataset, as well as 10 random images from each:
-<img src="files/dataset_overview.jpg">
+
+![png](/assets/images/dataset_overview.jpg)
+
 The classes are completely mutually exclusive. There is no overlap between automobiles and trucks. "Automobile" includes sedans, SUVs, things of that sort. "Truck" includes only big trucks. Neither includes pickup trucks.
 
 In the following we will preprocess the images, then train a convolutional neural network on all the samples. The images need to be normalized and the labels need to be one-hot encoded.  Next we will build a convolutional, max pooling, dropout, and fully connected layers. At the end, we will train the network ang get to see it's predictions on the sample images.

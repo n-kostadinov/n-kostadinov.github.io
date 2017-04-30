@@ -1,12 +1,44 @@
 /**
+ * Fonts
+ */
+@font-face {
+	font-family: 'Small Font';
+	src: url('../../assets/fonts/small_font/small_font.eot');
+	src: url('../../assets/fonts/small_font/small_font.eot?#iefix') format('embedded-opentype'),
+		url('../../assets/fonts/small_font/small_font.woff') format('woff'),
+		url('../../assets/fonts/small_font/small_font.ttf') format('truetype'),
+		url('../../assets/fonts/small_font/small_font.svg#small_font') format('svg');
+	font-weight: 200;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Big Font';
+	src: url('../../assets/fonts/big_font/big_font.eot');
+	src: url('../../assets/fonts/big_font/big_font.eot?#iefix') format('embedded-opentype'),
+		url('../../assets/fonts/big_font/big_font.woff') format('woff'),
+		url('../../assets/fonts/big_font/big_font.ttf') format('truetype'),
+		url('../../assets/fonts/big_font/big_font.svg#big_font') format('svg');
+	font-weight: 200;
+	font-style: normal;
+}
+
+#about {
+text-align: left;
+}
+
+
+/**
  * Master styling
  */
 body {
-    font-family: "Roboto Condensed", Arial, sans-serif;
+    font-family: "Small Font", Arial, sans-serif;
+    text-align: justify;
+    text-justify: inter-word;
     background-color: #fff;
     font-size: 16px;
     line-height: 1.5em;
-    color: #666;
+    color: #000;
     font-weight: 300;
 }
 hr {
@@ -27,31 +59,37 @@ span.time, span.categories {
 }
 
 h1 {
+    font-family: "Big Font", Arial, sans-serif;
     font-weight: normal;
-    color: #696969;
+    color: #3B83BD;
     margin-bottom: 10px;
     font-size: 25px;
+    text-align: left;
 }
 
 h2 {
+    font-family: "Big Font", Arial, sans-serif;
     font-weight: normal;
     margin-bottom: 5px;
-    color: #666666;
+    color: #3B83BD;
+    text-align: left;
 }
         
 h3 {
+    font-family: "Big Font", Arial, sans-serif;
     font-weight: normal;
     margin-bottom: 5px;
-    color: #666666;
+    color: #3B83BD;
+    text-align: left;
 }
 
 a, a:link, a:active {
     text-decoration: none;
-    color: #8C8C8C;
+    color: #2271B3;
 }
 
 a:hover {
-    color: #B3B3B3;
+    color: #2851ae;
     text-decoration: underline;
 }
 

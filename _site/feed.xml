@@ -5,8 +5,8 @@
     <description>description</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 24 Apr 2017 11:07:18 -0700</pubDate>
-    <lastBuildDate>Mon, 24 Apr 2017 11:07:18 -0700</lastBuildDate>
+    <pubDate>Sun, 30 Apr 2017 10:45:30 -0700</pubDate>
+    <lastBuildDate>Sun, 30 Apr 2017 10:45:30 -0700</lastBuildDate>
     <generator>Jekyll v3.3.1</generator>
     
       <item>
@@ -17,9 +17,11 @@
 
 &lt;h1 id=&quot;image-dataset&quot;&gt;Image Dataset&lt;/h1&gt;
 
-&lt;p&gt;The &lt;a href=&quot;https://www.cs.toronto.edu/~kriz/cifar.html&quot;&gt;CIFAR-10 dataset&lt;/a&gt; consists of 60000 32x32 colour images in 10 categories - airplanes, dogs, cats, and other objects. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class. Here are the classes in the dataset, as well as 10 random images from each:
-&lt;img src=&quot;files/dataset_overview.jpg&quot; /&gt;
-The classes are completely mutually exclusive. There is no overlap between automobiles and trucks. “Automobile” includes sedans, SUVs, things of that sort. “Truck” includes only big trucks. Neither includes pickup trucks.&lt;/p&gt;
+&lt;p&gt;The &lt;a href=&quot;https://www.cs.toronto.edu/~kriz/cifar.html&quot;&gt;CIFAR-10 dataset&lt;/a&gt; consists of 60000 32x32 colour images in 10 categories - airplanes, dogs, cats, and other objects. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class. Here are the classes in the dataset, as well as 10 random images from each:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/dataset_overview.jpg&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The classes are completely mutually exclusive. There is no overlap between automobiles and trucks. “Automobile” includes sedans, SUVs, things of that sort. “Truck” includes only big trucks. Neither includes pickup trucks.&lt;/p&gt;
 
 &lt;p&gt;In the following we will preprocess the images, then train a convolutional neural network on all the samples. The images need to be normalized and the labels need to be one-hot encoded.  Next we will build a convolutional, max pooling, dropout, and fully connected layers. At the end, we will train the network ang get to see it’s predictions on the sample images.&lt;/p&gt;
 
