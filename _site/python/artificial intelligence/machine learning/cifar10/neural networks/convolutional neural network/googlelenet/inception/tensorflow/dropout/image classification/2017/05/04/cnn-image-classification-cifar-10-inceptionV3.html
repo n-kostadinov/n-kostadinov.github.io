@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="shortcut icon" href="/static/img/favicon.ico" />
+        <title>Convolutional neural network for image classification from scratch - MACHINE MEMOS</title>
+        <meta name="author" content="Nikolay Kostadinov" />
+        <meta name="description" content="Convolutional neural network for image classification from scratch" />
+        <meta name="keywords" content="Convolutional neural network for image classification from scratch, MACHINE MEMOS, python, artificial intelligence, machine learning, cifar10, neural networks, convolutional neural network, GoogleLeNet, Inception, tensorflow, dropout, image classification" />
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
+
+        <meta content="" property="fb:app_id">
+        <meta content="MACHINE MEMOS" property="og:site_name">
+        
+          <meta content="Convolutional neural network for image classification from scratch" property="og:title">
+        
+        
+          <meta content="article" property="og:type">
+        
+        
+          <meta content="description" property="og:description">
+        
+        
+          <meta content="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html" property="og:url">
+        
+        
+          <meta content="2017-05-04T00:00:00-07:00" property="article:published_time">
+          <meta content="http://localhost:4000/about/" property="article:author">
+        
+        
+          <meta content="http://localhost:4000/static/img/logo-high-resolution.png" property="og:image">
+        
+        
+          
+          <meta content="python" property="article:section">
+          
+        
+        
+          
+        
+
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@NKKostadinov">
+        <meta name="twitter:creator" content="@NKKostadinov">
+        
+          <meta name="twitter:title" content="Convolutional neural network for image classification from scratch">
+        
+        
+          <meta name="twitter:url" content="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">
+        
+        
+          <meta name="twitter:description" content="description">
+        
+        
+
+        <!-- Font awesome icons -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/static/css/syntax.css">
+
+        <!-- Bootstrap core CSS -->
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Fonts -->
+        <link href="//fonts.googleapis.com/css?family=Roboto+Condensed:400,300italic,300,400italic,700&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+        <!-- Custom CSS -->        
+        <link rel="stylesheet" href="/static/css/super-search.css">
+        <link rel="stylesheet" href="/static/css/thickbox.css">
+        <link rel="stylesheet" href="/static/css/projects.css">
+        <link rel="stylesheet" href="/static/css/main.css">
+
+        <!-- Google Analytics -->2
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+          
+          ga('create', 'UA-26182347-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+    </head>
+
+    <body>
+	
+        <div class="container-fluid" style="padding-left: 190px; padding-right: 270px;">
+	 <div class="row justify-content-md-center">
+            <div class="col-sm-3">
+              <div class="fixed-condition" >
+                <h1 class="author-name">Nikolay Kostadinov</h1>
+                
+                <div id="about">
+                    I am freelance developer passionate about machine learning and AI.
+                </div>
+                
+
+                <div class="social">
+                    <ul>
+                        
+                            <li><a href="https://twitter.com/NKKostadinov" target="_blank"><i class="fa fa-twitter"></i></a></li>
+                        
+                            <li><a href="https://www.linkedin.com/in/nikolay-kostadinov-27a15975" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+                        
+                    </ul>
+                </div>
+
+                <div class="search" id="js-search">
+                  <input type="text" placeholder="(sitemap)~$ type to search" class="search__input form-control" id="js-search__input">
+                  <ul class="search__results" id="js-search__results"></ul>
+                </div>
+                <hr />
+
+                <strong>Navigation</strong><br />
+                    &nbsp;&raquo; <a href="/">Home</a> <br />
+                
+                    &nbsp;&raquo; <a class="about" href="/about/">About Me</a><br />
+                
+                    &nbsp;&raquo; <a class="about" href="https://github.com/n-kostadinov">Github</a><br />
+                
+              </div><!-- end /.fixed-condition -->
+            </div>
+
+            <div class="col-sm-7">
+                <h1>Convolutional neural network for image classification from scratch</h1>
+<span class="time">04 May 2017</span>
+
+<span class="categories">
+    &raquo; <a href="/category/python">python</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/cifar10">cifar10</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/convolutional neural network">convolutional neural network</a>, <a href="/category/GoogleLeNet">GoogleLeNet</a>, <a href="/category/Inception">Inception</a>, <a href="/category/tensorflow">tensorflow</a>, <a href="/category/dropout">dropout</a>, <a href="/category/image classification">image classification</a>
+</span>
+
+
+<div class="content">
+    <div class="post"><h1 id="image-classification-with-finetuned-googlelenet">Image Classification with finetuned GoogleLeNet</h1>
+
+<p>In my previous post <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a> I built a small convolutional neural network (CNN) to classify images from the <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR-10 dataset</a>. My goal was to demonstrate how easy one can construct a neural network with descent accuracy (around 67%). However, for many real word problems building CNNs from scratch might not be practical. For instance, in a recent <a href="http://kaggle.com/">kaggle</a> challenge called <a href="https://www.kaggle.com/c/dogs-vs-cats">Dog vs Cat</a> the competitors were asked to correctly classify images of dogs and cats. In an insightful <a href="http://blog.kaggle.com/2017/04/03/dogs-vs-cats-redux-playground-competition-winners-interview-bojan-tunguz/">interview</a> the winner of that challenge explained that he didn’t rely solely on a CNN that he built from scratch. Instead he got his hands on multiple models already trained with large datasets and applied some “finetuning” in order to make these fit for the specific goal of classifying cats and dogs. So how does this work? The idea is simple. There are hundreds of models already trained on a specific dataset. The largest repository I know is the <a href="https://github.com/BVLC/caffe/wiki/Model-Zoo">Model Zoo Github Repo</a>. There are also the models from the <a href="https://github.com/tensorflow/models/tree/master/slim">Tensorflow Slim Project</a>. So the goal is to select a model that is already trained on a dataset that is similar to the one you are interested in. After selecting the model one has to apply some “finetuning” on it. Interested? Well continue reading, as this is exactly what I am going to do in this post.</p>
+
+<h1 id="cifar-10-image-dataset">Cifar-10 Image Dataset</h1>
+
+<p>If you are already familiar with my previous post <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a>, you might want to skip the next sections and go directly to <strong>Converting datasets to .tfrecord</strong>.</p>
+
+<p>The <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR-10 dataset</a> consists of 60000 32x32 colour images in 10 categories - airplanes, dogs, cats, and other objects. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class. Here are the classes in the dataset, as well as 10 random images from each:
+<img src="/assets/images/dataset_overview.jpg" alt="png" />
+The classes are completely mutually exclusive. There is no overlap between automobiles and trucks. “Automobile” includes sedans, SUVs, things of that sort. “Truck” includes only big trucks. Neither includes pickup trucks.</p>
+
+<h1 id="download-the-dataset">Download the dataset</h1>
+<p>First, few lines of code will download the <a href="https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz">CIFAR-10 dataset for python</a>.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># DOWNLOAD DATASET </span>
+<span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlretrieve</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">tarfile</span>
+
+<span class="k">class</span> <span class="nc">DLProgress</span><span class="p">(</span><span class="n">tqdm</span><span class="p">):</span>
+    <span class="n">last_block</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">block_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">total_size</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="n">total_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="n">block_num</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_block</span><span class="p">)</span> <span class="o">*</span> <span class="n">block_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_block</span> <span class="o">=</span> <span class="n">block_num</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s">'cifar-10-python.tar.gz'</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">DLProgress</span><span class="p">(</span><span class="n">unit</span><span class="o">=</span><span class="s">'B'</span><span class="p">,</span> <span class="n">unit_scale</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">miniters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s">'CIFAR-10 Dataset'</span><span class="p">)</span> <span class="k">as</span> <span class="n">pbar</span><span class="p">:</span>
+        <span class="n">urlretrieve</span><span class="p">(</span>
+            <span class="s">'https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz'</span><span class="p">,</span>
+            <span class="s">'cifar-10-python.tar.gz'</span><span class="p">,</span>
+            <span class="n">pbar</span><span class="o">.</span><span class="n">hook</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s">'cifar-10-batches-py'</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="s">'cifar-10-python.tar.gz'</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar</span><span class="p">:</span>
+        <span class="n">tar</span><span class="o">.</span><span class="n">extractall</span><span class="p">()</span>
+        <span class="n">tar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<h1 id="data-overview">Data Overview</h1>
+<p>The dataset is broken into batches - this is especially useful if one is to train the network on a laptop as it will probably prevent it from running out of memory. I only had 12 GB on mine and a single batch used around 3.2 GB - it wouldn’t be possible to load everything at once. Nevertheless, the CIFAR-10 dataset consists of 5 batches, named <code class="highlighter-rouge">data_batch_1</code>, <code class="highlighter-rouge">data_batch_2</code>, etc.. Each batch contains the labels and images that are one of the following:</p>
+
+<ul>
+  <li>airplane</li>
+  <li>automobile</li>
+  <li>bird</li>
+  <li>cat</li>
+  <li>deer</li>
+  <li>dog</li>
+  <li>frog</li>
+  <li>horse</li>
+  <li>ship</li>
+  <li>truck</li>
+</ul>
+
+<p>Understanding a dataset is part of making predictions on the data. Following functions can be used to view different images by changing the <code class="highlighter-rouge">batch_id</code> and <code class="highlighter-rouge">sample_id</code>. The <code class="highlighter-rouge">batch_id</code> is the id for a batch (1-5). The <code class="highlighter-rouge">sample_id</code> is the id for a image and label pair in the batch.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="c"># The names of the classes in the dataset.</span>
+<span class="n">CLASS_NAMES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">'airplane'</span><span class="p">,</span>
+    <span class="s">'automobile'</span><span class="p">,</span>
+    <span class="s">'bird'</span><span class="p">,</span>
+    <span class="s">'cat'</span><span class="p">,</span>
+    <span class="s">'deer'</span><span class="p">,</span>
+    <span class="s">'dog'</span><span class="p">,</span>
+    <span class="s">'frog'</span><span class="p">,</span>
+    <span class="s">'horse'</span><span class="p">,</span>
+    <span class="s">'ship'</span><span class="p">,</span>
+    <span class="s">'truck'</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">load_cfar10_batch</span><span class="p">(</span><span class="n">batch_id</span><span class="p">):</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'cifar-10-batches-py'</span><span class="p">,</span><span class="s">'data_batch_'</span> 
+              <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">batch_id</span><span class="p">)),</span> <span class="n">mode</span><span class="o">=</span><span class="s">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+        <span class="n">batch</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s">'latin1'</span><span class="p">)</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s">'data'</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s">'data'</span><span class="p">]),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s">'labels'</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">features</span><span class="p">,</span> <span class="n">labels</span>
+
+
+<span class="k">def</span> <span class="nf">display_stats</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">sample_id</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">sample_id</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'{} samples in batch {}.  {} is out of range.'</span>
+              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">),</span> <span class="n">batch_id</span><span class="p">,</span> <span class="n">sample_id</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">Stats of batch {}:'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">batch_id</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Samples: {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Label Counts: {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="bp">True</span><span class="p">)))))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'First 20 Labels: {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">labels</span><span class="p">[:</span><span class="mi">20</span><span class="p">]))</span>
+
+    <span class="n">sample_image</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="n">sample_id</span><span class="p">]</span>
+    <span class="n">sample_label</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">sample_id</span><span class="p">]</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">Example of Image {}:'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sample_id</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Image - Min Value: {} Max Value: {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sample_image</span><span class="o">.</span><span class="nb">min</span><span class="p">(),</span> <span class="n">sample_image</span><span class="o">.</span><span class="nb">max</span><span class="p">()))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Image - Shape: {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sample_image</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Label - Label Id: {} Name: {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sample_label</span><span class="p">,</span> <span class="n">CLASS_NAMES</span><span class="p">[</span><span class="n">sample_label</span><span class="p">]))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s">'off'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sample_image</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Let’s check the first couple of images of each batch. The lines below can be easily modified to show an arbitary image from any batch.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="o">%</span><span class="n">config</span> <span class="n">InlineBackend</span><span class="o">.</span><span class="n">figure_format</span> <span class="o">=</span> <span class="s">'retina'</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="k">for</span> <span class="n">batch_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">):</span>
+    <span class="n">features</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">load_cfar10_batch</span><span class="p">(</span><span class="n">batch_id</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">image_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">display_stats</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">image_id</span><span class="p">)</span>
+
+<span class="k">del</span> <span class="n">features</span><span class="p">,</span> <span class="n">labels</span> <span class="c"># free memory  </span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 1:
+Samples: 10000
+Label Counts: {0: 1005, 1: 974, 2: 1032, 3: 1016, 4: 999, 5: 937, 6: 1030, 7: 1001, 8: 1025, 9: 981}
+First 20 Labels: [6, 9, 9, 4, 1, 1, 2, 7, 8, 3, 4, 7, 7, 2, 9, 9, 9, 3, 2, 6]
+
+Example of Image 0:
+Image - Min Value: 0 Max Value: 255
+Image - Shape: (32, 32, 3)
+Label - Label Id: 6 Name: frog
+</code></pre>
+</div>
+
+<p><img src="assets/images/output_7_1.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 1:
+Samples: 10000
+Label Counts: {0: 1005, 1: 974, 2: 1032, 3: 1016, 4: 999, 5: 937, 6: 1030, 7: 1001, 8: 1025, 9: 981}
+First 20 Labels: [6, 9, 9, 4, 1, 1, 2, 7, 8, 3, 4, 7, 7, 2, 9, 9, 9, 3, 2, 6]
+
+Example of Image 1:
+Image - Min Value: 5 Max Value: 254
+Image - Shape: (32, 32, 3)
+Label - Label Id: 9 Name: truck
+</code></pre>
+</div>
+
+<p><img src="assets/images/output_7_3.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 2:
+Samples: 10000
+Label Counts: {0: 984, 1: 1007, 2: 1010, 3: 995, 4: 1010, 5: 988, 6: 1008, 7: 1026, 8: 987, 9: 985}
+First 20 Labels: [1, 6, 6, 8, 8, 3, 4, 6, 0, 6, 0, 3, 6, 6, 5, 4, 8, 3, 2, 6]
+
+Example of Image 0:
+Image - Min Value: 5 Max Value: 225
+Image - Shape: (32, 32, 3)
+Label - Label Id: 1 Name: automobile
+</code></pre>
+</div>
+
+<p><img src="assets/images/output_7_5.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 2:
+Samples: 10000
+Label Counts: {0: 984, 1: 1007, 2: 1010, 3: 995, 4: 1010, 5: 988, 6: 1008, 7: 1026, 8: 987, 9: 985}
+First 20 Labels: [1, 6, 6, 8, 8, 3, 4, 6, 0, 6, 0, 3, 6, 6, 5, 4, 8, 3, 2, 6]
+
+Example of Image 1:
+Image - Min Value: 2 Max Value: 247
+Image - Shape: (32, 32, 3)
+Label - Label Id: 6 Name: frog
+</code></pre>
+</div>
+
+<p><img src="assets/images/output_7_7.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 3:
+Samples: 10000
+Label Counts: {0: 994, 1: 1042, 2: 965, 3: 997, 4: 990, 5: 1029, 6: 978, 7: 1015, 8: 961, 9: 1029}
+First 20 Labels: [8, 5, 0, 6, 9, 2, 8, 3, 6, 2, 7, 4, 6, 9, 0, 0, 7, 3, 7, 2]
+
+Example of Image 0:
+Image - Min Value: 0 Max Value: 254
+Image - Shape: (32, 32, 3)
+Label - Label Id: 8 Name: ship
+</code></pre>
+</div>
+
+<p><img src="assets/images/output_7_9.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 3:
+Samples: 10000
+Label Counts: {0: 994, 1: 1042, 2: 965, 3: 997, 4: 990, 5: 1029, 6: 978, 7: 1015, 8: 961, 9: 1029}
+First 20 Labels: [8, 5, 0, 6, 9, 2, 8, 3, 6, 2, 7, 4, 6, 9, 0, 0, 7, 3, 7, 2]
+
+Example of Image 1:
+Image - Min Value: 15 Max Value: 249
+Image - Shape: (32, 32, 3)
+Label - Label Id: 5 Name: dog
+</code></pre>
+</div>
+
+<p><img src="assets/images/output_7_11.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 4:
+Samples: 10000
+Label Counts: {0: 1003, 1: 963, 2: 1041, 3: 976, 4: 1004, 5: 1021, 6: 1004, 7: 981, 8: 1024, 9: 983}
+First 20 Labels: [0, 6, 0, 2, 7, 2, 1, 2, 4, 1, 5, 6, 6, 3, 1, 3, 5, 5, 8, 1]
+
+Example of Image 0:
+Image - Min Value: 34 Max Value: 203
+Image - Shape: (32, 32, 3)
+Label - Label Id: 0 Name: airplane
+</code></pre>
+</div>
+
+<p><img src="assets/images/output_7_13.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 4:
+Samples: 10000
+Label Counts: {0: 1003, 1: 963, 2: 1041, 3: 976, 4: 1004, 5: 1021, 6: 1004, 7: 981, 8: 1024, 9: 983}
+First 20 Labels: [0, 6, 0, 2, 7, 2, 1, 2, 4, 1, 5, 6, 6, 3, 1, 3, 5, 5, 8, 1]
+
+Example of Image 1:
+Image - Min Value: 0 Max Value: 246
+Image - Shape: (32, 32, 3)
+Label - Label Id: 6 Name: frog
+</code></pre>
+</div>
+
+<p><img src="assets/images/output_7_15.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 5:
+Samples: 10000
+Label Counts: {0: 1014, 1: 1014, 2: 952, 3: 1016, 4: 997, 5: 1025, 6: 980, 7: 977, 8: 1003, 9: 1022}
+First 20 Labels: [1, 8, 5, 1, 5, 7, 4, 3, 8, 2, 7, 2, 0, 1, 5, 9, 6, 2, 0, 8]
+
+Example of Image 0:
+Image - Min Value: 2 Max Value: 255
+Image - Shape: (32, 32, 3)
+Label - Label Id: 1 Name: automobile
+</code></pre>
+</div>
+
+<p><img src="assets/images/output_7_17.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Stats of batch 5:
+Samples: 10000
+Label Counts: {0: 1014, 1: 1014, 2: 952, 3: 1016, 4: 997, 5: 1025, 6: 980, 7: 977, 8: 1003, 9: 1022}
+First 20 Labels: [1, 8, 5, 1, 5, 7, 4, 3, 8, 2, 7, 2, 0, 1, 5, 9, 6, 2, 0, 8]
+
+Example of Image 1:
+Image - Min Value: 1 Max Value: 244
+Image - Shape: (32, 32, 3)
+Label - Label Id: 8 Name: ship
+</code></pre>
+</div>
+
+<p><img src="assets/images/output_7_19.png" alt="png" /></p>
+
+<h1 id="converting-datasets-to-tfrecord">Converting datasets to .tfrecord</h1>
+<p>Next we convert the datasets to tfrecords. This would allow for the easier further processing by Tensorflow. While the neural network constructed in <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a> expected images with size 32x32, the CNN we are going to use here expects an input size of 299x299. Nevertheless, it is not necessary to convert all 60000 images to the target size of 299x299 as this would requre much more of your disk space. Converting the data to tfrecord would actually shrink the dataset size (lossless compression) and allow for the use of tensorflow’s preprocessing pipeline and a dynamic conversion to the desired target size of 299x299 at training time.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">dataset_utils</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+
+<span class="n">IMAGE_SIZE</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">RGB_CHANNELS</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="k">def</span> <span class="nf">add_to_tfrecord</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">tfrecord_writer</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s">'latin1'</span><span class="p">)</span>
+    
+    <span class="n">images</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">'data'</span><span class="p">]</span>
+    <span class="n">num_images</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">images</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">num_images</span><span class="p">,</span> <span class="n">RGB_CHANNELS</span><span class="p">,</span> <span class="n">IMAGE_SIZE</span><span class="p">,</span> <span class="n">IMAGE_SIZE</span><span class="p">))</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">'labels'</span><span class="p">]</span>
+
+    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+        <span class="n">image_placeholder</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">encoded_image</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">encode_png</span><span class="p">(</span><span class="n">image_placeholder</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="s">''</span><span class="p">)</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_images</span><span class="p">):</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">'</span><span class="se">\r</span><span class="s">&gt;&gt; Reading file [</span><span class="si">%</span><span class="s">s] image </span><span class="si">%</span><span class="s">d/</span><span class="si">%</span><span class="s">d'</span> <span class="o">%</span> \
+                    <span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">num_images</span><span class="p">))</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+                <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">images</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+
+                <span class="n">png_string</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">encoded_image</span><span class="p">,</span>\
+                         <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">image_placeholder</span><span class="p">:</span> <span class="n">image</span><span class="p">})</span>
+
+                <span class="n">example</span> <span class="o">=</span> <span class="n">dataset_utils</span><span class="o">.</span><span class="n">image_to_tfexample</span><span class="p">(</span>\
+                    <span class="n">png_string</span><span class="p">,</span> <span class="s">'png'</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">),</span> <span class="n">IMAGE_SIZE</span><span class="p">,</span> <span class="n">IMAGE_SIZE</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+                <span class="n">tfrecord_writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">example</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">num_images</span>
+
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s">'tfrecord'</span><span class="p">):</span>
+    <span class="c"># make the directory</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s">'tfrecord'</span><span class="p">)</span>
+    <span class="c"># write all 5 batches into single training tfrecord</span>
+    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">python_io</span><span class="o">.</span><span class="n">TFRecordWriter</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'tfrecord'</span><span class="p">,</span> <span class="s">'cifar-10-training-tfrecord'</span><span class="p">))</span> <span class="k">as</span> <span class="n">tfrecord_writer</span><span class="p">:</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="c"># Train batches are data_batch_1 ... data_batch_5</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'cifar-10-batches-py'</span><span class="p">,</span> <span class="s">'data_batch_</span><span class="si">%</span><span class="s">d'</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">add_to_tfrecord</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">tfrecord_writer</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+
+    <span class="c"># Next, process the testing data:</span>
+    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">python_io</span><span class="o">.</span><span class="n">TFRecordWriter</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'tfrecord'</span><span class="p">,</span> <span class="s">'cifar-10-test-tfrecord'</span><span class="p">))</span> <span class="k">as</span> <span class="n">tfrecord_writer</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'cifar-10-batches-py'</span><span class="p">,</span> <span class="s">'test_batch'</span><span class="p">)</span>
+        <span class="n">add_to_tfrecord</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">tfrecord_writer</span><span class="p">)</span>
+
+    <span class="c"># Finally, write the labels file:</span>
+    <span class="n">labels_to_class_names</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">CLASS_NAMES</span><span class="p">)),</span> <span class="n">CLASS_NAMES</span><span class="p">))</span>
+
+    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">gfile</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'tfrecord'</span><span class="p">,</span> <span class="s">'labels.txt'</span><span class="p">),</span> <span class="s">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels_to_class_names</span><span class="p">:</span>
+            <span class="n">class_name</span> <span class="o">=</span> <span class="n">labels_to_class_names</span><span class="p">[</span><span class="n">label</span><span class="p">]</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">'</span><span class="si">%</span><span class="s">d:</span><span class="si">%</span><span class="s">s</span><span class="se">\n</span><span class="s">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">class_name</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<h1 id="downloading-googlelenet">Downloading GoogleLeNet</h1>
+<p>As previously elaborated, selecting a proper network to “finetune” is very important. For this post I chose GoogleLeNet and more specifically the InceptionV3 convolutional neural network. An overview on other fully trained neural networks by Google is available in the <a href="https://github.com/tensorflow/models/tree/master/slim">Tensorflow Slim Project</a>. All four versions of Inception (V1, V2, V3, v4) were trained on part of the <a href="http://www.image-net.org/challenges/LSVRC/2012/">ImageNet</a> dataset, whick consists of more than 10,000,000 images and over 10,000 categories. The ten categories in Cifar-10 are covered in ImageNet to some extent. Hence, the Inception models should be capable of recognizing images from Cifar-10 after we apply some finetuning. For this post I chose InceptionV3. As a matter of fact, the latest Inception network - InceptionV4 deemed the best results when testet against <a href="http://www.image-net.org/challenges/LSVRC/2012/">ImageNet</a>. However, InceptionV4 is much larger than InceptionV3 und would require much more computational resources when finetuning. Therefore I selected the second best Inception i.e. InceptionV3. The remaining code could be very easily modified to use the other versions of Inception. Given you have time and several GPUs to your dispolsal, I would rather recommend InceptionV4. InceptionV1 is the smallest and very suitable for some proof-of-concept-like projects.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">inceptionv3_archive</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'model'</span><span class="p">,</span> <span class="s">'inception_v3_2016_08_28.tar.gz'</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">DLProgress</span><span class="p">(</span><span class="n">tqdm</span><span class="p">):</span>
+    <span class="n">last_block</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">block_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">total_size</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="n">total_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="n">block_num</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_block</span><span class="p">)</span> <span class="o">*</span> <span class="n">block_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_block</span> <span class="o">=</span> <span class="n">block_num</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s">'model'</span><span class="p">):</span>
+    <span class="c"># create directory to store model</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s">'model'</span><span class="p">)</span>
+    <span class="c"># download the model</span>
+    <span class="k">with</span> <span class="n">DLProgress</span><span class="p">(</span><span class="n">unit</span><span class="o">=</span><span class="s">'B'</span><span class="p">,</span> <span class="n">unit_scale</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">miniters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s">'InceptionV3'</span><span class="p">)</span> <span class="k">as</span> <span class="n">pbar</span><span class="p">:</span>
+        <span class="n">urlretrieve</span><span class="p">(</span>
+            <span class="c"># I hope this url stays there</span>
+            <span class="s">'http://download.tensorflow.org/models/inception_v3_2016_08_28.tar.gz'</span><span class="p">,</span>
+            <span class="n">inceptionv3_archive</span><span class="p">,</span>
+            <span class="n">pbar</span><span class="o">.</span><span class="n">hook</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="n">inceptionv3_archive</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar</span><span class="p">:</span>
+        <span class="n">tar</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="s">'model'</span><span class="p">)</span>
+        <span class="n">tar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<h3 id="finetuning-inceptionv3">Finetuning InceptionV3</h3>
+<p>First we define a couple of functions for loading a batch and loading the dataset.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">inception_preprocessing</span>
+
+<span class="k">def</span> <span class="nf">load_batch</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">is_training</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="n">data_provider</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">dataset_data_provider</span><span class="o">.</span><span class="n">DatasetDataProvider</span><span class="p">(</span>
+        <span class="n">dataset</span><span class="p">,</span> <span class="n">common_queue_capacity</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">common_queue_min</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">image_raw</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">data_provider</span><span class="o">.</span><span class="n">get</span><span class="p">([</span><span class="s">'image'</span><span class="p">,</span> <span class="s">'label'</span><span class="p">])</span>
+    
+    <span class="c"># Preprocess image for usage by Inception.</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">inception_preprocessing</span><span class="o">.</span><span class="n">preprocess_image</span><span class="p">(</span>
+        <span class="n">image_raw</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">is_training</span><span class="o">=</span><span class="n">is_training</span><span class="p">)</span>
+    
+    <span class="c"># Preprocess the image for display purposes.</span>
+    <span class="n">image_raw</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">image_raw</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">image_raw</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">resize_images</span><span class="p">(</span><span class="n">image_raw</span><span class="p">,</span> <span class="p">[</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">])</span>
+    <span class="n">image_raw</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">image_raw</span><span class="p">)</span>
+
+    <span class="c"># Batch it up.</span>
+    <span class="n">images</span><span class="p">,</span> <span class="n">images_raw</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span>
+          <span class="p">[</span><span class="n">image</span><span class="p">,</span> <span class="n">image_raw</span><span class="p">,</span> <span class="n">label</span><span class="p">],</span>
+          <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+          <span class="n">num_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+          <span class="n">capacity</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">batch_size</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">images</span><span class="p">,</span> <span class="n">images_raw</span><span class="p">,</span> <span class="n">labels</span>
+
+<span class="k">def</span> <span class="nf">get_dataset</span><span class="p">(</span><span class="n">dataset_file_name</span><span class="p">,</span> <span class="n">train_sample_size</span><span class="p">):</span>
+
+    <span class="n">ITEMS_TO_DESCRIPTIONS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'image'</span><span class="p">:</span> <span class="s">'A [32 x 32 x 3] color image.'</span><span class="p">,</span>
+        <span class="s">'label'</span><span class="p">:</span> <span class="s">'A single integer between 0 and 9'</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">keys_to_features</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="s">'image/encoded'</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">((),</span> <span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s">''</span><span class="p">),</span>
+          <span class="s">'image/format'</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">((),</span> <span class="n">tf</span><span class="o">.</span><span class="n">string</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="s">'png'</span><span class="p">),</span>
+          <span class="s">'image/class/label'</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">FixedLenFeature</span><span class="p">(</span>
+              <span class="p">[],</span> <span class="n">tf</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">int64</span><span class="p">)),</span>
+    <span class="p">}</span>
+
+    <span class="n">items_to_handlers</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="s">'image'</span><span class="p">:</span> <span class="n">slim</span><span class="o">.</span><span class="n">tfexample_decoder</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">IMAGE_SIZE</span><span class="p">,</span> <span class="n">IMAGE_SIZE</span><span class="p">,</span> <span class="mi">3</span><span class="p">]),</span>
+          <span class="s">'label'</span><span class="p">:</span> <span class="n">slim</span><span class="o">.</span><span class="n">tfexample_decoder</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="s">'image/class/label'</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="n">labels_to_names</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">CLASS_NAMES</span><span class="p">)):</span>
+        <span class="n">labels_to_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">CLASS_NAMES</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="n">decoder</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">tfexample_decoder</span><span class="o">.</span><span class="n">TFExampleDecoder</span><span class="p">(</span><span class="n">keys_to_features</span><span class="p">,</span> <span class="n">items_to_handlers</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">slim</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span>
+          <span class="n">data_sources</span><span class="o">=</span><span class="n">dataset_file_name</span><span class="p">,</span>
+          <span class="n">reader</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">TFRecordReader</span><span class="p">,</span>
+          <span class="n">decoder</span><span class="o">=</span><span class="n">decoder</span><span class="p">,</span>
+          <span class="n">num_samples</span><span class="o">=</span><span class="n">train_sample_size</span><span class="p">,</span>
+          <span class="n">items_to_descriptions</span><span class="o">=</span><span class="n">ITEMS_TO_DESCRIPTIONS</span><span class="p">,</span>
+          <span class="n">num_classes</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">CLASS_NAMES</span><span class="p">),</span>
+          <span class="n">labels_to_names</span><span class="o">=</span><span class="n">labels_to_names</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Next we define a function for loading the pretrained model that has been previously downloaded. The function also specifies which variables should be restored from the pretrained model. The actual layers of the neural network are contained in those varaibles. What does finetuning a network means? The process of “finetuning” is selecting layers from the nueral network that should be retrained through backpropagation, while leaving the other layers unchanged. In a neural network for image classification, early layers capture low level details. Each subsequent layer uses the lower level details from its predecessors (e.g. a nose, an eye and a mouth) to caputre a higher level detail (e.g. a dogs or cats face). Take a look at the picture below.
+<img src="assets/images/andrewng.jpg" />
+What Andrew Ng is showing in the <a href="https://www.youtube.com/watch?v=n1ViNeWhC24">Deep Learning, Self-Taught Learning and Unsupervised Feature Learning</a> is how the level of abstraction is increasing with each subsequent layer of neurons. For more detailed explanation on this matter I can also recommend <a href="https://www.youtube.com/watch?v=ghEmQSxT6tw">Visualizing and Understanding Deep Neural Networks by Matt Zeiler</a>. Anyway, when finetuning you will only train the last few layers of the network. The functions below will not only load the model, but will also create a small log file. The log file <a href="tf_inception variables.txt">tf_inception_vars.txt</a> shows all tensorflow variables and indicates which variables would remain unchanged and which would be retrained through backpropagation in the process of finetuning.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_init_fn</span><span class="p">():</span>
+    <span class="s">"""Returns a function run by the chief worker to warm-start the training."""</span>
+    <span class="n">checkpoint_exclude_scopes</span><span class="o">=</span><span class="p">[</span><span class="s">"InceptionV3/Logits"</span><span class="p">,</span> <span class="s">"InceptionV3/AuxLogits"</span><span class="p">,</span> <span class="s">"InceptionV3/Mixed_7"</span><span class="p">]</span>
+    
+    <span class="n">exclusions</span> <span class="o">=</span> <span class="p">[</span><span class="n">scope</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">scope</span> <span class="ow">in</span> <span class="n">checkpoint_exclude_scopes</span><span class="p">]</span>
+    
+    <span class="n">variables_to_restore</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">variables_to_retrain</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">slim</span><span class="o">.</span><span class="n">get_model_variables</span><span class="p">():</span>
+        <span class="n">excluded</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">for</span> <span class="n">exclusion</span> <span class="ow">in</span> <span class="n">exclusions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">exclusion</span><span class="p">):</span>
+                <span class="n">excluded</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">excluded</span><span class="p">:</span>
+            <span class="n">variables_to_restore</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">variables_to_retrain</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+    
+    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">gfile</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s">'tf_inception_vars.txt'</span><span class="p">,</span> <span class="s">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">variables_to_restore</span><span class="p">:</span>
+             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">'</span><span class="si">%</span><span class="s">s ::RESTORED FROM CHECKPOINT</span><span class="se">\n</span><span class="s">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">var</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">variables_to_retrain</span><span class="p">:</span>
+             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">'</span><span class="si">%</span><span class="s">s ::SELECTED FOR RETRAINING</span><span class="se">\n</span><span class="s">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">var</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">slim</span><span class="o">.</span><span class="n">assign_from_checkpoint_fn</span><span class="p">(</span>
+      <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'model'</span><span class="p">,</span><span class="s">'inception_v3.ckpt'</span><span class="p">),</span> <span class="n">variables_to_restore</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Finally, we select several hyperparameters. A batch size of 128 pictures was a too much for the 12 GB of RAM I dedicated to my Linux VM. 64 was just fine. A single global step needed around 50 seconds. Hence, 1500 steps is around a day of time. If you have a CUDA-capable NVIDIA GPU the training will be much faster. The learning rate is probably the most importat hyperparameter. If you choose a learning rate too high, your model will converge very fast without actually learning anything. If you choose a learning rate too low, your model will train just fine, but you may not live long enough to see it finally converged. The Adam Optimizer is the least sensitive Optimizer I have tried out. For this tutorial I started with a learning rate of 0.01 and only after 15 steps (10 min of training) I noticed that the loss does not decrease. A learning rate of 0.001 was just fine. I like the AdamOptimizer as it is very tolerant if you chose a learning rate too high. You can also check this <a href="http://sebastianruder.com/optimizing-gradient-descent/index.html#adam">excellent overview on different optimizers</a>.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">inception_v3</span> <span class="kn">import</span> <span class="n">inception_v3</span>
+<span class="kn">from</span> <span class="nn">inception_v3</span> <span class="kn">import</span> <span class="n">inception_v3_arg_scope</span>
+
+<span class="n">TRAIN_SAMPLES</span> <span class="o">=</span> <span class="mi">50000</span>
+<span class="n">INCEPTION_IMAGE_SIZE</span> <span class="o">=</span> <span class="mi">299</span>
+<span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">NUMBER_OF_STEPS</span> <span class="o">=</span> <span class="mi">1500</span>
+<span class="n">LEARNING_RATE</span> <span class="o">=</span> <span class="mf">0.001</span>
+
+<span class="n">slim</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">slim</span>
+
+<span class="n">TRAINED_MODEL_DIR</span> <span class="o">=</span> <span class="s">'inceptionV3_cifar10_finetuned'</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    
+    <span class="n">train_dataset</span> <span class="o">=</span> <span class="n">get_dataset</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'tfrecord'</span><span class="p">,</span><span class="s">'cifar-10-training-tfrecord'</span><span class="p">),</span> <span class="n">TRAIN_SAMPLES</span><span class="p">)</span>
+    
+    <span class="n">images</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">load_batch</span><span class="p">(</span>
+       <span class="n">train_dataset</span><span class="p">,</span> <span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">INCEPTION_IMAGE_SIZE</span><span class="p">,</span> <span class="n">INCEPTION_IMAGE_SIZE</span><span class="p">)</span>
+    
+    <span class="c"># Create the model, use the default arg scope to configure the batch norm parameters.</span>
+    <span class="k">with</span> <span class="n">slim</span><span class="o">.</span><span class="n">arg_scope</span><span class="p">(</span><span class="n">inception_v3_arg_scope</span><span class="p">()):</span>
+        <span class="n">logits</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">inception_v3</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="n">train_dataset</span><span class="o">.</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">is_training</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        
+    <span class="c"># Specify the loss function:</span>
+    <span class="n">one_hot_labels</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">one_hot_encoding</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">train_dataset</span><span class="o">.</span><span class="n">num_classes</span><span class="p">)</span>
+    <span class="n">slim</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">softmax_cross_entropy</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">one_hot_labels</span><span class="p">)</span>
+    <span class="n">total_loss</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">get_total_loss</span><span class="p">()</span>
+
+    <span class="c"># Create some summaries to visualize the training process:</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">scalar</span><span class="p">(</span><span class="s">'losses/Total Loss'</span><span class="p">,</span> <span class="n">total_loss</span><span class="p">)</span>
+  
+    <span class="c"># Specify the optimizer and create the train op:</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">LEARNING_RATE</span><span class="p">)</span>
+    <span class="n">train_op</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">create_train_op</span><span class="p">(</span><span class="n">total_loss</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">)</span>
+    
+    <span class="c"># Run the training:</span>
+    <span class="n">final_loss</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+        <span class="n">train_op</span><span class="p">,</span>
+        <span class="n">logdir</span><span class="o">=</span><span class="n">TRAINED_MODEL_DIR</span><span class="p">,</span>
+        <span class="n">init_fn</span><span class="o">=</span><span class="n">get_init_fn</span><span class="p">(),</span>
+        <span class="n">number_of_steps</span><span class="o">=</span><span class="n">NUMBER_OF_STEPS</span><span class="p">)</span>
+        
+<span class="k">print</span><span class="p">(</span><span class="s">'Finished training. Last batch loss </span><span class="si">%</span><span class="s">f'</span> <span class="o">%</span> <span class="n">final_loss</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>WARNING:tensorflow:From &lt;ipython-input-8-ed783d386345&gt;:28: softmax_cross_entropy (from tensorflow.contrib.losses.python.losses.loss_ops) is deprecated and will be removed after 2016-12-30.
+Instructions for updating:
+Use tf.losses.softmax_cross_entropy instead.
+WARNING:tensorflow:From /home/freeman/anaconda3/envs/machinelearning/lib/python3.5/site-packages/tensorflow/contrib/losses/python/losses/loss_ops.py:394: compute_weighted_loss (from tensorflow.contrib.losses.python.losses.loss_ops) is deprecated and will be removed after 2016-12-30.
+Instructions for updating:
+Use tf.losses.compute_weighted_loss instead.
+WARNING:tensorflow:From /home/freeman/anaconda3/envs/machinelearning/lib/python3.5/site-packages/tensorflow/contrib/losses/python/losses/loss_ops.py:151: add_loss (from tensorflow.contrib.losses.python.losses.loss_ops) is deprecated and will be removed after 2016-12-30.
+Instructions for updating:
+Use tf.losses.add_loss instead.
+WARNING:tensorflow:From &lt;ipython-input-8-ed783d386345&gt;:29: get_total_loss (from tensorflow.contrib.losses.python.losses.loss_ops) is deprecated and will be removed after 2016-12-30.
+Instructions for updating:
+Use tf.losses.get_total_loss instead.
+WARNING:tensorflow:From /home/freeman/anaconda3/envs/machinelearning/lib/python3.5/site-packages/tensorflow/contrib/losses/python/losses/loss_ops.py:261: get_losses (from tensorflow.contrib.losses.python.losses.loss_ops) is deprecated and will be removed after 2016-12-30.
+Instructions for updating:
+Use tf.losses.get_losses instead.
+WARNING:tensorflow:From /home/freeman/anaconda3/envs/machinelearning/lib/python3.5/site-packages/tensorflow/contrib/losses/python/losses/loss_ops.py:263: get_regularization_losses (from tensorflow.contrib.losses.python.losses.loss_ops) is deprecated and will be removed after 2016-12-30.
+Instructions for updating:
+Use tf.losses.get_regularization_losses instead.
+INFO:tensorflow:Summary name losses/Total Loss is illegal; using losses/Total_Loss instead.
+INFO:tensorflow:Starting Session.
+INFO:tensorflow:Starting Queues.
+INFO:tensorflow:global_step/sec: 0
+INFO:tensorflow:global step 1: loss = 2.9792 (76.37 sec/step)
+INFO:tensorflow:global step 2: loss = 2.4563 (52.38 sec/step)
+INFO:tensorflow:global step 3: loss = 1.8246 (51.16 sec/step)
+INFO:tensorflow:global step 4: loss = 1.9932 (51.35 sec/step)
+INFO:tensorflow:global step 5: loss = 1.8377 (49.80 sec/step)
+...
+INFO:tensorflow:global step 1496: loss = 0.5959 (53.37 sec/step)
+INFO:tensorflow:global step 1497: loss = 0.6893 (50.19 sec/step)
+INFO:tensorflow:global step 1498: loss = 0.5368 (50.39 sec/step)
+INFO:tensorflow:global step 1499: loss = 0.8566 (50.85 sec/step)
+INFO:tensorflow:global step 1500: loss = 0.6417 (50.32 sec/step)
+INFO:tensorflow:Stopping Training.
+INFO:tensorflow:Finished training! Saving model to disk.
+Finished training. Last batch loss 0.641681
+</code></pre>
+</div>
+
+<h1 id="evaluation">Evaluation</h1>
+<p>The neural networks I trained in my last post <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a> was classifying 67% of the images correctly. As there are 10 categories, a random guess would classify 10% of the images correctly. Hence, 67% is quite good. Let’s see…</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">TEST_SAMPLE_SIZE</span> <span class="o">=</span> <span class="mi">10000</span>
+
+<span class="n">all_batch_stats</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">def</span> <span class="nf">getProbsAsStr</span><span class="p">(</span><span class="n">probabilities</span><span class="p">):</span>
+    <span class="n">probs_str</span> <span class="o">=</span> <span class="s">'Probabilities: '</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">CLASS_NAMES</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">):</span>
+        <span class="n">probs_str</span> <span class="o">+=</span> <span class="s">'</span><span class="si">%</span><span class="s">s: </span><span class="si">%.2</span><span class="s">f</span><span class="si">%% </span><span class="s">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">prob</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">probs_str</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    
+    <span class="n">test_dataset</span> <span class="o">=</span> <span class="n">get_dataset</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'tfrecord'</span><span class="p">,</span><span class="s">'cifar-10-test-tfrecord'</span><span class="p">),</span> <span class="n">TEST_SAMPLE_SIZE</span><span class="p">)</span>
+    <span class="n">images</span><span class="p">,</span> <span class="n">images_raw</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">load_batch</span><span class="p">(</span>
+        <span class="n">test_dataset</span><span class="p">,</span> <span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">INCEPTION_IMAGE_SIZE</span><span class="p">,</span> <span class="n">INCEPTION_IMAGE_SIZE</span><span class="p">)</span>
+    
+    <span class="c"># Create the model, use the default arg scope to configure the batch norm parameters.</span>
+    <span class="k">with</span> <span class="n">slim</span><span class="o">.</span><span class="n">arg_scope</span><span class="p">(</span><span class="n">inception_v3_arg_scope</span><span class="p">()):</span>
+        <span class="n">logits</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">inception_v3</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="n">test_dataset</span><span class="o">.</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">is_training</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="n">probabilities</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">)</span>
+    
+    <span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">latest_checkpoint</span><span class="p">(</span><span class="n">TRAINED_MODEL_DIR</span><span class="p">)</span>
+    <span class="n">init_fn</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">assign_from_checkpoint_fn</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">slim</span><span class="o">.</span><span class="n">get_variables_to_restore</span><span class="p">())</span>
+    
+    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">slim</span><span class="o">.</span><span class="n">queues</span><span class="o">.</span><span class="n">QueueRunners</span><span class="p">(</span><span class="n">sess</span><span class="p">):</span>
+            <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">initialize_local_variables</span><span class="p">())</span>
+            <span class="n">init_fn</span><span class="p">(</span><span class="n">sess</span><span class="p">)</span>
+            <span class="n">all_accuracy</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">TEST_SAMPLE_SIZE</span><span class="o">/</span><span class="n">BATCH_SIZE</span><span class="p">)):</span>
+                <span class="n">np_probabilities</span><span class="p">,</span> <span class="n">np_images_raw</span><span class="p">,</span> <span class="n">np_labels</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">probabilities</span><span class="p">,</span> <span class="n">images_raw</span><span class="p">,</span> <span class="n">labels</span><span class="p">])</span>
+                <span class="n">all_batch_stats</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">np_labels</span><span class="p">,</span> <span class="n">np_probabilities</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">999</span><span class="p">:</span> <span class="c"># show images </span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">BATCH_SIZE</span><span class="p">):</span> 
+                        <span class="n">image</span> <span class="o">=</span> <span class="n">np_images_raw</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span>
+                        <span class="n">true_label</span> <span class="o">=</span> <span class="n">np_labels</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                        <span class="n">predicted_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np_probabilities</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:])</span>
+                        <span class="n">predicted_name</span> <span class="o">=</span> <span class="n">test_dataset</span><span class="o">.</span><span class="n">labels_to_names</span><span class="p">[</span><span class="n">predicted_label</span><span class="p">]</span>
+                        <span class="n">true_name</span> <span class="o">=</span> <span class="n">test_dataset</span><span class="o">.</span><span class="n">labels_to_names</span><span class="p">[</span><span class="n">true_label</span><span class="p">]</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">))</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Ground Truth: [</span><span class="si">%</span><span class="s">s], Prediction [</span><span class="si">%</span><span class="s">s] '</span>
+                                  <span class="o">%</span> <span class="p">(</span><span class="n">true_name</span><span class="p">,</span> <span class="n">predicted_name</span><span class="p">)</span> <span class="o">+</span> <span class="n">getProbsAsStr</span><span class="p">(</span><span class="n">np_probabilities</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:]))</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s">'off'</span><span class="p">)</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c"># Calculate accuracy over the whole test set</span>
+<span class="n">all_batch_accuracy</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">labels</span><span class="p">,</span> <span class="n">probs</span> <span class="ow">in</span> <span class="n">all_batch_stats</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">probs</span><span class="p">):</span>
+            <span class="n">all_batch_accuracy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">prob</span><span class="p">)</span> <span class="o">==</span> <span class="n">label</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'Overall accuracy'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">all_batch_accuracy</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>WARNING:tensorflow:From &lt;ipython-input-36-bcd06166f627&gt;:31: initialize_local_variables (from tensorflow.python.ops.variables) is deprecated and will be removed after 2017-03-02.
+Instructions for updating:
+Use `tf.local_variables_initializer` instead.
+</code></pre>
+</div>
+
+<p><img src="assets/images/output_19_1.png" alt="png" /></p>
+
+<p><img src="assets/images/output_19_2.png" alt="png" /></p>
+
+<p><img src="assets/images/output_19_3.png" alt="png" /></p>
+
+<p><img src="assets/images/output_19_4.png" alt="png" /></p>
+
+<p><img src="assets/images/output_19_5.png" alt="png" /></p>
+
+<p><img src="assets/images/output_19_6.png" alt="png" /></p>
+
+<p><img src="assets/images/output_19_7.png" alt="png" /></p>
+
+<p><img src="assets/images/output_19_8.png" alt="png" /></p>
+
+<p><img src="assets/images/output_19_9.png" alt="png" /></p>
+
+<p><img src="assets/images/output_19_10.png" alt="png" /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Overall accuracy 0.7985
+</code></pre>
+</div>
+
+<p>Indeed, the accuracy is much better. Evaluated over the whole test set of 10,000 images it is . Howerver, there is plenty of room for improvements. While our finetuned network will not be at the very bottom of the leaderboard <a href="http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html">“state of the art in objects classification”</a>, the best model achieves 96.53%. At this point the neural network is better than a human that would achieve an accuracy of only 94%. This is simply amazing. Here is a link to the whole git repo: <a href="https://github.com/n-kostadinov/cnn-image-classification-cifar-10-inceptionv3">cnn-image-classification-cifar-10-inceptionv3</a>.</p>
+
+</div>
+    <div class="share-page">
+    <span style="float: left;">Share this on &rarr;&nbsp;&nbsp;</span>
+    
+    <!-- Twitter -->
+     <a href="https://twitter.com/share" class="twitter-share-button" data-via="NKKostadinov">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+    <!-- Google + -->
+    <div class="g-plus" data-action="share" data-annotation="bubble"></div>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <!-- Facebook -->
+    <div class="fb-share-button" data-href="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
+</div>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+</div>
+
+
+
+    
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+
+    
+    
+        
+            
+                
+                <div class="panel-body">
+                <h4>Related Posts</h4>
+                <ul>
+                
+                <li class="relatedPost">
+                    <a href="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a>
+                    
+                        (Categories: <a href="/category/python">python</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/cifar10">cifar10</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/convolutional neural network">convolutional neural network</a>, <a href="/category/dropout">dropout</a>, <a href="/category/image classification">image classification</a>)
+                    
+                </li>
+                
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+
+    
+    
+        
+            
+                
+                <li class="relatedPost">
+                    <a href="http://localhost:4000/python/artificial%20intelligence/depth%20search/sudoku/diagonal%20sudoku/naked%20twins/2017/02/27/cracking-the-worlds-hardest-sudoku.html">Cracking the world hardest sudoku</a>
+                    
+                        (Categories: <a href="/category/python">python</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/depth search">depth search</a>, <a href="/category/sudoku">sudoku</a>, <a href="/category/diagonal sudoku">diagonal sudoku</a>, <a href="/category/naked twins">naked twins</a>)
+                    
+                </li>
+                
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+
+    
+    
+        
+            
+                
+                <li class="relatedPost">
+                    <a href="http://localhost:4000/python/machine%20learning/deep%20learning/neural%20networks/sigmoid/hidden%20layer/activation%20function/tensorflow/2017/01/29/implementing-neural-network-from-scratch.html">Implementing a neural network from scratch</a>
+                    
+                        (Categories: <a href="/category/python">python</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/deep learning">deep learning</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/sigmoid">sigmoid</a>, <a href="/category/hidden layer">hidden layer</a>, <a href="/category/activation function">activation function</a>, <a href="/category/tensorflow">tensorflow</a>)
+                    
+                </li>
+                
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+
+    
+    
+        
+            
+                
+                <li class="relatedPost">
+                    <a href="http://localhost:4000/python/machine%20learning/reinforcement%20learning/xgboost/cart%20pole/open%20gym/openai/artificial%20intelligence/2016/11/29/solving-cartpole-xgboost.html">Solving CartPole-v0 with xgboost</a>
+                    
+                        (Categories: <a href="/category/python">python</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/reinforcement learning">reinforcement learning</a>, <a href="/category/xgboost">xgboost</a>, <a href="/category/cart pole">cart pole</a>, <a href="/category/open gym">open gym</a>, <a href="/category/openai">openai</a>, <a href="/category/artificial intelligence">artificial intelligence</a>)
+                    
+                </li>
+                
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+
+
+    </ul>
+    </div>
+
+
+<div class="PageNavigation">
+  
+    <a class="prev" href="/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">&laquo; Convolutional neural network for image classification from scratch</a>
+  
+  
+</div>
+
+
+<div class="disqus-comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* <![CDATA[ */
+
+        var disqus_shortname = "machinememos-com";
+        var disqus_identifier = "http://localhost:4000_Convolutional neural network for image classification from scratch";
+        var disqus_title = "Convolutional neural network for image classification from scratch";
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    /* ]]> */
+    </script>
+</div>
+
+                <footer>
+                    &copy; Nikolay Kostadinov
+                     
+                    - <a href="https://github.com/n-kostadinov">https://github.com/n-kostadinov</a> - Powered by Jekyll.
+                    
+                </footer>
+            </div><!-- end /.col-sm-8 -->
+	    <div class="col-sm-2">
+		<div class="fixed-condition">
+		 <a href="/"><img id="about" src="/static/img/logo.png" height="760px" width="380px"/></a>
+		</div>
+	    </div>
+	 </div>
+        </div><!-- end /.container -->
+
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+        <script src="/static/js/super-search.js"></script>
+        <script src="/static/js/thickbox-compressed.js"></script>
+        <script src="/static/js/projects.js"></script>
+    </body>
+</html>
