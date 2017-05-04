@@ -555,24 +555,6 @@ with tf.Graph().as_default():
 print('Finished training. Last batch loss %f' % final_loss)
 ```
 
-    WARNING:tensorflow:From <ipython-input-8-ed783d386345>:28: softmax_cross_entropy (from tensorflow.contrib.losses.python.losses.loss_ops) is deprecated and will be removed after 2016-12-30.
-    Instructions for updating:
-    Use tf.losses.softmax_cross_entropy instead.
-    WARNING:tensorflow:From /home/freeman/anaconda3/envs/machinelearning/lib/python3.5/site-packages/tensorflow/contrib/losses/python/losses/loss_ops.py:394: compute_weighted_loss (from tensorflow.contrib.losses.python.losses.loss_ops) is deprecated and will be removed after 2016-12-30.
-    Instructions for updating:
-    Use tf.losses.compute_weighted_loss instead.
-    WARNING:tensorflow:From /home/freeman/anaconda3/envs/machinelearning/lib/python3.5/site-packages/tensorflow/contrib/losses/python/losses/loss_ops.py:151: add_loss (from tensorflow.contrib.losses.python.losses.loss_ops) is deprecated and will be removed after 2016-12-30.
-    Instructions for updating:
-    Use tf.losses.add_loss instead.
-    WARNING:tensorflow:From <ipython-input-8-ed783d386345>:29: get_total_loss (from tensorflow.contrib.losses.python.losses.loss_ops) is deprecated and will be removed after 2016-12-30.
-    Instructions for updating:
-    Use tf.losses.get_total_loss instead.
-    WARNING:tensorflow:From /home/freeman/anaconda3/envs/machinelearning/lib/python3.5/site-packages/tensorflow/contrib/losses/python/losses/loss_ops.py:261: get_losses (from tensorflow.contrib.losses.python.losses.loss_ops) is deprecated and will be removed after 2016-12-30.
-    Instructions for updating:
-    Use tf.losses.get_losses instead.
-    WARNING:tensorflow:From /home/freeman/anaconda3/envs/machinelearning/lib/python3.5/site-packages/tensorflow/contrib/losses/python/losses/loss_ops.py:263: get_regularization_losses (from tensorflow.contrib.losses.python.losses.loss_ops) is deprecated and will be removed after 2016-12-30.
-    Instructions for updating:
-    Use tf.losses.get_regularization_losses instead.
     INFO:tensorflow:Summary name losses/Total Loss is illegal; using losses/Total_Loss instead.
     INFO:tensorflow:Starting Session.
     INFO:tensorflow:Starting Queues.
