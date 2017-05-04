@@ -5,12 +5,12 @@
     <description>description</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/sitemap.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 04 May 2017 12:01:40 -0700</pubDate>
-    <lastBuildDate>Thu, 04 May 2017 12:01:40 -0700</lastBuildDate>
+    <pubDate>Thu, 04 May 2017 12:17:55 -0700</pubDate>
+    <lastBuildDate>Thu, 04 May 2017 12:17:55 -0700</lastBuildDate>
     <generator>Jekyll v3.3.1</generator>
     
       <item>
-        <title>Convolutional neural network for image classification from scratch</title>
+        <title>Image classification with pretrained CNN InceptionV3</title>
         <description>&lt;h1 id=&quot;image-classification-with-finetuned-googlelenet&quot;&gt;Image Classification with finetuned GoogleLeNet&lt;/h1&gt;
 
 &lt;p&gt;In my previous post &lt;a href=&quot;http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html&quot;&gt;Convolutional neural network for image classification from scratch&lt;/a&gt; I built a small convolutional neural network (CNN) to classify images from the &lt;a href=&quot;https://www.cs.toronto.edu/~kriz/cifar.html&quot;&gt;CIFAR-10 dataset&lt;/a&gt;. My goal was to demonstrate how easy one can construct a neural network with descent accuracy (around 67%). However, for many real word problems building CNNs from scratch might not be practical. For instance, in a recent &lt;a href=&quot;http://kaggle.com/&quot;&gt;kaggle&lt;/a&gt; challenge called &lt;a href=&quot;https://www.kaggle.com/c/dogs-vs-cats&quot;&gt;Dog vs Cat&lt;/a&gt; the competitors were asked to correctly classify images of dogs and cats. In an insightful &lt;a href=&quot;http://blog.kaggle.com/2017/04/03/dogs-vs-cats-redux-playground-competition-winners-interview-bojan-tunguz/&quot;&gt;interview&lt;/a&gt; the winner of that challenge explained that he didn’t rely solely on a CNN that he built from scratch. Instead he got his hands on multiple models already trained with large datasets and applied some “finetuning” in order to make these fit for the specific goal of classifying cats and dogs. So how does this work? The idea is simple. There are hundreds of models already trained on a specific dataset. The largest repository I know is the &lt;a href=&quot;https://github.com/BVLC/caffe/wiki/Model-Zoo&quot;&gt;Model Zoo Github Repo&lt;/a&gt;. There are also the models from the &lt;a href=&quot;https://github.com/tensorflow/models/tree/master/slim&quot;&gt;Tensorflow Slim Project&lt;/a&gt;. So the goal is to select a model that is already trained on a dataset that is similar to the one you are interested in. After selecting the model one has to apply some “finetuning” on it. Interested? Well continue reading, as this is exactly what I am going to do in this post.&lt;/p&gt;
@@ -19,9 +19,11 @@
 
 &lt;p&gt;If you are already familiar with my previous post &lt;a href=&quot;http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html&quot;&gt;Convolutional neural network for image classification from scratch&lt;/a&gt;, you might want to skip the next sections and go directly to &lt;strong&gt;Converting datasets to .tfrecord&lt;/strong&gt;.&lt;/p&gt;
 
-&lt;p&gt;The &lt;a href=&quot;https://www.cs.toronto.edu/~kriz/cifar.html&quot;&gt;CIFAR-10 dataset&lt;/a&gt; consists of 60000 32x32 colour images in 10 categories - airplanes, dogs, cats, and other objects. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class. Here are the classes in the dataset, as well as 10 random images from each:
-&lt;img src=&quot;/assets/images/dataset_overview.jpg&quot; alt=&quot;png&quot; /&gt;
-The classes are completely mutually exclusive. There is no overlap between automobiles and trucks. “Automobile” includes sedans, SUVs, things of that sort. “Truck” includes only big trucks. Neither includes pickup trucks.&lt;/p&gt;
+&lt;p&gt;The &lt;a href=&quot;https://www.cs.toronto.edu/~kriz/cifar.html&quot;&gt;CIFAR-10 dataset&lt;/a&gt; consists of 60000 32x32 colour images in 10 categories - airplanes, dogs, cats, and other objects. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class. Here are the classes in the dataset, as well as 10 random images from each:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/dataset_overview.jpg&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The classes are completely mutually exclusive. There is no overlap between automobiles and trucks. “Automobile” includes sedans, SUVs, things of that sort. “Truck” includes only big trucks. Neither includes pickup trucks.&lt;/p&gt;
 
 &lt;h1 id=&quot;download-the-dataset&quot;&gt;Download the dataset&lt;/h1&gt;
 &lt;p&gt;First, few lines of code will download the &lt;a href=&quot;https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz&quot;&gt;CIFAR-10 dataset for python&lt;/a&gt;.&lt;/p&gt;
@@ -154,7 +156,7 @@ Label - Label Id: 6 Name: frog
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_7_1.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_7_1.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Stats of batch 1:
 Samples: 10000
@@ -168,7 +170,7 @@ Label - Label Id: 9 Name: truck
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_7_3.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_7_3.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Stats of batch 2:
 Samples: 10000
@@ -182,7 +184,7 @@ Label - Label Id: 1 Name: automobile
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_7_5.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_7_5.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Stats of batch 2:
 Samples: 10000
@@ -196,7 +198,7 @@ Label - Label Id: 6 Name: frog
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_7_7.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_7_7.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Stats of batch 3:
 Samples: 10000
@@ -210,7 +212,7 @@ Label - Label Id: 8 Name: ship
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_7_9.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_7_9.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Stats of batch 3:
 Samples: 10000
@@ -224,7 +226,7 @@ Label - Label Id: 5 Name: dog
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_7_11.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_7_11.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Stats of batch 4:
 Samples: 10000
@@ -238,7 +240,7 @@ Label - Label Id: 0 Name: airplane
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_7_13.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_7_13.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Stats of batch 4:
 Samples: 10000
@@ -252,7 +254,7 @@ Label - Label Id: 6 Name: frog
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_7_15.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_7_15.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Stats of batch 5:
 Samples: 10000
@@ -266,7 +268,7 @@ Label - Label Id: 1 Name: automobile
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_7_17.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_7_17.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Stats of batch 5:
 Samples: 10000
@@ -280,7 +282,7 @@ Label - Label Id: 8 Name: ship
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_7_19.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_7_19.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;converting-datasets-to-tfrecord&quot;&gt;Converting datasets to .tfrecord&lt;/h1&gt;
 &lt;p&gt;Next we convert the datasets to tfrecords. This would allow for the easier further processing by Tensorflow. While the neural network constructed in &lt;a href=&quot;http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html&quot;&gt;Convolutional neural network for image classification from scratch&lt;/a&gt; expected images with size 32x32, the CNN we are going to use here expects an input size of 299x299. Nevertheless, it is not necessary to convert all 60000 images to the target size of 299x299 as this would requre much more of your disk space. Converting the data to tfrecord would actually shrink the dataset size (lossless compression) and allow for the use of tensorflow’s preprocessing pipeline and a dynamic conversion to the desired target size of 299x299 at training time.&lt;/p&gt;
@@ -446,9 +448,11 @@ Label - Label Id: 8 Name: ship
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Next we define a function for loading the pretrained model that has been previously downloaded. The function also specifies which variables should be restored from the pretrained model. The actual layers of the neural network are contained in those varaibles. What does finetuning a network means? The process of “finetuning” is selecting layers from the nueral network that should be retrained through backpropagation, while leaving the other layers unchanged. In a neural network for image classification, early layers capture low level details. Each subsequent layer uses the lower level details from its predecessors (e.g. a nose, an eye and a mouth) to caputre a higher level detail (e.g. a dogs or cats face). Take a look at the picture below.
-&lt;img src=&quot;assets/images/andrewng.jpg&quot; /&gt;
-What Andrew Ng is showing in the &lt;a href=&quot;https://www.youtube.com/watch?v=n1ViNeWhC24&quot;&gt;Deep Learning, Self-Taught Learning and Unsupervised Feature Learning&lt;/a&gt; is how the level of abstraction is increasing with each subsequent layer of neurons. For more detailed explanation on this matter I can also recommend &lt;a href=&quot;https://www.youtube.com/watch?v=ghEmQSxT6tw&quot;&gt;Visualizing and Understanding Deep Neural Networks by Matt Zeiler&lt;/a&gt;. Anyway, when finetuning you will only train the last few layers of the network. The functions below will not only load the model, but will also create a small log file. The log file &lt;a href=&quot;tf_inception variables.txt&quot;&gt;tf_inception_vars.txt&lt;/a&gt; shows all tensorflow variables and indicates which variables would remain unchanged and which would be retrained through backpropagation in the process of finetuning.&lt;/p&gt;
+&lt;p&gt;Next we define a function for loading the pretrained model that has been previously downloaded. The function also specifies which variables should be restored from the pretrained model. The actual layers of the neural network are contained in those varaibles. What does finetuning a network means? The process of “finetuning” is selecting layers from the nueral network that should be retrained through backpropagation, while leaving the other layers unchanged. In a neural network for image classification, early layers capture low level details. Each subsequent layer uses the lower level details from its predecessors (e.g. a nose, an eye and a mouth) to caputre a higher level detail (e.g. a dogs or cats face). Take a look at the picture below.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/andrewng.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;What Andrew Ng is showing in the &lt;a href=&quot;https://www.youtube.com/watch?v=n1ViNeWhC24&quot;&gt;Deep Learning, Self-Taught Learning and Unsupervised Feature Learning&lt;/a&gt; is how the level of abstraction is increasing with each subsequent layer of neurons. For more detailed explanation on this matter I can also recommend &lt;a href=&quot;https://www.youtube.com/watch?v=ghEmQSxT6tw&quot;&gt;Visualizing and Understanding Deep Neural Networks by Matt Zeiler&lt;/a&gt;. Anyway, when finetuning you will only train the last few layers of the network. The functions below will not only load the model, but will also create a small log file. The log file &lt;a href=&quot;tf_inception variables.txt&quot;&gt;tf_inception_vars.txt&lt;/a&gt; shows all tensorflow variables and indicates which variables would remain unchanged and which would be retrained through backpropagation in the process of finetuning.&lt;/p&gt;
 
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_init_fn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
     &lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;Returns a function run by the chief worker to warm-start the training.&quot;&quot;&quot;&lt;/span&gt;
@@ -639,31 +643,31 @@ Use `tf.local_variables_initializer` instead.
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_19_1.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_19_1.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_19_2.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_19_2.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_19_3.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_19_3.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_19_4.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_19_4.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_19_5.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_19_5.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_19_6.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_19_6.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_19_7.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_19_7.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_19_8.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_19_8.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_19_9.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_19_9.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;assets/images/output_19_10.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/output_19_10.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Overall accuracy 0.7985
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Indeed, the accuracy is much better. Evaluated over the whole test set of 10,000 images it is . Howerver, there is plenty of room for improvements. While our finetuned network will not be at the very bottom of the leaderboard &lt;a href=&quot;http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html&quot;&gt;“state of the art in objects classification”&lt;/a&gt;, the best model achieves 96.53%. At this point the neural network is better than a human that would achieve an accuracy of only 94%. This is simply amazing. Here is a link to the whole git repo: &lt;a href=&quot;https://github.com/n-kostadinov/cnn-image-classification-cifar-10-inceptionv3&quot;&gt;cnn-image-classification-cifar-10-inceptionv3&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Indeed, the accuracy is much better. Evaluated over the whole test set of 10,000 images it is 79,85%. Howerver, there is plenty of room for improvements. While this finetuned network will not be at the very bottom of the leaderboard &lt;a href=&quot;http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html&quot;&gt;“state of the art in objects classification”&lt;/a&gt;, the best model achieves 96.53%. At this point best model is actually better than a human that would achieve an accuracy of only 94%. Look at the fourth image from above that gets incorrectly classified as deer, but is actually a bird. I thought it was a white horse. Here is a link to the whole git repo: &lt;a href=&quot;https://github.com/n-kostadinov/cnn-image-classification-cifar-10-inceptionv3&quot;&gt;cnn-image-classification-cifar-10-inceptionv3&lt;/a&gt;.&lt;/p&gt;
 
 </description>
         <pubDate>Thu, 04 May 2017 00:00:00 -0700</pubDate>

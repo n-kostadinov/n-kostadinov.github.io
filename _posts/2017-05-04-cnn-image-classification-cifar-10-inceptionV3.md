@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Convolutional neural network for image classification from scratch
+title: Image classification with pretrained CNN InceptionV3
 categories: [python, artificial intelligence, machine learning, cifar10, neural networks, convolutional neural network, GoogleLeNet, Inception, tensorflow, dropout, image classification]
 ---
 
@@ -13,7 +13,9 @@ In my previous post [Convolutional neural network for image classification from 
 If you are already familiar with my previous post [Convolutional neural network for image classification from scratch](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html), you might want to skip the next sections and go directly to **Converting datasets to .tfrecord**.
 
 The [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html) consists of 60000 32x32 colour images in 10 categories - airplanes, dogs, cats, and other objects. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class. Here are the classes in the dataset, as well as 10 random images from each:
+
 ![png](/assets/images/dataset_overview.jpg)
+
 The classes are completely mutually exclusive. There is no overlap between automobiles and trucks. "Automobile" includes sedans, SUVs, things of that sort. "Truck" includes only big trucks. Neither includes pickup trucks.
 
 # Download the dataset
@@ -149,7 +151,7 @@ del features, labels # free memory
 
 
 
-![png](assets/images/output_7_1.png)
+![png](/assets/images/output_7_1.png)
 
 
     
@@ -165,7 +167,7 @@ del features, labels # free memory
 
 
 
-![png](assets/images/output_7_3.png)
+![png](/assets/images/output_7_3.png)
 
 
     
@@ -181,7 +183,7 @@ del features, labels # free memory
 
 
 
-![png](assets/images/output_7_5.png)
+![png](/assets/images/output_7_5.png)
 
 
     
@@ -197,7 +199,7 @@ del features, labels # free memory
 
 
 
-![png](assets/images/output_7_7.png)
+![png](/assets/images/output_7_7.png)
 
 
     
@@ -213,7 +215,7 @@ del features, labels # free memory
 
 
 
-![png](assets/images/output_7_9.png)
+![png](/assets/images/output_7_9.png)
 
 
     
@@ -229,7 +231,7 @@ del features, labels # free memory
 
 
 
-![png](assets/images/output_7_11.png)
+![png](/assets/images/output_7_11.png)
 
 
     
@@ -245,7 +247,7 @@ del features, labels # free memory
 
 
 
-![png](assets/images/output_7_13.png)
+![png](/assets/images/output_7_13.png)
 
 
     
@@ -261,7 +263,7 @@ del features, labels # free memory
 
 
 
-![png](assets/images/output_7_15.png)
+![png](/assets/images/output_7_15.png)
 
 
     
@@ -277,7 +279,7 @@ del features, labels # free memory
 
 
 
-![png](assets/images/output_7_17.png)
+![png](/assets/images/output_7_17.png)
 
 
     
@@ -293,7 +295,7 @@ del features, labels # free memory
 
 
 
-![png](assets/images/output_7_19.png)
+![png](/assets/images/output_7_19.png)
 
 
 # Converting datasets to .tfrecord
@@ -464,7 +466,9 @@ def get_dataset(dataset_file_name, train_sample_size):
 ```
 
 Next we define a function for loading the pretrained model that has been previously downloaded. The function also specifies which variables should be restored from the pretrained model. The actual layers of the neural network are contained in those varaibles. What does finetuning a network means? The process of "finetuning" is selecting layers from the nueral network that should be retrained through backpropagation, while leaving the other layers unchanged. In a neural network for image classification, early layers capture low level details. Each subsequent layer uses the lower level details from its predecessors (e.g. a nose, an eye and a mouth) to caputre a higher level detail (e.g. a dogs or cats face). Take a look at the picture below.
-<img src="assets/images/andrewng.jpg">
+
+![png](/assets/images/andrewng.png)
+
 What Andrew Ng is showing in the [Deep Learning, Self-Taught Learning and Unsupervised Feature Learning](https://www.youtube.com/watch?v=n1ViNeWhC24) is how the level of abstraction is increasing with each subsequent layer of neurons. For more detailed explanation on this matter I can also recommend [Visualizing and Understanding Deep Neural Networks by Matt Zeiler](https://www.youtube.com/watch?v=ghEmQSxT6tw). Anyway, when finetuning you will only train the last few layers of the network. The functions below will not only load the model, but will also create a small log file. The log file [tf_inception_vars.txt](tf_inception variables.txt) shows all tensorflow variables and indicates which variables would remain unchanged and which would be retrained through backpropagation in the process of finetuning.
 
 
@@ -658,47 +662,47 @@ print('Overall accuracy', np.mean(all_batch_accuracy))
 
 
 
-![png](assets/images/output_19_1.png)
+![png](/assets/images/output_19_1.png)
 
 
 
-![png](assets/images/output_19_2.png)
+![png](/assets/images/output_19_2.png)
 
 
 
-![png](assets/images/output_19_3.png)
+![png](/assets/images/output_19_3.png)
 
 
 
-![png](assets/images/output_19_4.png)
+![png](/assets/images/output_19_4.png)
 
 
 
-![png](assets/images/output_19_5.png)
+![png](/assets/images/output_19_5.png)
 
 
 
-![png](assets/images/output_19_6.png)
+![png](/assets/images/output_19_6.png)
 
 
 
-![png](assets/images/output_19_7.png)
+![png](/assets/images/output_19_7.png)
 
 
 
-![png](assets/images/output_19_8.png)
+![png](/assets/images/output_19_8.png)
 
 
 
-![png](assets/images/output_19_9.png)
+![png](/assets/images/output_19_9.png)
 
 
 
-![png](assets/images/output_19_10.png)
+![png](/assets/images/output_19_10.png)
 
 
     Overall accuracy 0.7985
 
 
-Indeed, the accuracy is much better. Evaluated over the whole test set of 10,000 images it is . Howerver, there is plenty of room for improvements. While our finetuned network will not be at the very bottom of the leaderboard ["state of the art in objects classification"](http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html), the best model achieves 96.53%. At this point the neural network is better than a human that would achieve an accuracy of only 94%. This is simply amazing. Here is a link to the whole git repo: [cnn-image-classification-cifar-10-inceptionv3](https://github.com/n-kostadinov/cnn-image-classification-cifar-10-inceptionv3).
+Indeed, the accuracy is much better. Evaluated over the whole test set of 10,000 images it is 79,85%. Howerver, there is plenty of room for improvements. While this finetuned network will not be at the very bottom of the leaderboard ["state of the art in objects classification"](http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html), the best model achieves 96.53%. At this point best model is actually better than a human that would achieve an accuracy of only 94%. Look at the fourth image from above that gets incorrectly classified as deer, but is actually a bird. I thought it was a white horse. Here is a link to the whole git repo: [cnn-image-classification-cifar-10-inceptionv3](https://github.com/n-kostadinov/cnn-image-classification-cifar-10-inceptionv3).
 
