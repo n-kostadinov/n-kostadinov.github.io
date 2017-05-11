@@ -6,16 +6,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="shortcut icon" href="/static/img/favicon.ico" />
-        <title>Image classification with pretrained CNN InceptionV3 - MACHINE MEMOS</title>
+        <title>Image classification with stacked InceptionV3 - MACHINE MEMOS</title>
         <meta name="author" content="Nikolay Kostadinov" />
-        <meta name="description" content="Image classification with pretrained CNN InceptionV3" />
-        <meta name="keywords" content="Image classification with pretrained CNN InceptionV3, MACHINE MEMOS, python, artificial intelligence, machine learning, cifar10, neural networks, convolutional neural network, GoogleLeNet, Inception, tensorflow, dropout, image classification" />
+        <meta name="description" content="Image classification with stacked InceptionV3" />
+        <meta name="keywords" content="Image classification with stacked InceptionV3, MACHINE MEMOS, python, artificial intelligence, machine learning, cifar10, neural networks, convolutional neural network, GoogleLeNet, Inception, xgboost, ridgeregression, sklearn, tensorflow, image classification, imagenet" />
         <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
 
         <meta content="" property="fb:app_id">
         <meta content="MACHINE MEMOS" property="og:site_name">
         
-          <meta content="Image classification with pretrained CNN InceptionV3" property="og:title">
+          <meta content="Image classification with stacked InceptionV3" property="og:title">
         
         
           <meta content="article" property="og:type">
@@ -24,10 +24,10 @@
           <meta content="description" property="og:description">
         
         
-          <meta content="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html" property="og:url">
+          <meta content="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/2017/05/11/cnn-image-classification-cifar-10-stacked-inceptionV3.html" property="og:url">
         
         
-          <meta content="2017-05-04T00:00:00-07:00" property="article:published_time">
+          <meta content="2017-05-11T00:00:00-07:00" property="article:published_time">
           <meta content="http://localhost:4000/about/" property="article:author">
         
         
@@ -46,10 +46,10 @@
         <meta name="twitter:site" content="@NKKostadinov">
         <meta name="twitter:creator" content="@NKKostadinov">
         
-          <meta name="twitter:title" content="Image classification with pretrained CNN InceptionV3">
+          <meta name="twitter:title" content="Image classification with stacked InceptionV3">
         
         
-          <meta name="twitter:url" content="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">
+          <meta name="twitter:url" content="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/2017/05/11/cnn-image-classification-cifar-10-stacked-inceptionV3.html">
         
         
           <meta name="twitter:description" content="description">
@@ -126,22 +126,22 @@
             </div>
 
             <div class="col-sm-7">
-                <h1>Image classification with pretrained CNN InceptionV3</h1>
-<span class="time">04 May 2017</span>
+                <h1>Image classification with stacked InceptionV3</h1>
+<span class="time">11 May 2017</span>
 
 <span class="categories">
-    &raquo; <a href="/category/python">python</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/cifar10">cifar10</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/convolutional neural network">convolutional neural network</a>, <a href="/category/GoogleLeNet">GoogleLeNet</a>, <a href="/category/Inception">Inception</a>, <a href="/category/tensorflow">tensorflow</a>, <a href="/category/dropout">dropout</a>, <a href="/category/image classification">image classification</a>
+    &raquo; <a href="/category/python">python</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/cifar10">cifar10</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/convolutional neural network">convolutional neural network</a>, <a href="/category/GoogleLeNet">GoogleLeNet</a>, <a href="/category/Inception">Inception</a>, <a href="/category/xgboost">xgboost</a>, <a href="/category/ridgeregression">ridgeregression</a>, <a href="/category/sklearn">sklearn</a>, <a href="/category/tensorflow">tensorflow</a>, <a href="/category/image classification">image classification</a>, <a href="/category/imagenet">imagenet</a>
 </span>
 
 
 <div class="content">
-    <div class="post"><h1 id="image-classification-with-finetuned-googlelenet">Image Classification with finetuned GoogleLeNet</h1>
+    <div class="post"><h1 id="image-classification-with-stacked-googlelenet">Image Classification with stacked GoogleLeNet</h1>
 
-<p>In my previous post <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a> I built a small convolutional neural network (CNN) to classify images from the <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR-10 dataset</a>. My goal was to demonstrate how easy one can construct a neural network with descent accuracy (around 67%). However, for many real word problems building CNNs from scratch might not be practical. For instance, in a recent <a href="http://kaggle.com/">kaggle</a> challenge called <a href="https://www.kaggle.com/c/dogs-vs-cats">Dog vs Cat</a> the competitors were asked to correctly classify images of dogs and cats. In an insightful <a href="http://blog.kaggle.com/2017/04/03/dogs-vs-cats-redux-playground-competition-winners-interview-bojan-tunguz/">interview</a> the winner of that challenge explained that he didn’t rely solely on a CNN that he built from scratch. Instead he got his hands on multiple models already trained with large datasets and applied some “finetuning” in order to make these fit for the specific goal of classifying cats and dogs. So how does this work? The idea is simple. There are hundreds of models already trained on a specific dataset. The largest repository I know is the <a href="https://github.com/BVLC/caffe/wiki/Model-Zoo">Model Zoo Github Repo</a>. There are also the models from the <a href="https://github.com/tensorflow/models/tree/master/slim">Tensorflow Slim Project</a>. So the goal is to select a model that is already trained on a dataset that is similar to the one you are interested in. After selecting the model one has to apply some “finetuning” on it. Interested? Well continue reading, as this is exactly what I am going to do in this post.</p>
+<p>This post builds on my two previous posts: <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a> and <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pretrained CNN InceptionV3</a>. In <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a> I built a small convolutional neural network (CNN) to classify images from the <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR-10 dataset</a>. My goal was to demonstrate how easy one can construct a neural network with descent accuracy (around 67%). Achieving an accuracy higher than that would required a deeper and wider neural network. Unfortunately, deeper and wider networks are often trained on multiple GPUs for several weeks. Hence, instead of training such a CNN from scrach in <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pretrained CNN InceptionV3</a> I showed how one could reuse an existing already pretrained one. Indeed, I used GoogleLeNet and more specifically the InceptionV3 neural network and applied some “finetuning” by training only the last few layers of the neural network. As a matter of fact, I was able to reach an accuracy that is significantly higher - 79,85%. In this post I want to try another approach. The goal is to achieve similar and possibly higher accuracy in much less time and without applying any finetuing. So, instead of retraining the last few layers, the neural network can be put in a classifier stack as a first level classifier, so that its output is the input of a second level classifier. Continue reading below for more details.</p>
 
 <h1 id="cifar-10-image-dataset">Cifar-10 Image Dataset</h1>
 
-<p>If you are already familiar with my previous post <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a>, you might want to skip the next sections and go directly to <strong>Converting datasets to .tfrecord</strong>.</p>
+<p>If you are already familiar with any of my previous posts about convolutional neural networks - <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a> or <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pretrained CNN InceptionV3</a>, you might want to skip the next sections and go directly to <strong>Stacking InceptionV3</strong>.</p>
 
 <p>The <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR-10 dataset</a> consists of 60000 32x32 colour images in 10 categories - airplanes, dogs, cats, and other objects. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class. Here are the classes in the dataset, as well as 10 random images from each:</p>
 
@@ -149,7 +149,7 @@
 
 <p>The classes are completely mutually exclusive. There is no overlap between automobiles and trucks. “Automobile” includes sedans, SUVs, things of that sort. “Truck” includes only big trucks. Neither includes pickup trucks.</p>
 
-<h1 id="download-the-dataset">Download the dataset</h1>
+<h2 id="download-the-dataset">Download the dataset</h2>
 <p>First, few lines of code will download the <a href="https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz">CIFAR-10 dataset for python</a>.</p>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># DOWNLOAD DATASET </span>
@@ -180,7 +180,7 @@
 </code></pre>
 </div>
 
-<h1 id="data-overview">Data Overview</h1>
+<h2 id="data-overview">Data Overview</h2>
 <p>The dataset is broken into batches - this is especially useful if one is to train the network on a laptop as it will probably prevent it from running out of memory. I only had 12 GB on mine and a single batch used around 3.2 GB - it wouldn’t be possible to load everything at once. Nevertheless, the CIFAR-10 dataset consists of 5 batches, named <code class="highlighter-rouge">data_batch_1</code>, <code class="highlighter-rouge">data_batch_2</code>, etc.. Each batch contains the labels and images that are one of the following:</p>
 
 <ul>
@@ -479,7 +479,7 @@ Label - Label Id: 8 Name: ship
 </div>
 
 <h1 id="downloading-googlelenet">Downloading GoogleLeNet</h1>
-<p>As previously elaborated, selecting a proper network to “finetune” is very important. For this post I chose GoogleLeNet and more specifically the InceptionV3 convolutional neural network. An overview on other fully trained neural networks by Google is available in the <a href="https://github.com/tensorflow/models/tree/master/slim">Tensorflow Slim Project</a>. All four versions of Inception (V1, V2, V3, v4) were trained on part of the <a href="http://www.image-net.org/challenges/LSVRC/2012/">ImageNet</a> dataset, whick consists of more than 10,000,000 images and over 10,000 categories. The ten categories in Cifar-10 are covered in ImageNet to some extent. Hence, the Inception models should be capable of recognizing images from Cifar-10 after we apply some finetuning. For this post I chose InceptionV3. As a matter of fact, the latest Inception network - InceptionV4 deemed the best results when testet against <a href="http://www.image-net.org/challenges/LSVRC/2012/">ImageNet</a>. However, InceptionV4 is much larger than InceptionV3 und would require much more computational resources when finetuning. Therefore I selected the second best Inception i.e. InceptionV3. The remaining code could be very easily modified to use the other versions of Inception. Given you have time and several GPUs to your dispolsal, I would rather recommend InceptionV4. InceptionV1 is the smallest and very suitable for some proof-of-concept-like projects.</p>
+<p>Check my previous post <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pretrained CNN InceptionV3</a> for information on why InceptionV3 has been selected.</p>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">inceptionv3_archive</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'model'</span><span class="p">,</span> <span class="s">'inception_v3_2016_08_28.tar.gz'</span><span class="p">)</span>
 
@@ -508,8 +508,7 @@ Label - Label Id: 8 Name: ship
 </code></pre>
 </div>
 
-<h3 id="finetuning-inceptionv3">Finetuning InceptionV3</h3>
-<p>First we define a couple of functions for loading a batch and loading the dataset.</p>
+<p>Next we define a couple of utility functions for loading a batch and loading the dataset…</p>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">inception_preprocessing</span>
 
@@ -572,208 +571,286 @@ Label - Label Id: 8 Name: ship
 </code></pre>
 </div>
 
-<p>Next we define a function for loading the pretrained model that has been previously downloaded. The function also specifies which variables should be restored from the pretrained model. The actual layers of the neural network are contained in those varaibles. What does finetuning a network means? The process of “finetuning” is selecting layers from the nueral network that should be retrained through backpropagation, while leaving the other layers unchanged. In a neural network for image classification, early layers capture low level details. Each subsequent layer uses the lower level details from its predecessors (e.g. a nose, an eye and a mouth) to caputre a higher level detail (e.g. a dogs or cats face). Take a look at the picture below.</p>
-
-<p><img src="/assets/images/andrewng.png" alt="png" /></p>
-
-<p>What Andrew Ng is showing in the <a href="https://www.youtube.com/watch?v=n1ViNeWhC24">Deep Learning, Self-Taught Learning and Unsupervised Feature Learning</a> is how the level of abstraction is increasing with each subsequent layer of neurons. For more detailed explanation on this matter I can also recommend <a href="https://www.youtube.com/watch?v=ghEmQSxT6tw">Visualizing and Understanding Deep Neural Networks by Matt Zeiler</a>. Anyway, when finetuning you will only train the last few layers of the network. The functions below will not only load the model, but will also create a small log file. The log file <a href="tf_inception variables.txt">tf_inception_vars.txt</a> shows all tensorflow variables and indicates which variables would remain unchanged and which would be retrained through backpropagation in the process of finetuning.</p>
-
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_init_fn</span><span class="p">():</span>
-    <span class="s">"""Returns a function run by the chief worker to warm-start the training."""</span>
-    <span class="n">checkpoint_exclude_scopes</span><span class="o">=</span><span class="p">[</span><span class="s">"InceptionV3/Logits"</span><span class="p">,</span> <span class="s">"InceptionV3/AuxLogits"</span><span class="p">,</span> <span class="s">"InceptionV3/Mixed_7"</span><span class="p">]</span>
-    
-    <span class="n">exclusions</span> <span class="o">=</span> <span class="p">[</span><span class="n">scope</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">scope</span> <span class="ow">in</span> <span class="n">checkpoint_exclude_scopes</span><span class="p">]</span>
-    
-    <span class="n">variables_to_restore</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">variables_to_retrain</span> <span class="o">=</span> <span class="p">[]</span>
-    
-    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">slim</span><span class="o">.</span><span class="n">get_model_variables</span><span class="p">():</span>
-        <span class="n">excluded</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="k">for</span> <span class="n">exclusion</span> <span class="ow">in</span> <span class="n">exclusions</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">exclusion</span><span class="p">):</span>
-                <span class="n">excluded</span> <span class="o">=</span> <span class="bp">True</span>
-                <span class="k">break</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">excluded</span><span class="p">:</span>
-            <span class="n">variables_to_restore</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">variables_to_retrain</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
-    
-    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">gfile</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s">'tf_inception_vars.txt'</span><span class="p">,</span> <span class="s">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">variables_to_restore</span><span class="p">:</span>
-             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">'</span><span class="si">%</span><span class="s">s ::RESTORED FROM CHECKPOINT</span><span class="se">\n</span><span class="s">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">var</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">variables_to_retrain</span><span class="p">:</span>
-             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">'</span><span class="si">%</span><span class="s">s ::SELECTED FOR RETRAINING</span><span class="se">\n</span><span class="s">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">var</span><span class="p">))</span>
-
-    <span class="k">return</span> <span class="n">slim</span><span class="o">.</span><span class="n">assign_from_checkpoint_fn</span><span class="p">(</span>
-      <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'model'</span><span class="p">,</span><span class="s">'inception_v3.ckpt'</span><span class="p">),</span> <span class="n">variables_to_restore</span><span class="p">)</span>
-</code></pre>
-</div>
-
-<p>Finally, we select several hyperparameters. A batch size of 128 pictures was a too much for the 12 GB of RAM I dedicated to my Linux VM. 64 was just fine. A single global step needed around 50 seconds. Hence, 1500 steps is around a day of time. If you have a CUDA-capable NVIDIA GPU the training will be much faster. The learning rate is probably the most importat hyperparameter. If you choose a learning rate too high, your model will converge very fast without actually learning anything. If you choose a learning rate too low, your model will train just fine, but you may not live long enough to see it finally converged. The Adam Optimizer is the least sensitive Optimizer I have tried out. For this tutorial I started with a learning rate of 0.01 and only after 15 steps (10 min of training) I noticed that the loss does not decrease. A learning rate of 0.001 was just fine. I like the AdamOptimizer as it is very tolerant if you chose a learning rate too high. You can also check this <a href="http://sebastianruder.com/optimizing-gradient-descent/index.html#adam">excellent overview on different optimizers</a>.</p>
+<h1 id="stacking-inceptionv3">Stacking InceptionV3</h1>
+<p>So instead of finetuning the neural network like we did in <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pretrained CNN InceptionV3</a>, we are going to use it as a first level classifier in a stack of classifiers consisting of two levels. In the code below the InceptionV3 model is loaded and without any training whatsover it is used to make a prediction for all images in the training set. Note that the unmodified InceptionV3 model has an output that is a vector of length 1001. For each image this output vector is saved to be later used as un input for the second level classifier.</p>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">inception_v3</span> <span class="kn">import</span> <span class="n">inception_v3</span>
 <span class="kn">from</span> <span class="nn">inception_v3</span> <span class="kn">import</span> <span class="n">inception_v3_arg_scope</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
+<span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="n">TRAIN_SAMPLES</span> <span class="o">=</span> <span class="mi">50000</span>
+<span class="n">NUMBER_OF_STEPS</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">TRAIN_SAMPLES</span> <span class="o">/</span> <span class="n">BATCH_SIZE</span><span class="p">)</span>
+<span class="n">INCEPTION_OUTPUT_SIZE</span> <span class="o">=</span> <span class="mi">1001</span>
+
 <span class="n">INCEPTION_IMAGE_SIZE</span> <span class="o">=</span> <span class="mi">299</span>
-<span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">64</span>
-<span class="n">NUMBER_OF_STEPS</span> <span class="o">=</span> <span class="mi">1500</span>
-<span class="n">LEARNING_RATE</span> <span class="o">=</span> <span class="mf">0.001</span>
 
 <span class="n">slim</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">slim</span>
 
-<span class="n">TRAINED_MODEL_DIR</span> <span class="o">=</span> <span class="s">'inceptionV3_cifar10_finetuned'</span>
+<span class="n">meta_data_train_X</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">meta_data_train_Y</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
-    <span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
     
     <span class="n">train_dataset</span> <span class="o">=</span> <span class="n">get_dataset</span><span class="p">(</span>
         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'tfrecord'</span><span class="p">,</span><span class="s">'cifar-10-training-tfrecord'</span><span class="p">),</span> <span class="n">TRAIN_SAMPLES</span><span class="p">)</span>
-    
-    <span class="n">images</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">load_batch</span><span class="p">(</span>
-       <span class="n">train_dataset</span><span class="p">,</span> <span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">INCEPTION_IMAGE_SIZE</span><span class="p">,</span> <span class="n">INCEPTION_IMAGE_SIZE</span><span class="p">)</span>
-    
-    <span class="c"># Create the model, use the default arg scope to configure the batch norm parameters.</span>
-    <span class="k">with</span> <span class="n">slim</span><span class="o">.</span><span class="n">arg_scope</span><span class="p">(</span><span class="n">inception_v3_arg_scope</span><span class="p">()):</span>
-        <span class="n">logits</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">inception_v3</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="n">train_dataset</span><span class="o">.</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">is_training</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-        
-    <span class="c"># Specify the loss function:</span>
-    <span class="n">one_hot_labels</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">one_hot_encoding</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">train_dataset</span><span class="o">.</span><span class="n">num_classes</span><span class="p">)</span>
-    <span class="n">slim</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">softmax_cross_entropy</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">one_hot_labels</span><span class="p">)</span>
-    <span class="n">total_loss</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">get_total_loss</span><span class="p">()</span>
-
-    <span class="c"># Create some summaries to visualize the training process:</span>
-    <span class="n">tf</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">scalar</span><span class="p">(</span><span class="s">'losses/Total Loss'</span><span class="p">,</span> <span class="n">total_loss</span><span class="p">)</span>
-  
-    <span class="c"># Specify the optimizer and create the train op:</span>
-    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">LEARNING_RATE</span><span class="p">)</span>
-    <span class="n">train_op</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">create_train_op</span><span class="p">(</span><span class="n">total_loss</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">)</span>
-    
-    <span class="c"># Run the training:</span>
-    <span class="n">final_loss</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
-        <span class="n">train_op</span><span class="p">,</span>
-        <span class="n">logdir</span><span class="o">=</span><span class="n">TRAINED_MODEL_DIR</span><span class="p">,</span>
-        <span class="n">init_fn</span><span class="o">=</span><span class="n">get_init_fn</span><span class="p">(),</span>
-        <span class="n">number_of_steps</span><span class="o">=</span><span class="n">NUMBER_OF_STEPS</span><span class="p">)</span>
-        
-<span class="k">print</span><span class="p">(</span><span class="s">'Finished training. Last batch loss </span><span class="si">%</span><span class="s">f'</span> <span class="o">%</span> <span class="n">final_loss</span><span class="p">)</span>
-</code></pre>
-</div>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>INFO:tensorflow:Summary name losses/Total Loss is illegal; using losses/Total_Loss instead.
-INFO:tensorflow:Starting Session.
-INFO:tensorflow:Starting Queues.
-INFO:tensorflow:global_step/sec: 0
-INFO:tensorflow:global step 1: loss = 2.9792 (76.37 sec/step)
-INFO:tensorflow:global step 2: loss = 2.4563 (52.38 sec/step)
-INFO:tensorflow:global step 3: loss = 1.8246 (51.16 sec/step)
-INFO:tensorflow:global step 4: loss = 1.9932 (51.35 sec/step)
-INFO:tensorflow:global step 5: loss = 1.8377 (49.80 sec/step)
-...
-INFO:tensorflow:global step 1496: loss = 0.5959 (53.37 sec/step)
-INFO:tensorflow:global step 1497: loss = 0.6893 (50.19 sec/step)
-INFO:tensorflow:global step 1498: loss = 0.5368 (50.39 sec/step)
-INFO:tensorflow:global step 1499: loss = 0.8566 (50.85 sec/step)
-INFO:tensorflow:global step 1500: loss = 0.6417 (50.32 sec/step)
-INFO:tensorflow:Stopping Training.
-INFO:tensorflow:Finished training! Saving model to disk.
-Finished training. Last batch loss 0.641681
-</code></pre>
-</div>
-
-<h1 id="evaluation">Evaluation</h1>
-<p>The neural networks I trained in my last post <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a> was classifying 67% of the images correctly. As there are 10 categories, a random guess would classify 10% of the images correctly. Hence, 67% is quite good. Let’s see…</p>
-
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">TEST_SAMPLE_SIZE</span> <span class="o">=</span> <span class="mi">10000</span>
-
-<span class="n">all_batch_stats</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="k">def</span> <span class="nf">getProbsAsStr</span><span class="p">(</span><span class="n">probabilities</span><span class="p">):</span>
-    <span class="n">probs_str</span> <span class="o">=</span> <span class="s">'Probabilities: '</span>
-    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">CLASS_NAMES</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">):</span>
-        <span class="n">probs_str</span> <span class="o">+=</span> <span class="s">'</span><span class="si">%</span><span class="s">s: </span><span class="si">%.2</span><span class="s">f</span><span class="si">%% </span><span class="s">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">prob</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">probs_str</span>
-
-<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
-    <span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
-    
-    <span class="n">test_dataset</span> <span class="o">=</span> <span class="n">get_dataset</span><span class="p">(</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'tfrecord'</span><span class="p">,</span><span class="s">'cifar-10-test-tfrecord'</span><span class="p">),</span> <span class="n">TEST_SAMPLE_SIZE</span><span class="p">)</span>
     <span class="n">images</span><span class="p">,</span> <span class="n">images_raw</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">load_batch</span><span class="p">(</span>
-        <span class="n">test_dataset</span><span class="p">,</span> <span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">INCEPTION_IMAGE_SIZE</span><span class="p">,</span> <span class="n">INCEPTION_IMAGE_SIZE</span><span class="p">)</span>
+        <span class="n">train_dataset</span><span class="p">,</span> <span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">INCEPTION_IMAGE_SIZE</span><span class="p">,</span> <span class="n">INCEPTION_IMAGE_SIZE</span><span class="p">)</span>
     
     <span class="c"># Create the model, use the default arg scope to configure the batch norm parameters.</span>
     <span class="k">with</span> <span class="n">slim</span><span class="o">.</span><span class="n">arg_scope</span><span class="p">(</span><span class="n">inception_v3_arg_scope</span><span class="p">()):</span>
-        <span class="n">logits</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">inception_v3</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="n">test_dataset</span><span class="o">.</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">is_training</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">logits</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">inception_v3</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="n">INCEPTION_OUTPUT_SIZE</span><span class="p">,</span> <span class="n">is_training</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
     <span class="n">probabilities</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">)</span>
     
-    <span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">latest_checkpoint</span><span class="p">(</span><span class="n">TRAINED_MODEL_DIR</span><span class="p">)</span>
-    <span class="n">init_fn</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">assign_from_checkpoint_fn</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">slim</span><span class="o">.</span><span class="n">get_variables_to_restore</span><span class="p">())</span>
+    <span class="n">init_fn</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">assign_from_checkpoint_fn</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'model'</span><span class="p">,</span><span class="s">'inception_v3.ckpt'</span><span class="p">),</span> <span class="n">slim</span><span class="o">.</span><span class="n">get_model_variables</span><span class="p">())</span>
     
     <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
         <span class="k">with</span> <span class="n">slim</span><span class="o">.</span><span class="n">queues</span><span class="o">.</span><span class="n">QueueRunners</span><span class="p">(</span><span class="n">sess</span><span class="p">):</span>
             <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">initialize_local_variables</span><span class="p">())</span>
             <span class="n">init_fn</span><span class="p">(</span><span class="n">sess</span><span class="p">)</span>
-            <span class="n">all_accuracy</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">TEST_SAMPLE_SIZE</span><span class="o">/</span><span class="n">BATCH_SIZE</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">NUMBER_OF_STEPS</span><span class="p">)):</span>
                 <span class="n">np_probabilities</span><span class="p">,</span> <span class="n">np_images_raw</span><span class="p">,</span> <span class="n">np_labels</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">probabilities</span><span class="p">,</span> <span class="n">images_raw</span><span class="p">,</span> <span class="n">labels</span><span class="p">])</span>
-                <span class="n">all_batch_stats</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">np_labels</span><span class="p">,</span> <span class="n">np_probabilities</span><span class="p">))</span>
-                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">999</span><span class="p">:</span> <span class="c"># show images </span>
-                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">BATCH_SIZE</span><span class="p">):</span> 
-                        <span class="n">image</span> <span class="o">=</span> <span class="n">np_images_raw</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:]</span>
-                        <span class="n">true_label</span> <span class="o">=</span> <span class="n">np_labels</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-                        <span class="n">predicted_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np_probabilities</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:])</span>
-                        <span class="n">predicted_name</span> <span class="o">=</span> <span class="n">test_dataset</span><span class="o">.</span><span class="n">labels_to_names</span><span class="p">[</span><span class="n">predicted_label</span><span class="p">]</span>
-                        <span class="n">true_name</span> <span class="o">=</span> <span class="n">test_dataset</span><span class="o">.</span><span class="n">labels_to_names</span><span class="p">[</span><span class="n">true_label</span><span class="p">]</span>
-                        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-                        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">))</span>
-                        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Ground Truth: [</span><span class="si">%</span><span class="s">s], Prediction [</span><span class="si">%</span><span class="s">s] '</span>
-                                  <span class="o">%</span> <span class="p">(</span><span class="n">true_name</span><span class="p">,</span> <span class="n">predicted_name</span><span class="p">)</span> <span class="o">+</span> <span class="n">getProbsAsStr</span><span class="p">(</span><span class="n">np_probabilities</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:]))</span>
-                        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s">'off'</span><span class="p">)</span>
-                        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="c"># Calculate accuracy over the whole test set</span>
-<span class="n">all_batch_accuracy</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">labels</span><span class="p">,</span> <span class="n">probs</span> <span class="ow">in</span> <span class="n">all_batch_stats</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">probs</span><span class="p">):</span>
-            <span class="n">all_batch_accuracy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">prob</span><span class="p">)</span> <span class="o">==</span> <span class="n">label</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s">'Overall accuracy'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">all_batch_accuracy</span><span class="p">))</span>
+                <span class="n">meta_data_train_X</span> <span class="o">+=</span> <span class="n">np_probabilities</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="n">meta_data_train_Y</span> <span class="o">+=</span> <span class="n">np_labels</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>WARNING:tensorflow:From &lt;ipython-input-36-bcd06166f627&gt;:31: initialize_local_variables (from tensorflow.python.ops.variables) is deprecated and will be removed after 2017-03-02.
-Instructions for updating:
-Use `tf.local_variables_initializer` instead.
+<div class="highlighter-rouge"><pre class="highlight"><code>100%|██████████| 1000/1000 [3:00:56&lt;00:00, 10.95s/it] 
 </code></pre>
 </div>
 
-<p><img src="/assets/images/output_19_1.png" alt="png" /></p>
+<p>It does not hurt to save the outputs to the disk in case the python notebook kernel crashes…</p>
 
-<p><img src="/assets/images/output_19_2.png" alt="png" /></p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pickle</span>
 
-<p><img src="/assets/images/output_19_3.png" alt="png" /></p>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">meta_data_train_X</span><span class="p">)</span> <span class="o">==</span> <span class="n">TRAIN_SAMPLES</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">meta_data_train_Y</span><span class="p">)</span> <span class="o">==</span> <span class="n">TRAIN_SAMPLES</span>
 
-<p><img src="/assets/images/output_19_4.png" alt="png" /></p>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'meta_data_train_inceptionV3.p'</span><span class="p">,</span> <span class="s">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">((</span><span class="n">meta_data_train_X</span><span class="p">,</span> <span class="n">meta_data_train_Y</span><span class="p">),</span> <span class="n">handle</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
 
-<p><img src="/assets/images/output_19_5.png" alt="png" /></p>
-
-<p><img src="/assets/images/output_19_6.png" alt="png" /></p>
-
-<p><img src="/assets/images/output_19_7.png" alt="png" /></p>
-
-<p><img src="/assets/images/output_19_8.png" alt="png" /></p>
-
-<p><img src="/assets/images/output_19_9.png" alt="png" /></p>
-
-<p><img src="/assets/images/output_19_10.png" alt="png" /></p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>Overall accuracy 0.7985
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'meta_data_train_inceptionV3.p'</span><span class="p">,</span> <span class="s">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+    <span class="n">meta_data_train_X</span><span class="p">,</span> <span class="n">meta_data_train_Y</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
 </code></pre>
 </div>
 
-<p>Indeed, the accuracy is much better. Evaluated over the whole test set of 10,000 images it is 79,85%. Howerver, there is plenty of room for improvements. While this finetuned network will not be at the very bottom of the leaderboard <a href="http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html">“state of the art in objects classification”</a>, the best model achieves 96.53%. At this point best model is actually better than a human that would achieve an accuracy of only 94%. Look at the fourth image from above that gets incorrectly classified as deer, but is actually a bird. I thought it was a white horse. Here is a link to the whole git repo: <a href="https://github.com/n-kostadinov/cnn-image-classification-cifar-10-inceptionv3">cnn-image-classification-cifar-10-inceptionv3</a>.</p>
+<p>Once training data set goes through the InceptionV3 network, you are all set to use the output vectors that have been produced as a training set for a second level classifier, Hence, your next task is to choose the second level classifier. As an input it receives the output vectors created by the unmodified InceptionV3 neural network. Its output, however, is the actual label - an integer from 1 to 10 for the 10 categories in the cifar-10 dataset. Below I will train three different second level classifiers in order to compare their performance. I will start with the most simple classifier possible, linear regression with L2 regularisation, that is also known as <a href="http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RidgeClassifier.html">ridge regression classifier</a>. It is not a bad idea to use a 5-fold cross validation in order to evaluate the classifier’s accuracy without actually using the test set.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">RidgeClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
+
+<span class="n">ridge_classifier</span> <span class="o">=</span> <span class="n">RidgeClassifier</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">ridge_classifier</span><span class="p">,</span> <span class="n">meta_data_train_X</span><span class="p">,</span> <span class="n">meta_data_train_Y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'Accuracy ridge classifier'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Accuracy ridge classifier 0.743219828872
+</code></pre>
+</div>
+
+<p>With an accuracy of over 74% it is already better than the accuracy achieved in my home made, small and simple CNN described in <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a>. Let’s train the ridge regression on the whole training set, it only takes a few seconds…</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">ridge_classifier</span> <span class="o">=</span> <span class="n">RidgeClassifier</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">meta_data_train_X</span><span class="p">,</span> <span class="n">meta_data_train_Y</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>The second second-level classifier I want to evaluate is a small fully connected neural network. We can split the training set into training (90%) and validation (10%) parts in order to test the classifier’s performance without actually using the test set. To keep it short and simple, I will use the <a href="https://www.tensorflow.org/get_started/tflearn">TensorFlow’s high-level machine learning API (tf.contrib.learn)</a>. The neural network below has an input layer of 1001 nodes (that is the output of Inception3), and three hidden layers of 2048, 512 and 64 nodes.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">train_X</span><span class="p">,</span> <span class="n">train_Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">meta_data_train_X</span><span class="p">[:</span><span class="mi">45000</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">meta_data_train_Y</span><span class="p">[:</span><span class="mi">45000</span><span class="p">]</span>
+<span class="n">validation_X</span><span class="p">,</span> <span class="n">validation_Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">meta_data_train_X</span><span class="p">[</span><span class="mi">45000</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">meta_data_train_Y</span><span class="p">[</span><span class="mi">45000</span><span class="p">:]</span>
+
+<span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+<span class="n">feature_columns</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">infer_real_valued_columns_from_input</span><span class="p">(</span><span class="n">train_X</span><span class="p">)</span>
+<span class="n">dnnClassifier</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">DNNClassifier</span><span class="p">(</span><span class="n">hidden_units</span><span class="o">=</span><span class="p">[</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span>
+                                            <span class="n">feature_columns</span><span class="o">=</span><span class="n">feature_columns</span><span class="p">,</span>  
+                                            <span class="n">n_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                            <span class="n">model_dir</span><span class="o">=</span><span class="s">'second_leveld_dnn'</span><span class="p">,</span>
+                                            <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                                            <span class="n">optimizer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)):</span>
+    <span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">train_X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">train_Y</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">accuracy_score</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">validation_X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">validation_Y</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="s">"accuracy"</span><span class="p">]</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Accuracy DNNClassifier'</span><span class="p">,</span><span class="n">accuracy_score</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code> 10%|█         | 1/10 [10:48&lt;1:37:14, 648.28s/it]
+
+Accuracy DNNClassifier 0.7536
+
+
+ 20%|██        | 2/10 [21:47&lt;1:26:52, 651.62s/it]
+
+Accuracy DNNClassifier 0.7772
+
+
+ 30%|███       | 3/10 [33:02&lt;1:16:50, 658.59s/it]
+
+Accuracy DNNClassifier 0.7888
+
+
+ 40%|████      | 4/10 [43:58&lt;1:05:47, 657.90s/it]
+
+Accuracy DNNClassifier 0.797
+
+
+ 50%|█████     | 5/10 [54:30&lt;54:10, 650.17s/it]  
+
+Accuracy DNNClassifier 0.8022
+
+
+ 60%|██████    | 6/10 [1:05:08&lt;43:05, 646.26s/it]
+
+Accuracy DNNClassifier 0.8062
+
+
+ 70%|███████   | 7/10 [1:16:01&lt;32:25, 648.52s/it]
+
+Accuracy DNNClassifier 0.808
+
+
+ 80%|████████  | 8/10 [1:27:10&lt;21:49, 654.67s/it]
+
+Accuracy DNNClassifier 0.8082
+
+
+ 90%|█████████ | 9/10 [1:38:04&lt;10:54, 654.31s/it]
+
+Accuracy DNNClassifier 0.8072
+
+
+100%|██████████| 10/10 [1:48:54&lt;00:00, 653.14s/it]
+
+Accuracy DNNClassifier 0.808
+</code></pre>
+</div>
+
+<p>The accuracy goes up to almost 81%. However, a little more then a few seconds are needed. It took almost 2 hours on my laptop. And then we need another two hours to train it on the whole training set… I will be gearing up with several GPUs in the next few weeks.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+<span class="n">feature_columns</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">infer_real_valued_columns_from_input</span><span class="p">(</span><span class="n">train_X</span><span class="p">)</span>
+<span class="n">dnnClassifier</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">DNNClassifier</span><span class="p">(</span><span class="n">hidden_units</span><span class="o">=</span><span class="p">[</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span>
+                                            <span class="n">feature_columns</span><span class="o">=</span><span class="n">feature_columns</span><span class="p">,</span>  
+                                            <span class="n">n_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                            <span class="n">model_dir</span><span class="o">=</span><span class="s">'full_second_leveld_dnn'</span><span class="p">,</span>
+                                            <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                                            <span class="n">optimizer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)):</span>
+    <span class="n">dnnClassifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">meta_data_train_X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">y</span><span class="o">=</span><span class="n">meta_data_train_Y</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>100%|██████████| 10/10 [2:11:16&lt;00:00, 749.81s/it] 
+</code></pre>
+</div>
+
+<p>At last, I want to also evaluate one more classifier. This one is actually one of mine and many AI engineers favorite - the Boosted Trees classifier and its implementation <a href="http://xgboost.readthedocs.io/en/latest/model.html">xgboost</a>. It became widly popular as it was consistently used in the winning solutions for many of the challenges posted on <a href="http://xgboost.readthedocs.io/en/latest/model.html">kaggle</a>. Interesting enoughs, several challenges has been won by using only feature engineering and stacking xgboost classifier on top of each other… Sadly, you can not really classify images with Boosted Trees, but you can sure use them as a second level classifier.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">xgboost</span>
+
+<span class="n">xgb_classifier</span> <span class="o">=</span> <span class="n">xgboost</span><span class="o">.</span><span class="n">XGBClassifier</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+ <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+ <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">meta_data_train_X</span><span class="p">)</span>
+
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">xgb_classifier</span><span class="p">,</span>  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">meta_data_train_X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">meta_data_train_Y</span><span class="p">),</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'Accuracy xgboost'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Accuracy xgboost 0.823939567637
+
+
+[Parallel(n_jobs=1)]: Done   5 out of   5 | elapsed: 71.9min finished
+</code></pre>
+</div>
+
+<p>In a 5-fold cross validation set it yelds the best accuracy so far more than 82%. It also needs a little less time than the fully connected neural network above. Let’s train it on the whole training set.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># Prepare classifier</span>
+<span class="n">xgb_classifier</span> <span class="o">=</span> <span class="n">xgboost</span><span class="o">.</span><span class="n">XGBClassifier</span><span class="p">(</span>
+    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">meta_data_train_X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">meta_data_train_Y</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<h1 id="evaluation">Evaluation</h1>
+<p>At last it is time to evaluate our two level stack. First, we move all the images from the test set through the neural network to create the output of the first layer of our two layer stack. That output we are then to feed into each of the second level classifiers in order to get the final predictions.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">TEST_SAMPLES</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">NUMBER_OF_STEPS</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">TEST_SAMPLES</span> <span class="o">/</span> <span class="n">BATCH_SIZE</span><span class="p">)</span>
+
+<span class="n">meta_data_test_X</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">meta_data_test_Y</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+    
+    <span class="n">test_dataset</span> <span class="o">=</span> <span class="n">get_dataset</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'tfrecord'</span><span class="p">,</span><span class="s">'cifar-10-test-tfrecord'</span><span class="p">),</span> <span class="n">TEST_SAMPLES</span><span class="p">)</span>
+    <span class="n">images</span><span class="p">,</span> <span class="n">images_raw</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">load_batch</span><span class="p">(</span>
+        <span class="n">test_dataset</span><span class="p">,</span> <span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">INCEPTION_IMAGE_SIZE</span><span class="p">,</span> <span class="n">INCEPTION_IMAGE_SIZE</span><span class="p">)</span>
+    
+    <span class="c"># Create the model, use the default arg scope to configure the batch norm parameters.</span>
+    <span class="k">with</span> <span class="n">slim</span><span class="o">.</span><span class="n">arg_scope</span><span class="p">(</span><span class="n">inception_v3_arg_scope</span><span class="p">()):</span>
+        <span class="n">logits</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">inception_v3</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="n">INCEPTION_OUTPUT_SIZE</span><span class="p">,</span> <span class="n">is_training</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="n">probabilities</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">)</span>
+    
+    <span class="n">init_fn</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">assign_from_checkpoint_fn</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'model'</span><span class="p">,</span><span class="s">'inception_v3.ckpt'</span><span class="p">),</span> <span class="n">slim</span><span class="o">.</span><span class="n">get_model_variables</span><span class="p">())</span>
+    
+    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">slim</span><span class="o">.</span><span class="n">queues</span><span class="o">.</span><span class="n">QueueRunners</span><span class="p">(</span><span class="n">sess</span><span class="p">):</span>
+            <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">initialize_local_variables</span><span class="p">())</span>
+            <span class="n">init_fn</span><span class="p">(</span><span class="n">sess</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">NUMBER_OF_STEPS</span><span class="p">)):</span>
+                <span class="n">np_probabilities</span><span class="p">,</span> <span class="n">np_images_raw</span><span class="p">,</span> <span class="n">np_labels</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">probabilities</span><span class="p">,</span> <span class="n">images_raw</span><span class="p">,</span> <span class="n">labels</span><span class="p">])</span>
+                <span class="n">meta_data_test_X</span> <span class="o">+=</span> <span class="n">np_probabilities</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="n">meta_data_test_Y</span> <span class="o">+=</span> <span class="n">np_labels</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>100%|██████████| 200/200 [38:55&lt;00:00, 10.25s/it] 
+</code></pre>
+</div>
+
+<p>Ok, now the outputs are used as inputs in the three classifiers - ridge regression, fully connected NN and xgboost. The final accuracy is then calculated for each of the three classifiers.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="c"># Accuracy of Ridge Regression as second level classifier, evaluated on the test set</span>
+<span class="n">predictions_ridge</span> <span class="o">=</span> <span class="n">ridge_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">meta_data_test_X</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'Accuracy with RidgeRegression as second level classifier'</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">predictions_ridge</span><span class="p">,</span> <span class="n">meta_data_test_Y</span><span class="p">))</span>
+<span class="n">prediction_dnn</span> <span class="o">=</span> <span class="n">dnnClassifier</span><span class="o">.</span><span class="n">predict_classes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">meta_data_test_X</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'Accuracy with Deep Neural Network as second level classifier'</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">prediction_dnn</span><span class="p">),</span> <span class="n">meta_data_test_Y</span><span class="p">))</span>
+<span class="n">prediction_xgb</span> <span class="o">=</span> <span class="n">xgb_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">meta_data_test_X</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'Accuracy with XGB as second level classifier'</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">prediction_xgb</span><span class="p">,</span> <span class="n">meta_data_test_Y</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Accuracy with RidgeRegression as second level classifier 0.7357
+Accuracy with Deep Neural Network as second level classifier 0.7977
+Accuracy with XGB as second level classifier 0.8176
+</code></pre>
+</div>
+
+<p>Yet again, xgboost did not disappoint and yeld the best accuracy of three classifiers. Let’s save it for leater use.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'xgboost_model.p'</span><span class="p">,</span> <span class="s">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">xgb_classifier</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>It may seem contraintuitive that the classifier stack produced better results than the finetunning approach shown in <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pretrained CNN InceptionV3</a> An explanation is given in the chapter <a href="http://cs231n.github.io/transfer-learning/">Transfer Learning</a> in Andrej Karpathy’s lecture <a href="http://cs231n.github.io/">CS231n: Convolutional Neural Networks for Visual Recognition</a>. “New dataset is small and similar to original dataset. Since the data is small, it is not a good idea to fine-tune the ConvNet due to overfitting concerns. Since the data is similar to the original data, we expect higher-level features in the ConvNet to be relevant to this dataset as well. Hence, the best idea might be to train a linear classifier on the CNN codes.” Well the Cifar-10 is indeed similar to the ImageNet dataset, but is it small? With 50,000 images in the training set it does not seem so. But in comparison to the the massive <a href="http://image-net.org/index">ImageNet</a> with over 10,000,000 images it is rather tiny. So what is next? Deploying both stacked models into a web application and making it possible to actually upload and classify a picture. As awlays feel free to checkout the whole github repository: <a href="https://github.com/n-kostadinov/cnn-image-classification-stacked-inception3">cnn-image-classification-stacked-inception3</a>.</p>
 
 </div>
     <div class="share-page">
@@ -788,7 +865,7 @@ Use `tf.local_variables_initializer` instead.
     <script src="https://apis.google.com/js/platform.js" async defer></script>
 
     <!-- Facebook -->
-    <div class="fb-share-button" data-href="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
+    <div class="fb-share-button" data-href="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/2017/05/11/cnn-image-classification-cifar-10-stacked-inceptionV3.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
 </div>
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
@@ -806,15 +883,438 @@ Use `tf.local_variables_initializer` instead.
     
         
             
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+
+    
+    
+        
+            
                 
                 <div class="panel-body">
                 <h4>Related Posts</h4>
                 <ul>
                 
                 <li class="relatedPost">
-                    <a href="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/2017/05/11/cnn-image-classification-cifar-10-stacked-inceptionV3.html">Image classification with stacked InceptionV3</a>
+                    <a href="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pretrained CNN InceptionV3</a>
                     
-                        (Categories: <a href="/category/python">python</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/cifar10">cifar10</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/convolutional neural network">convolutional neural network</a>, <a href="/category/GoogleLeNet">GoogleLeNet</a>, <a href="/category/Inception">Inception</a>, <a href="/category/xgboost">xgboost</a>, <a href="/category/ridgeregression">ridgeregression</a>, <a href="/category/sklearn">sklearn</a>, <a href="/category/tensorflow">tensorflow</a>, <a href="/category/image classification">image classification</a>, <a href="/category/imagenet">imagenet</a>)
+                        (Categories: <a href="/category/python">python</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/cifar10">cifar10</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/convolutional neural network">convolutional neural network</a>, <a href="/category/GoogleLeNet">GoogleLeNet</a>, <a href="/category/Inception">Inception</a>, <a href="/category/tensorflow">tensorflow</a>, <a href="/category/dropout">dropout</a>, <a href="/category/image classification">image classification</a>)
                     
                 </li>
                 
@@ -841,24 +1341,6 @@ Use `tf.local_variables_initializer` instead.
         
             
         
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
             
         
             
@@ -872,24 +1354,6 @@ Use `tf.local_variables_initializer` instead.
             
         
             
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
         
             
         
@@ -937,24 +1401,6 @@ Use `tf.local_variables_initializer` instead.
         
             
         
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
             
         
             
@@ -968,24 +1414,6 @@ Use `tf.local_variables_initializer` instead.
             
         
             
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
         
             
         
@@ -1033,24 +1461,6 @@ Use `tf.local_variables_initializer` instead.
         
             
         
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
             
         
             
@@ -1064,24 +1474,6 @@ Use `tf.local_variables_initializer` instead.
             
         
             
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
         
             
         
@@ -1129,24 +1521,6 @@ Use `tf.local_variables_initializer` instead.
         
             
         
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
             
         
             
@@ -1154,33 +1528,12 @@ Use `tf.local_variables_initializer` instead.
             
         
     
-
-    
-    
         
             
         
             
         
             
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
         
             
         
@@ -1228,24 +1581,6 @@ Use `tf.local_variables_initializer` instead.
         
             
         
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
             
         
             
@@ -1276,24 +1611,6 @@ Use `tf.local_variables_initializer` instead.
         
             
         
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
             
         
             
@@ -1307,96 +1624,6 @@ Use `tf.local_variables_initializer` instead.
             
         
             
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
         
             
         
@@ -1457,24 +1684,6 @@ Use `tf.local_variables_initializer` instead.
         
             
         
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
             
         
             
@@ -1488,24 +1697,6 @@ Use `tf.local_variables_initializer` instead.
             
         
             
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
         
             
         
@@ -1553,24 +1744,6 @@ Use `tf.local_variables_initializer` instead.
         
             
         
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
             
         
             
@@ -1601,7 +1774,109 @@ Use `tf.local_variables_initializer` instead.
         
             
         
+            
+        
+            
+        
+            
+        
     
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
         
             
         
@@ -1662,24 +1937,6 @@ Use `tf.local_variables_initializer` instead.
         
             
         
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
             
         
             
@@ -1693,24 +1950,6 @@ Use `tf.local_variables_initializer` instead.
             
         
             
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
         
             
         
@@ -1758,7 +1997,79 @@ Use `tf.local_variables_initializer` instead.
         
             
         
+            
+        
+            
+        
+            
+        
     
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
         
             
         
@@ -1819,24 +2130,6 @@ Use `tf.local_variables_initializer` instead.
         
             
         
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
             
         
             
@@ -1850,24 +2143,6 @@ Use `tf.local_variables_initializer` instead.
             
         
             
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
         
             
         
@@ -1915,24 +2190,6 @@ Use `tf.local_variables_initializer` instead.
         
             
         
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
             
         
             
@@ -1963,7 +2220,109 @@ Use `tf.local_variables_initializer` instead.
         
             
         
+            
+        
+            
+        
+            
+        
     
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
         
             
         
@@ -2024,24 +2383,6 @@ Use `tf.local_variables_initializer` instead.
         
             
         
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
             
         
             
@@ -2055,24 +2396,6 @@ Use `tf.local_variables_initializer` instead.
             
         
             
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
         
             
         
@@ -2120,24 +2443,6 @@ Use `tf.local_variables_initializer` instead.
         
             
         
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
             
         
             
@@ -2168,7 +2473,109 @@ Use `tf.local_variables_initializer` instead.
         
             
         
+            
+        
+            
+        
+            
+        
     
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
         
             
         
@@ -2201,10 +2608,8 @@ Use `tf.local_variables_initializer` instead.
 
 <div class="PageNavigation">
   
-    <a class="prev" href="/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">&laquo; Convolutional neural network for image classification from scratch</a>
+    <a class="prev" href="/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">&laquo; Image classification with pretrained CNN InceptionV3</a>
   
-  
-    <a class="next" href="/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/2017/05/11/cnn-image-classification-cifar-10-stacked-inceptionV3.html">Image classification with stacked InceptionV3 &raquo;</a>
   
 </div>
 
@@ -2215,8 +2620,8 @@ Use `tf.local_variables_initializer` instead.
         /* <![CDATA[ */
 
         var disqus_shortname = "machinememos-com";
-        var disqus_identifier = "http://localhost:4000_Image classification with pretrained CNN InceptionV3";
-        var disqus_title = "Image classification with pretrained CNN InceptionV3";
+        var disqus_identifier = "http://localhost:4000_Image classification with stacked InceptionV3";
+        var disqus_title = "Image classification with stacked InceptionV3";
 
         /* * * DON'T EDIT BELOW THIS LINE * * */
         (function() {
