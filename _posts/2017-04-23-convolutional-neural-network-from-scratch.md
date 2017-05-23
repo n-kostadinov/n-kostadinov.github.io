@@ -10,13 +10,13 @@ In this project we will build a convolutional neural network (CNN) to classify i
 
 # Image Dataset
 
-The [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html) consists of 60000 32x32 colour images in 10 categories - airplanes, dogs, cats, and other objects. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class. Here are the classes in the dataset, as well as 10 random images from each:
+The [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html) consists of 60000 32x32 color images in 10 categories - airplanes, dogs, cats, and other objects. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class. Here are the classes in the dataset, as well as 10 random images from each:
 
 ![png](/assets/images/dataset_overview.jpg)
 
 The classes are completely mutually exclusive. There is no overlap between automobiles and trucks. "Automobile" includes sedans, SUVs, things of that sort. "Truck" includes only big trucks. Neither includes pickup trucks.
 
-In the following we will preprocess the images, then train a convolutional neural network on all the samples. The images need to be normalized and the labels need to be one-hot encoded.  Next we will build a convolutional, max pooling, dropout, and fully connected layers. At the end, we will train the network ang get to see it's predictions on the sample images.
+In the following, we will preprocess the images, then train a convolutional neural network on all the samples. The images need to be normalized and the labels need to be one-hot encoded.  Next, we will build a convolutional, max pooling, dropout, and fully connected layers. At the end, we will train the network and get to see it's predictions on the sample images.
 
 ## Download the dataset
 First, few lines of code will download the [CIFAR-10 dataset for python](https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz).
@@ -115,7 +115,7 @@ def display_stats(features, labels, sample_id):
     plt.show()
 ```
 
-Let's check the first couple of images of each batch. The lines below can be easily modified to show an arbitary image from any batch.
+Let's check the first couple of images of each batch. The lines below can be easily modified to show an arbitrary image from any batch.
 
 
 ```python
@@ -296,7 +296,7 @@ del features, labels # free memory
 
 ### Normalization function
 
-In the cell below, the `normalize` function takes in image data, `x`, and return it as a normalized Numpy array. The values are in the range of 0 to 1, inclusive. The return object has the same shape as `x`.
+In the cell below, the `normalize` function takes in image data, `x`, and return it as a normalized Numpy array. The values are in the range of 0 to 1, inclusive. The returned object has the same shape as `x`.
 
 
 ```python
@@ -319,7 +319,7 @@ def one_hot_encode(x):
 ```
 
 ## Preprocess all the data and save it
-Running the code cell below will preprocess all the CIFAR-10 data and save it to file. The code below also uses 10% of the training data for validation. Remember, we do not want to load all the data in the memory simulanously.
+Running the code cell below will preprocess all the CIFAR-10 data and save it to file. The code below also uses 10% of the training data for validation. Remember, we do not want to load all the data in the memory simultaneously.
 
 
 ```python
@@ -349,7 +349,7 @@ def preprocess_and_save_all_data():
         features, labels = load_cfar10_batch(batch_i)
         validation_count = int(len(features) * 0.1)
 
-        # Prprocess and save a batch of training data
+        # Process and save a batch of training data
         preprocess_and_save(
             features[:-validation_count],
             labels[:-validation_count],
@@ -383,7 +383,7 @@ preprocess_and_save_all_data()
 ```
 
 ## Building the neural network
-For the neural network, I will build each type of layer into a function. Encapsulating tensorflow logic in such functions allows you to easily modify the architectire without having to rewrite the boilerplate tensorflow code. Furthermore, the functions built can be later reused for other datasets containing images with different size and different labels.
+For the neural network, I will build each type of layer into a function. Encapsulating tensorflow logic in such functions allows you to easily modify the architecture without having to rewrite the boilerplate tensorflow code. Furthermore, the functions built can be later reused for other datasets containing images with different size and different labels.
 
 ### Input
 The neural network needs to read the image data, one-hot encoded labels, and dropout keep probability. 
@@ -469,7 +469,7 @@ def fully_conn(x_tensor, num_outputs):
 ```
 
 ### The Neural Network architecture
-In the function `conv_net` we create the actual convolutional neural network model. The function takes in a batch of images, `x`, and outputs logits. The layers introduced above are bound together. This is where one actually defines the architecture of the neural network. As a matter of fact, I changed the architecture more than a dozen of times, until I reached a reasonable accuracy. Indeed, it is very hard to choose a proper architecture and blind trail and error is not the way to go here. There are multiple methodologies for finetuning a neural network described in various papers by the scientific community. For the sake of simplicity I will not dive into the details here, but would definetly recommend this reading: [1st place on the Galaxy Zoo Challenge](http://benanne.github.io/2014/04/05/galaxy-zoo.html)
+In the function `conv_net` we create the actual convolutional neural network model. The function takes in a batch of images, `x`, and outputs logits. The layers introduced above are bound together. This is where one actually defines the architecture of the neural network. As a matter of fact, I changed the architecture more than a dozen of times, until I reached a reasonable accuracy. Indeed, it is very hard to choose a proper architecture and blind trial and error is not the way to go here. There are multiple methodologies for fine tuning a neural network described in various papers by the scientific community. For the sake of simplicity I will not dive into the details here, but would definitely recommend this reading: [1st place on the Galaxy Zoo Challenge](http://benanne.github.io/2014/04/05/galaxy-zoo.html)
 
 
 ```python
@@ -490,7 +490,7 @@ def conv_net(input_x, keep_probability):
 ```
 
 ### Building the Neural Network
-In the code block below we use tensorflow to train the neural network. I found the AdamOptimizer to be the least sensitive to the learning rate. The learning rate is another parameter one has to tune. For an overview of diffent optimizers check [An overview of gradient descent optimization algorithms.](http://sebastianruder.com/optimizing-gradient-descent/)
+In the code block below we use tensorflow to train the neural network. I found the AdamOptimizer to be the least sensitive to the learning rate. The learning rate is another parameter one has to tune. For an overview of different optimizers check [An overview of gradient descent optimization algorithms.](http://sebastianruder.com/optimizing-gradient-descent/)
 
 
 ```python
@@ -557,10 +557,10 @@ def print_stats(session, feature_batch, label_batch, cost, accuracy):
 
 A few more parameters need to be tuned:
 * We set `epochs` to the number of iterations until the network stops learning or starts overfitting
-* We Set `batch_size` to the highest number that your machine has memory for.  Most people set them to common sizes of memory like 64, 128, etc. The bigger the batch size, the less epochs are needed for the network to be trained. 
+* We Set `batch_size` to the highest number that your machine has memory for.  Most people set them to common sizes of memory like 64, 128, etc. The bigger the batch size, the fewer epochs are needed for the network to be trained. 
 
 
-* We set `keep_probability` to the probability of keeping a node using dropout. Hence, keep_probability prevents overfitting of the neural network. Usually values between 0.4 and 0.8 produce good results. 
+* We set `keep_probability` to the probability of keeping a node using dropout. Hence, keep_probability prevents overfitting of the neural network. Usually, values between 0.4 and 0.8 produce good results. 
 
 
 ```python
@@ -719,7 +719,7 @@ with tf.Session() as session:
 
 
 ### Fully Train the Model
-Now that we got a good accuracy with a single CIFAR-10 batch, we train the model again by using all five batches. This takes quite a lot of time. At the end the model is saved on the hard disk in order to be reused in the future.
+Now that we got a good accuracy with a single CIFAR-10 batch, we train the model again by using all five batches. This takes quite a lot of time. At the end, the model is saved on the hard disk in order to be reused in the future.
 
 
 ```python
@@ -749,7 +749,7 @@ with tf.Session() as session:
 
 
 ## Test Model
-At the end we load the model from the disk and use it to test against the test dataset. This will produce our final accuracy estimation.
+Let's load the model from the disk and use it to test against the test dataset. This will produce our final accuracy estimation.
 
 
 ```python
@@ -852,4 +852,4 @@ test_model()
 
 
 ## Outlook
-This post gives a general idea how one could build and train a confolutional neural network. Nonetheless, more than a few details were not discussed. So, deer reader, as always feel free to contant me and let me know if you have any questions. The whole Python Notebook can be found here: [cnn-image-classification-cifar-10-from-scratch.ipynb](https://github.com/n-kostadinov/cnn-image-classification-cifar-10-from-scratch/blob/master/cnn-image-classification-cifar-10-from-scratch.ipynb). 
+This post gives a general idea how one could build and train a convolutional neural network. Nonetheless, more than a few details were not discussed. So, dear reader, as always feel free to contact me and let me know if you have any questions. The whole Python Notebook can be found here: [cnn-image-classification-cifar-10-from-scratch.ipynb](https://github.com/n-kostadinov/cnn-image-classification-cifar-10-from-scratch/blob/master/cnn-image-classification-cifar-10-from-scratch.ipynb). 

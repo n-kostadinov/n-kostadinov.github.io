@@ -3,7 +3,7 @@ layout: post
 title: Implementing a neural network from scratch
 categories: [python, machine learning, deep learning, neural networks, sigmoid, hidden layer, activation function, tensorflow]
 ---
-When designing a neural network machine learning engineers will usually use a high level library like <a href="https://www.tensorflow.org/" target="_blank">tensorflow</a> (my personal favorite) or a wrapper on top of tensorflow like <a href="https://keras.io/" target="_blank">keras</a>. And yes, old school ML engineers are still using <a href="http://deeplearning.net/software/theano/index.html" target="_blank">theano</a>. Having all these tools at your disposal it is rather tempting to view neural networks as a black box and not spend too much time thinking on low level implementation details like backpropagation, the chain rule, weights initialization, etc. However understanding these concepts might be crucial when fine tuning a neural network. Choosing the optimal count of the hidden layers, the optimal size of each layer, the right activation function, the learning rate, the regularization weights, dropout rate, etc. is not an easy task. Knowing how deep learning works will certainly help you debug and optimize your network. Otherwise you will be left shooting in the dark, trying to guess the optimal configuration. 
+When designing a neural network machine learning engineers will usually use a high-level library like <a href="https://www.tensorflow.org/" target="_blank">tensorflow</a> (my personal favorite) or a wrapper on top of tensorflow like <a href="https://keras.io/" target="_blank">keras</a>. And yes, old school ML engineers are still using <a href="http://deeplearning.net/software/theano/index.html" target="_blank">theano</a>. Having all these tools at your disposal it is rather tempting to view neural networks as a black box and not spend too much time thinking about low-level implementation details like backpropagation, the chain rule, weights initialization, etc. However understanding these concepts might be crucial when fine tuning a neural network. Choosing the optimal count of the hidden layers, the optimal size of each layer, the right activation function, the learning rate, the regularization weights, dropout rate, etc. is not an easy task. Knowing how deep learning works will certainly help you debug and optimize your network. Otherwise, you will be left shooting in the dark, trying to guess the optimal configuration. 
 
 In this post I will discuss the my solution to the first assignment in the excellent <a href="https://www.udacity.com/" target="_blank">Udacity</a> program "Deep Learning Nanodegree Foundation". Before reading any further I strongly recommend watching the video below. It is a very well structured Stanford Lecture on Neural Networks, which is discussing backpropagation and the chain rule:
 
@@ -34,7 +34,7 @@ rides[:24*20].plot(x='dteday', y='cnt')
 
 ![Bike Share Data Rides per Hour](/assets/images/bike_share_data_rides.jpg){:class="img-responsive"}
 
-You can see the hourly rentals here. This data is pretty complicated! The weekends have lower over all ridership and there are spikes when people are biking to and from work during the week. Looking at the data above, we also have information about temperature, humidity, and windspeed, all of these likely affecting the number of riders. The neural network will by trying to capture all these.
+You can see the hourly rentals here. This data is pretty complicated! The weekends have lower overall ridership and there are spikes when people are biking to and from work during the week. Looking at the data above, we also have information about temperature, humidity, and windspeed, all of this likely affecting the number of riders. The neural network will by trying to capture all these.
 
 Let's convert categorical data into binary, so that it can be used as input in the neural network:
 
@@ -71,7 +71,7 @@ features, targets = data.drop(target_fields, axis=1), data[target_fields]
 test_features, test_targets = test_data.drop(target_fields, axis=1), test_data[target_fields]
 {% endhighlight %}
 
-Usually you would like to make one more split and create a validation set in order to observe and control the bias and variance of the neural network. Although this is EXTREMELY important, I will skip this step here, as I want to focus on the network implementation. If you want to learn more about identifying and controlling bias and variance you can take a look at andrew ng's lecture <a href="https://youtu.be/tTSssB9OuI4" target="_blank">Machine learning W6 4 Diagnosing Bias vs Variance</a>.
+Usually, you would like to make one more split and create a validation set in order to observe and control the bias and variance of the neural network. Although this is EXTREMELY important, I will skip this step here, as I want to focus on the network implementation. If you want to learn more about identifying and controlling bias and variance you can take a look at Andrew NG's lecture <a href="https://youtu.be/tTSssB9OuI4" target="_blank">Machine learning W6 4 Diagnosing Bias vs Variance</a>.
 
 So let's implement the neural network:
 {% highlight python %}
@@ -208,20 +208,4 @@ _ = ax.set_xticklabels(dates[12::24], rotation=45)
 
 ![Neural Network Predictions](/assets/images/bike_share_data_predictions.jpg){:class="img-responsive"}
 
-As you can see, you can easily implement a neural network from scratch that could get you pretty descent predictions for some real world problems. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+As you can see, you can easily implement a neural network from scratch that could get you pretty decent predictions for some real world problems.

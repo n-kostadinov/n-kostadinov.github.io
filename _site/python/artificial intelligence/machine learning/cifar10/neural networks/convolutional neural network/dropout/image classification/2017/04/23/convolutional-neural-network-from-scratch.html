@@ -141,13 +141,13 @@
 
 <h1 id="image-dataset">Image Dataset</h1>
 
-<p>The <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR-10 dataset</a> consists of 60000 32x32 colour images in 10 categories - airplanes, dogs, cats, and other objects. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class. Here are the classes in the dataset, as well as 10 random images from each:</p>
+<p>The <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR-10 dataset</a> consists of 60000 32x32 color images in 10 categories - airplanes, dogs, cats, and other objects. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class. Here are the classes in the dataset, as well as 10 random images from each:</p>
 
 <p><img src="/assets/images/dataset_overview.jpg" alt="png" /></p>
 
 <p>The classes are completely mutually exclusive. There is no overlap between automobiles and trucks. “Automobile” includes sedans, SUVs, things of that sort. “Truck” includes only big trucks. Neither includes pickup trucks.</p>
 
-<p>In the following we will preprocess the images, then train a convolutional neural network on all the samples. The images need to be normalized and the labels need to be one-hot encoded.  Next we will build a convolutional, max pooling, dropout, and fully connected layers. At the end, we will train the network ang get to see it’s predictions on the sample images.</p>
+<p>In the following, we will preprocess the images, then train a convolutional neural network on all the samples. The images need to be normalized and the labels need to be one-hot encoded.  Next, we will build a convolutional, max pooling, dropout, and fully connected layers. At the end, we will train the network and get to see it’s predictions on the sample images.</p>
 
 <h2 id="download-the-dataset">Download the dataset</h2>
 <p>First, few lines of code will download the <a href="https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz">CIFAR-10 dataset for python</a>.</p>
@@ -246,7 +246,7 @@
 </code></pre>
 </div>
 
-<p>Let’s check the first couple of images of each batch. The lines below can be easily modified to show an arbitary image from any batch.</p>
+<p>Let’s check the first couple of images of each batch. The lines below can be easily modified to show an arbitrary image from any batch.</p>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 <span class="o">%</span><span class="n">config</span> <span class="n">InlineBackend</span><span class="o">.</span><span class="n">figure_format</span> <span class="o">=</span> <span class="s">'retina'</span>
@@ -406,7 +406,7 @@ Label - Label Id: 8 Name: ship
 
 <h3 id="normalization-function">Normalization function</h3>
 
-<p>In the cell below, the <code class="highlighter-rouge">normalize</code> function takes in image data, <code class="highlighter-rouge">x</code>, and return it as a normalized Numpy array. The values are in the range of 0 to 1, inclusive. The return object has the same shape as <code class="highlighter-rouge">x</code>.</p>
+<p>In the cell below, the <code class="highlighter-rouge">normalize</code> function takes in image data, <code class="highlighter-rouge">x</code>, and return it as a normalized Numpy array. The values are in the range of 0 to 1, inclusive. The returned object has the same shape as <code class="highlighter-rouge">x</code>.</p>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="c"># Each pixel has three channels - Red, Green and Blue. </span>
@@ -427,7 +427,7 @@ Label - Label Id: 8 Name: ship
 </div>
 
 <h2 id="preprocess-all-the-data-and-save-it">Preprocess all the data and save it</h2>
-<p>Running the code cell below will preprocess all the CIFAR-10 data and save it to file. The code below also uses 10% of the training data for validation. Remember, we do not want to load all the data in the memory simulanously.</p>
+<p>Running the code cell below will preprocess all the CIFAR-10 data and save it to file. The code below also uses 10% of the training data for validation. Remember, we do not want to load all the data in the memory simultaneously.</p>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="s">"""
 Preprocess Training and Validation and Test Data
@@ -455,7 +455,7 @@ Preprocess Training and Validation and Test Data
         <span class="n">features</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">load_cfar10_batch</span><span class="p">(</span><span class="n">batch_i</span><span class="p">)</span>
         <span class="n">validation_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">)</span>
 
-        <span class="c"># Prprocess and save a batch of training data</span>
+        <span class="c"># Process and save a batch of training data</span>
         <span class="n">preprocess_and_save</span><span class="p">(</span>
             <span class="n">features</span><span class="p">[:</span><span class="o">-</span><span class="n">validation_count</span><span class="p">],</span>
             <span class="n">labels</span><span class="p">[:</span><span class="o">-</span><span class="n">validation_count</span><span class="p">],</span>
@@ -490,7 +490,7 @@ Preprocess Training and Validation and Test Data
 </div>
 
 <h2 id="building-the-neural-network">Building the neural network</h2>
-<p>For the neural network, I will build each type of layer into a function. Encapsulating tensorflow logic in such functions allows you to easily modify the architectire without having to rewrite the boilerplate tensorflow code. Furthermore, the functions built can be later reused for other datasets containing images with different size and different labels.</p>
+<p>For the neural network, I will build each type of layer into a function. Encapsulating tensorflow logic in such functions allows you to easily modify the architecture without having to rewrite the boilerplate tensorflow code. Furthermore, the functions built can be later reused for other datasets containing images with different size and different labels.</p>
 
 <h3 id="input">Input</h3>
 <p>The neural network needs to read the image data, one-hot encoded labels, and dropout keep probability.</p>
@@ -573,7 +573,7 @@ Preprocess Training and Validation and Test Data
 </div>
 
 <h3 id="the-neural-network-architecture">The Neural Network architecture</h3>
-<p>In the function <code class="highlighter-rouge">conv_net</code> we create the actual convolutional neural network model. The function takes in a batch of images, <code class="highlighter-rouge">x</code>, and outputs logits. The layers introduced above are bound together. This is where one actually defines the architecture of the neural network. As a matter of fact, I changed the architecture more than a dozen of times, until I reached a reasonable accuracy. Indeed, it is very hard to choose a proper architecture and blind trail and error is not the way to go here. There are multiple methodologies for finetuning a neural network described in various papers by the scientific community. For the sake of simplicity I will not dive into the details here, but would definetly recommend this reading: <a href="http://benanne.github.io/2014/04/05/galaxy-zoo.html">1st place on the Galaxy Zoo Challenge</a></p>
+<p>In the function <code class="highlighter-rouge">conv_net</code> we create the actual convolutional neural network model. The function takes in a batch of images, <code class="highlighter-rouge">x</code>, and outputs logits. The layers introduced above are bound together. This is where one actually defines the architecture of the neural network. As a matter of fact, I changed the architecture more than a dozen of times, until I reached a reasonable accuracy. Indeed, it is very hard to choose a proper architecture and blind trial and error is not the way to go here. There are multiple methodologies for fine tuning a neural network described in various papers by the scientific community. For the sake of simplicity I will not dive into the details here, but would definitely recommend this reading: <a href="http://benanne.github.io/2014/04/05/galaxy-zoo.html">1st place on the Galaxy Zoo Challenge</a></p>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">conv_net</span><span class="p">(</span><span class="n">input_x</span><span class="p">,</span> <span class="n">keep_probability</span><span class="p">):</span>
     
@@ -593,7 +593,7 @@ Preprocess Training and Validation and Test Data
 </div>
 
 <h3 id="building-the-neural-network-1">Building the Neural Network</h3>
-<p>In the code block below we use tensorflow to train the neural network. I found the AdamOptimizer to be the least sensitive to the learning rate. The learning rate is another parameter one has to tune. For an overview of diffent optimizers check <a href="http://sebastianruder.com/optimizing-gradient-descent/">An overview of gradient descent optimization algorithms.</a></p>
+<p>In the code block below we use tensorflow to train the neural network. I found the AdamOptimizer to be the least sensitive to the learning rate. The learning rate is another parameter one has to tune. For an overview of different optimizers check <a href="http://sebastianruder.com/optimizing-gradient-descent/">An overview of gradient descent optimization algorithms.</a></p>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">##############################</span>
 <span class="c">## Build the Neural Network ##</span>
@@ -659,10 +659,10 @@ layer input shape [None, 128] layer output shape [None, 10]
 
 <p>A few more parameters need to be tuned:
 * We set <code class="highlighter-rouge">epochs</code> to the number of iterations until the network stops learning or starts overfitting
-* We Set <code class="highlighter-rouge">batch_size</code> to the highest number that your machine has memory for.  Most people set them to common sizes of memory like 64, 128, etc. The bigger the batch size, the less epochs are needed for the network to be trained.</p>
+* We Set <code class="highlighter-rouge">batch_size</code> to the highest number that your machine has memory for.  Most people set them to common sizes of memory like 64, 128, etc. The bigger the batch size, the fewer epochs are needed for the network to be trained.</p>
 
 <ul>
-  <li>We set <code class="highlighter-rouge">keep_probability</code> to the probability of keeping a node using dropout. Hence, keep_probability prevents overfitting of the neural network. Usually values between 0.4 and 0.8 produce good results.</li>
+  <li>We set <code class="highlighter-rouge">keep_probability</code> to the probability of keeping a node using dropout. Hence, keep_probability prevents overfitting of the neural network. Usually, values between 0.4 and 0.8 produce good results.</li>
 </ul>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># For my laptop I selected:</span>
@@ -820,7 +820,7 @@ batch_accuracy accuracy is : 0.5784
 </div>
 
 <h3 id="fully-train-the-model">Fully Train the Model</h3>
-<p>Now that we got a good accuracy with a single CIFAR-10 batch, we train the model again by using all five batches. This takes quite a lot of time. At the end the model is saved on the hard disk in order to be reused in the future.</p>
+<p>Now that we got a good accuracy with a single CIFAR-10 batch, we train the model again by using all five batches. This takes quite a lot of time. At the end, the model is saved on the hard disk in order to be reused in the future.</p>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">save_model_path</span> <span class="o">=</span> <span class="s">'./image_classification'</span>
 
@@ -850,7 +850,7 @@ batch_accuracy accuracy is : 0.5784
 </div>
 
 <h2 id="test-model">Test Model</h2>
-<p>At the end we load the model from the disk and use it to test against the test dataset. This will produce our final accuracy estimation.</p>
+<p>Let’s load the model from the disk and use it to test against the test dataset. This will produce our final accuracy estimation.</p>
 
 <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 <span class="o">%</span><span class="n">config</span> <span class="n">InlineBackend</span><span class="o">.</span><span class="n">figure_format</span> <span class="o">=</span> <span class="s">'retina'</span>
@@ -951,7 +951,7 @@ batch_accuracy accuracy is : 0.5784
 <p><img src="/assets/images/output_32_1.png" alt="png" /></p>
 
 <h2 id="outlook">Outlook</h2>
-<p>This post gives a general idea how one could build and train a confolutional neural network. Nonetheless, more than a few details were not discussed. So, deer reader, as always feel free to contant me and let me know if you have any questions. The whole Python Notebook can be found here: <a href="https://github.com/n-kostadinov/cnn-image-classification-cifar-10-from-scratch/blob/master/cnn-image-classification-cifar-10-from-scratch.ipynb">cnn-image-classification-cifar-10-from-scratch.ipynb</a>.</p>
+<p>This post gives a general idea how one could build and train a convolutional neural network. Nonetheless, more than a few details were not discussed. So, dear reader, as always feel free to contact me and let me know if you have any questions. The whole Python Notebook can be found here: <a href="https://github.com/n-kostadinov/cnn-image-classification-cifar-10-from-scratch/blob/master/cnn-image-classification-cifar-10-from-scratch.ipynb">cnn-image-classification-cifar-10-from-scratch.ipynb</a>.</p>
 </div>
     <div class="share-page">
     <span style="float: left;">Share this on &rarr;&nbsp;&nbsp;</span>
@@ -987,6 +987,608 @@ batch_accuracy accuracy is : 0.5784
                 <div class="panel-body">
                 <h4>Related Posts</h4>
                 <ul>
+                
+                <li class="relatedPost">
+                    <a href="http://localhost:4000/python/catdog/artificial%20intelligence/machine%20learning/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/apache%20kafka/real-time/2017/05/19/catdog-kafka-microservice.html">Cat vs Dog Real-time classification&#58 Kafka Micro Service (Part 2)</a>
+                    
+                        (Categories: <a href="/category/python">python</a>, <a href="/category/catdog">catdog</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/convolutional neural network">convolutional neural network</a>, <a href="/category/GoogleLeNet">GoogleLeNet</a>, <a href="/category/Inception">Inception</a>, <a href="/category/xgboost">xgboost</a>, <a href="/category/ridgeregression">ridgeregression</a>, <a href="/category/sklearn">sklearn</a>, <a href="/category/tensorflow">tensorflow</a>, <a href="/category/image classification">image classification</a>, <a href="/category/imagenet">imagenet</a>, <a href="/category/apache kafka">apache kafka</a>, <a href="/category/real-time">real-time</a>)
+                    
+                </li>
+                
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+
+    
+    
+        
+            
+                
+                <li class="relatedPost">
+                    <a href="http://localhost:4000/python/catdog/artificial%20intelligence/machine%20learning/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/apache%20kafka/real-time/2017/05/18/catdog-stacked-classification.html">Cat vs Dog Real-time classification&#58 Model Stack (Part 1)</a>
+                    
+                        (Categories: <a href="/category/python">python</a>, <a href="/category/catdog">catdog</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/convolutional neural network">convolutional neural network</a>, <a href="/category/GoogleLeNet">GoogleLeNet</a>, <a href="/category/Inception">Inception</a>, <a href="/category/xgboost">xgboost</a>, <a href="/category/ridgeregression">ridgeregression</a>, <a href="/category/sklearn">sklearn</a>, <a href="/category/tensorflow">tensorflow</a>, <a href="/category/image classification">image classification</a>, <a href="/category/imagenet">imagenet</a>, <a href="/category/apache kafka">apache kafka</a>, <a href="/category/real-time">real-time</a>)
+                    
+                </li>
+                
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+
+    
+    
+        
+            
                 
                 <li class="relatedPost">
                     <a href="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/2017/05/11/cnn-image-classification-cifar-10-stacked-inceptionV3.html">Image classification with stacked InceptionV3</a>
@@ -1254,7 +1856,7 @@ batch_accuracy accuracy is : 0.5784
             
                 
                 <li class="relatedPost">
-                    <a href="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pretrained CNN InceptionV3</a>
+                    <a href="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pre-trained CNN InceptionV3</a>
                     
                         (Categories: <a href="/category/python">python</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/cifar10">cifar10</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/convolutional neural network">convolutional neural network</a>, <a href="/category/GoogleLeNet">GoogleLeNet</a>, <a href="/category/Inception">Inception</a>, <a href="/category/tensorflow">tensorflow</a>, <a href="/category/dropout">dropout</a>, <a href="/category/image classification">image classification</a>)
                     
@@ -1888,16 +2490,6 @@ batch_accuracy accuracy is : 0.5784
     
         
             
-                
-                <li class="relatedPost">
-                    <a href="http://localhost:4000/python/machine%20learning/reinforcement%20learning/xgboost/cart%20pole/open%20gym/openai/artificial%20intelligence/2016/11/29/solving-cartpole-xgboost.html">Solving CartPole-v0 with xgboost</a>
-                    
-                        (Categories: <a href="/category/python">python</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/reinforcement learning">reinforcement learning</a>, <a href="/category/xgboost">xgboost</a>, <a href="/category/cart pole">cart pole</a>, <a href="/category/open gym">open gym</a>, <a href="/category/openai">openai</a>, <a href="/category/artificial intelligence">artificial intelligence</a>)
-                    
-                </li>
-                
-                
-            
         
             
         
@@ -2051,7 +2643,7 @@ batch_accuracy accuracy is : 0.5784
     <a class="prev" href="/python/artificial%20intelligence/depth%20search/sudoku/diagonal%20sudoku/naked%20twins/2017/02/27/cracking-the-worlds-hardest-sudoku.html">&laquo; Cracking the world hardest sudoku</a>
   
   
-    <a class="next" href="/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pretrained CNN InceptionV3 &raquo;</a>
+    <a class="next" href="/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pre-trained CNN InceptionV3 &raquo;</a>
   
 </div>
 

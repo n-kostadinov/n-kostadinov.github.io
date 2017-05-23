@@ -6,13 +6,13 @@ categories: [python, artificial intelligence, machine learning, cifar10, neural 
 
 # Image Classification with stacked GoogleLeNet
 
-This post builds on my two previous posts: [Convolutional neural network for image classification from scratch](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html) and [Image classification with pretrained CNN InceptionV3](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html). In [Convolutional neural network for image classification from scratch](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html) I built a small convolutional neural network (CNN) to classify images from the [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html). My goal was to demonstrate how easy one can construct a neural network with descent accuracy (around 67%). Achieving an accuracy higher than that would required a deeper and wider neural network. Unfortunately, deeper and wider networks are often trained on multiple GPUs for several weeks. Hence, instead of training such a CNN from scrach in [Image classification with pretrained CNN InceptionV3](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html) I showed how one could reuse an existing already pretrained one. Indeed, I used GoogleLeNet and more specifically the InceptionV3 neural network and applied some "finetuning" by training only the last few layers of the neural network. As a matter of fact, I was able to reach an accuracy that is significantly higher - 79,85%. In this post I want to try another approach. The goal is to achieve similar and possibly higher accuracy in much less time and without applying any finetuing. So, instead of retraining the last few layers, the neural network can be put in a classifier stack as a first level classifier, so that its output is the input of a second level classifier. Continue reading below for more details.
+This post builds on my two previous posts: [Convolutional neural network for image classification from scratch](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html) and [Image classification with pre-trained CNN InceptionV3](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html). In [Convolutional neural network for image classification from scratch](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html) I built a small convolutional neural network (CNN) to classify images from the [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html). My goal was to demonstrate how easy one can construct a neural network with decent accuracy (around 67%). Achieving an accuracy higher than that would require a deeper and wider neural network. Unfortunately, deeper and wider networks are often trained on multiple GPUs for several weeks. Hence, instead of training such a CNN from scratch in [Image classification with pre-trained CNN InceptionV3](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html) I showed how one could reuse an existing already pre-trained one. Indeed, I used GoogleLeNet and more specifically the InceptionV3 neural network and applied some "finetuning" by training only the last few layers of the neural network. As a matter of fact, I was able to reach an accuracy that is significantly higher - 79,85%. In this post I want to try another approach. The goal is to achieve similar and possibly higher accuracy in much less time and without applying any fine-tuning. So, instead of retraining the last few layers, the neural network can be put in a classifier stack as a first level classifier, so that its output is the input of a second level classifier. Continue reading below for more details.
 
 # Cifar-10 Image Dataset
 
-If you are already familiar with any of my previous posts about convolutional neural networks - [Convolutional neural network for image classification from scratch](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html) or [Image classification with pretrained CNN InceptionV3](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html), you might want to skip the next sections and go directly to **Stacking InceptionV3**.
+If you are already familiar with any of my previous posts about convolutional neural networks - [Convolutional neural network for image classification from scratch](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html) or [Image classification with pre-trained CNN InceptionV3](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html), you might want to skip the next sections and go directly to **Stacking InceptionV3**.
 
-The [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html) consists of 60000 32x32 colour images in 10 categories - airplanes, dogs, cats, and other objects. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class. Here are the classes in the dataset, as well as 10 random images from each:
+The [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html) consists of 60000 32x32 color images in 10 categories - airplanes, dogs, cats, and other objects. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class. Here are the classes in the dataset, as well as 10 random images from each:
 
 ![png](/assets/images/dataset_overview.jpg)
 
@@ -64,7 +64,7 @@ The dataset is broken into batches - this is especially useful if one is to trai
 * ship
 * truck
 
-Understanding a dataset is part of making predictions on the data. Following functions can be used to view different images by changing the `batch_id` and `sample_id`. The `batch_id` is the id for a batch (1-5). The `sample_id` is the id for a image and label pair in the batch.
+Understanding a dataset is part of making predictions on the data. Following functions can be used to view different images by changing the `batch_id` and `sample_id`. The `batch_id` is the id for a batch (1-5). The `sample_id` is the id for an image and label pair in the batch.
 
 
 ```python
@@ -121,7 +121,7 @@ def display_stats(features, labels, sample_id):
     plt.show()
 ```
 
-Let's check the first couple of images of each batch. The lines below can be easily modified to show an arbitary image from any batch.
+Let's check the first couple of images of each batch. The lines below can be easily modified to show an arbitrary image from any batch.
 
 
 ```python
@@ -299,7 +299,7 @@ del features, labels # free memory
 
 
 # Converting datasets to .tfrecord
-Next we convert the datasets to tfrecords. This would allow for the easier further processing by Tensorflow. While the neural network constructed in [Convolutional neural network for image classification from scratch](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html) expected images with size 32x32, the CNN we are going to use here expects an input size of 299x299. Nevertheless, it is not necessary to convert all 60000 images to the target size of 299x299 as this would requre much more of your disk space. Converting the data to tfrecord would actually shrink the dataset size (lossless compression) and allow for the use of tensorflow's preprocessing pipeline and a dynamic conversion to the desired target size of 299x299 at training time.
+Next, we convert the datasets to tfrecords. This would allow for the easier further processing by Tensorflow. While the neural network constructed in [Convolutional neural network for image classification from scratch](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html) expected images with size 32x32, the CNN we are going to use here expects an input size of 299x299. Nevertheless, it is not necessary to convert all 60000 images to the target size of 299x299 as this would require much more of your disk space. Converting the data to tfrecord would actually shrink the dataset size (lossless compression) and allow for the use of tensorflow's preprocessing pipeline and a dynamic conversion to the desired target size of 299x299 at training time.
 
 
 ```python
@@ -370,7 +370,7 @@ if not os.path.isdir('tfrecord'):
 ```
 
 # Downloading GoogleLeNet
-Check my previous post [Image classification with pretrained CNN InceptionV3](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html) for information on why InceptionV3 has been selected.
+Check my previous post [Image classification with pre-trained CNN InceptionV3](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html) for information on why InceptionV3 has been selected.
 
 
 ```python
@@ -400,7 +400,7 @@ if not os.path.isdir('model'):
         tar.close()
 ```
 
-Next we define a couple of utility functions for loading a batch and loading the dataset... 
+Next, we define a couple of utility functions for loading a batch and loading the dataset... 
 
 
 ```python
@@ -465,7 +465,7 @@ def get_dataset(dataset_file_name, train_sample_size):
 ```
 
 # Stacking InceptionV3
-So instead of finetuning the neural network like we did in [Image classification with pretrained CNN InceptionV3](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html), we are going to use it as a first level classifier in a stack of classifiers consisting of two levels. In the code below the InceptionV3 model is loaded and without any training whatsover it is used to make a prediction for all images in the training set. Note that the unmodified InceptionV3 model has an output that is a vector of length 1001. For each image this output vector is saved to be later used as un input for the second level classifier. 
+So instead of fine-tuning the neural network like we did in [Image classification with pre-trained CNN InceptionV3](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html), we are going to use it as a first level classifier in a stack of classifiers consisting of two levels. In the code below the InceptionV3 model is loaded and without any training whatsoever it is used to make a prediction for all images in the training set. Note that the unmodified InceptionV3 model has an output that is a vector of length 1001. For each image this output vector is saved to be later used as un input for the second level classifier. 
 
 
 ```python
@@ -531,7 +531,7 @@ with open('meta_data_train_inceptionV3.p', 'rb') as handle:
     meta_data_train_X, meta_data_train_Y = pickle.load(handle)
 ```
 
-Once training data set goes through the InceptionV3 network, you are all set to use the output vectors that have been produced as a training set for a second level classifier, Hence, your next task is to choose the second level classifier. As an input it receives the output vectors created by the unmodified InceptionV3 neural network. Its output, however, is the actual label - an integer from 1 to 10 for the 10 categories in the cifar-10 dataset. Below I will train three different second level classifiers in order to compare their performance. I will start with the most simple classifier possible, linear regression with L2 regularisation, that is also known as [ridge regression classifier](http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RidgeClassifier.html). It is not a bad idea to use a 5-fold cross validation in order to evaluate the classifier's accuracy without actually using the test set.
+Once training data set goes through the InceptionV3 network, you are all set to use the output vectors that have been produced as a training set for a second level classifier, Hence, your next task is to choose the second level classifier. As an input it receives the output vectors created by the unmodified InceptionV3 neural network. Its output, however, is the actual label - an integer from 1 to 10 for the 10 categories in the cifar-10 dataset. Below I will train three different second level classifiers in order to compare their performance. I will start with the most simple classifier possible, linear regression with L2 regularization, that is also known as [ridge regression classifier](http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RidgeClassifier.html). It is not a bad idea to use a 5-fold cross validation in order to evaluate the classifier's accuracy without actually using the test set.
 
 
 ```python
@@ -547,7 +547,7 @@ print('Accuracy ridge classifier', np.mean(scores))
     Accuracy ridge classifier 0.743219828872
 
 
-With an accuracy of over 74% it is already better than the accuracy achieved in my home made, small and simple CNN described in [Convolutional neural network for image classification from scratch](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html). Let's train the ridge regression on the whole training set, it only takes a few seconds...
+With an accuracy of over 74%, it is already better than the accuracy achieved in my homemade, small and simple CNN described in [Convolutional neural network for image classification from scratch](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html). Let's train the ridge regression on the whole training set, it only takes a few seconds...
 
 
 ```python
@@ -629,7 +629,7 @@ for i in tqdm(range(10)):
     
 
 
-The accuracy goes up to almost 81%. However, a little more then a few seconds are needed. It took almost 2 hours on my laptop. And then we need another two hours to train it on the whole training set... I will be gearing up with several GPUs in the next few weeks.
+The accuracy goes up to almost 81%. However, a little more than a few seconds are needed. It took almost 2 hours on my laptop. And then we need another two hours to train it on the whole training set... I will be gearing up with several GPUs in the next few weeks.
 
 
 ```python
@@ -649,7 +649,7 @@ for i in tqdm(range(10)):
     100%|██████████| 10/10 [2:11:16<00:00, 749.81s/it] 
 
 
-At last, I want to also evaluate one more classifier. This one is actually one of mine and many AI engineers favorite - the Boosted Trees classifier and its implementation [xgboost](http://xgboost.readthedocs.io/en/latest/model.html). It became widly popular as it was consistently used in the winning solutions for many of the challenges posted on [kaggle](http://xgboost.readthedocs.io/en/latest/model.html). Interesting enoughs, several challenges has been won by using only feature engineering and stacking xgboost classifier on top of each other... Sadly, you can not really classify images with Boosted Trees, but you can sure use them as a second level classifier.
+At last, I want to also evaluate one more classifier. This one is actually one of mine and many AI engineers favorite - the Boosted Trees classifier and its implementation [xgboost](http://xgboost.readthedocs.io/en/latest/model.html). It became widely popular as it was consistently used in the winning solutions for many of the challenges posted on [kaggle](http://xgboost.readthedocs.io/en/latest/model.html). Interesting enough, several challenges has been won by using only feature engineering and stacking xgboost classifier on top of each other... Sadly, you can not really classify images with Boosted Trees, but you can sure use them as a second level classifier.
 
 
 ```python
@@ -671,7 +671,7 @@ print('Accuracy xgboost', np.mean(scores))
     [Parallel(n_jobs=1)]: Done   5 out of   5 | elapsed: 71.9min finished
 
 
-In a 5-fold cross validation set it yelds the best accuracy so far more than 82%. It also needs a little less time than the fully connected neural network above. Let's train it on the whole training set. 
+In a 5-fold cross validation set it yields the best accuracy so far more than 82%. It also needs a little less time than the fully connected neural network above. Let's train it on the whole training set. 
 
 
 ```python
@@ -683,7 +683,7 @@ xgb_classifier = xgboost.XGBClassifier(
 ```
 
 # Evaluation
-At last it is time to evaluate our two level stack. First, we move all the images from the test set through the neural network to create the output of the first layer of our two layer stack. That output we are then to feed into each of the second level classifiers in order to get the final predictions.
+At last, it is time to evaluate our two level stack. First, we move all the images from the test set through the neural network to create the output of the first layer of our two layer stack. That output we are then to feed into each of the second level classifiers in order to get the final predictions.
 
 
 ```python
@@ -743,7 +743,7 @@ print('Accuracy with XGB as second level classifier', accuracy_score(prediction_
     Accuracy with XGB as second level classifier 0.8176
 
 
-Yet again, xgboost did not disappoint and yeld the best accuracy of three classifiers. Let's save it for leater use. 
+Yet again, xgboost did not disappoint and yield the best accuracy of three classifiers. Let's save it for later use. 
 
 
 ```python
@@ -751,5 +751,4 @@ with open('xgboost_model.p', 'wb') as handle:
     pickle.dump(xgb_classifier, handle, protocol=pickle.HIGHEST_PROTOCOL)
 ```
 
-It may seem contraintuitive that the classifier stack produced better results than the finetunning approach shown in [Image classification with pretrained CNN InceptionV3](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html) An explanation is given in the chapter [Transfer Learning](http://cs231n.github.io/transfer-learning/) in Andrej Karpathy's lecture [CS231n: Convolutional Neural Networks for Visual Recognition](http://cs231n.github.io/). "New dataset is small and similar to original dataset. Since the data is small, it is not a good idea to fine-tune the ConvNet due to overfitting concerns. Since the data is similar to the original data, we expect higher-level features in the ConvNet to be relevant to this dataset as well. Hence, the best idea might be to train a linear classifier on the CNN codes." Well the Cifar-10 is indeed similar to the ImageNet dataset, but is it small? With 50,000 images in the training set it does not seem so. But in comparison to the the massive [ImageNet](http://image-net.org/index) with over 10,000,000 images it is rather tiny. So what is next? Deploying both stacked models into a web application and making it possible to actually upload and classify a picture. As awlays feel free to checkout the whole github repository: [cnn-image-classification-stacked-inception3](https://github.com/n-kostadinov/cnn-image-classification-stacked-inception3). 
-
+It may seem counterintuitive that the classifier stack produced better results than the fine-tuning approach shown in [Image classification with pre-trained CNN InceptionV3](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html) An explanation is given in the chapter [Transfer Learning](http://cs231n.github.io/transfer-learning/) in Andrej Karpathy's lecture [CS231n: Convolutional Neural Networks for Visual Recognition](http://cs231n.github.io/). "New dataset is small and similar to original dataset. Since the data is small, it is not a good idea to fine-tune the ConvNet due to overfitting concerns. Since the data is similar to the original data, we expect higher-level features in the ConvNet to be relevant to this dataset as well. Hence, the best idea might be to train a linear classifier on the CNN codes." Well, the Cifar-10 is indeed similar to the ImageNet dataset, but is it small? With 50,000 images in the training set, it does not seem so. But in comparison to the massive [ImageNet](http://image-net.org/index) with over 10,000,000 images, it is rather tiny. So what is next? Deploying both stacked models into a web application and making it possible to actually upload and classify a picture. As always feel free to checkout the whole github repository: [cnn-image-classification-stacked-inception3](https://github.com/n-kostadinov/cnn-image-classification-stacked-inception3). 

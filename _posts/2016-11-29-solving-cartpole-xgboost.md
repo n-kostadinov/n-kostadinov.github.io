@@ -8,7 +8,7 @@ Recently, I found the <a href="https://gym.openai.com/" target="_blank">OpenAI G
 
 As suggested on the <a href="https://gym.openai.com/docs" target="_blank">Getting stared page</a> I got my hands on one of the easier problems, called <a href="https://gym.openai.com/envs/CartPole-v0" target="_blank">CartPole-v0</a>. Basically, you have to balance a pole on a cart. Each time frame you have to choose between one of two "actions" `[1;-1]` and thereby move the pole either left or right. Note, the actual action set `[0;1]`.
 
-The first problem you have to solve is figuring out how to structure the data. Obviously, your input data should contain the four observations. Interestingly enough, since we are solving this problem by applying supervised learning, the semantics of this data is not important (black box approach). The tricky part is what comes next. You add the action `[0;1]` taken based on these observations as a fifth input variable. Deciding on how to represent the output variable is probably even more trickier. As an output variable you take the count of time frames it takes for the episode to finish - either the pole falls on its side or you reach the maximum of 200 time frames. Ok, lets start by defining a simple class called `Cache`:
+The first problem you have to solve is figuring out how to structure the data. Obviously, your input data should contain the four observations. Interestingly enough, since we are solving this problem by applying supervised learning, the semantics of this data is not important (black box approach). The tricky part is what comes next. You add the action `[0;1]` taken based on these observations as a fifth input variable. Deciding on how to represent the output variable is probably even trickier. As an output variable you take the count of time frames it takes for the episode to finish - either the pole falls on its side or you reach the maximum of 200 time frames. Ok, let's start by defining a simple class called `Cache`:
 
 {% highlight python %}
 class Cache:
@@ -34,7 +34,7 @@ class Cache:
         return df_cache
 {% endhighlight %}
 
-As the episode starts, for each time frame `cache_data` is called to store the observation, the action taken and the time frame index. At the end of the episode the `get_frame` creates a data frame - the valuable peace of data that is later to be learned by a model. Notice the transformation of the output variable (here called `future_reward`) into the count of time frames it takes for the episode to finish. Next we create a class `Memory`:
+As the episode starts, for each time frame `cache_data` is called to store the observation, the action taken and the time frame index. At the end of the episode the `get_frame` creates a data frame - the valuable peace of data that is later to be learned by a model. Notice the transformation of the output variable (here called `future_reward`) into the count of time frames it takes for the episode to finish. Next, we create a class `Memory`:
 
 {% highlight python %}
 class Memory:
@@ -46,7 +46,7 @@ class Memory:
         self.df_data = pd.concat([self.df_data, cache.get_frame()])
 {% endhighlight %}
 
-The `Memory` class holds all the data that our "AI agent" is going to use when learning. After each episode the "cache" or the short-term memory is added to the "memory" or the long-term memory. The last peace of the puzzle is adding the brain:
+The `Memory` class holds all the data that our "AI agent" is going to use when learning. After each episode the "cache" or the short-term memory is added to the "memory" or the long-term memory. The last piece of the puzzle is adding the brain:
 
 {% highlight python %}
 class Brain:
@@ -79,7 +79,7 @@ class Brain:
             return 0 if future_reward_0 > future_reward_1 else 1
 {% endhighlight %}
 
-After each episode the 'train' function is called - a model is fitted to the data collected so far. I won't get into details, as there is plenty of material online on xgboost or other learning algos. However, it took me quite a lot of time in order to fine tune xgboost to perform well, probably a little more than a couple of hours. Next to learning, the brain also has to decide for an action based on observation. For the first few episodes, the brain should behave randomly. Afterwards, it gradually switches to fully conscious decisions by using the regression model. Basically, the regressions model tries to predict which one of the two actions will lead to a higher count of time frames before the episode ends. The whole code is posted below, feel free to reproduce it. This <a href="https://gym.openai.com/evaluations/eval_XxwHyBGS22PX3ha0bLJ9A" target="_blank">solution</a> did quite well and solved the environment after 15 episodes and only 9 seconds. You can see the behaviour of the cart pole on the video below:
+After each episode the 'train' function is called - a model is fitted to the data collected so far. I won't get into details, as there is plenty of material online on xgboost or other learning also. However, it took me quite a lot of time in order to fine tune xgboost to perform well, probably a little more than a couple of hours. Next, to learning, the brain also has to decide for an action based on observation. For the first few episodes, the brain should behave randomly. Afterward, it gradually switches to fully conscious decisions by using the regression model. Basically, the regressions model tries to predict which one of the two actions will lead to a higher count of time frames before the episode ends. The whole code is posted below, feel free to reproduce it. This <a href="https://gym.openai.com/evaluations/eval_XxwHyBGS22PX3ha0bLJ9A" target="_blank">solution</a> did quite well and solved the environment after 15 episodes and only 9 seconds. You can see the behavior of the cart pole on the video below:
 
 <iframe width="600" height="400" src="https://openai-kubernetes-prod-scoreboard.s3.amazonaws.com/v1/evaluations/eval_XxwHyBGS22PX3ha0bLJ9A/training_episode_batch_video.mp4" frameborder="0"></iframe>
 ---
