@@ -504,7 +504,7 @@ print('Test accuracy: %.4f%%' % (accuracy_score(breed_true_labels, breed_predict
 
 The accuracy, when tested on the test set, is 82.3%. I find it really impressive compared to the 11% accuracy achieved by the model that was trained from scratch. The reason the accuracy is so much higher is that both VGG-19 and Resnet-50 were trained on [ImageNet](http://www.image-net.org/), which is not only huge (1.2 million images), but also contains a considerable amount of dog images. As a result, the accuracy achieved by using models pre-trained on ImageNet is much higher than the accuracy that could possibly be achieved by training a model from scratch. Well, [Andrew Ng](http://www.andrewng.org/), the founder of [Coursera](http://coursera.org/) and one of the biggest names in the ML realm said during his widely popular NIPS 2016 tutorial that transfer learning will be the next driver of ML commercial success. I can imagine, that in the future, models pre-trained on massive datasets would be made available by Google, Apple, Amazon, and others in exchange for some kind of subscription fee or some other form of payment. As a result, data scientists would be able to achieve remarkable results even when only provided with a limited set of data to use for training. 
 
-As always feel free to contact me or check out and execute the whole jupyter notebook: [Dog Breed Github Repo]()
+As always feel free to contact me or check out and execute the whole jupyter notebook: [Dog Breed Github Repo](https://github.com/n-kostadinov/keras-dogbreed)
 
 
 ```python
