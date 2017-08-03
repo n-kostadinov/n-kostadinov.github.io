@@ -3,10 +3,10 @@
   <channel>
     <title>Blog</title>
     <description>Love to AI.</description>
-    <link>http://localhost:4000/</link>
-    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 03 Aug 2017 10:12:03 -0700</pubDate>
-    <lastBuildDate>Thu, 03 Aug 2017 10:12:03 -0700</lastBuildDate>
+    <link>http://machinememos.com/</link>
+    <atom:link href="http://machinememos.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Thu, 03 Aug 2017 10:16:56 -0700</pubDate>
+    <lastBuildDate>Thu, 03 Aug 2017 10:16:56 -0700</lastBuildDate>
     <generator>Jekyll v3.0.1</generator>
     
       <item>
@@ -518,8 +518,8 @@ Epoch 10/10
 &lt;p&gt;As always feel free to contact me or check out and execute the whole jupyter notebook: &lt;a href=&quot;https://github.com/n-kostadinov/keras-dogbreed&quot;&gt;Dog Breed Github Repo&lt;/a&gt;&lt;/p&gt;
 </description>
         <pubDate>Tue, 11 Jul 2017 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/python/keras/artificial%20intelligence/machine%20learning/transfer%20learning/dog%20breed/neural%20networks/convolutional%20neural%20network/tensorflow/image%20classification/imagenet/2017/07/11/dog-breed-image-classification.html</link>
-        <guid isPermaLink="true">http://localhost:4000/python/keras/artificial%20intelligence/machine%20learning/transfer%20learning/dog%20breed/neural%20networks/convolutional%20neural%20network/tensorflow/image%20classification/imagenet/2017/07/11/dog-breed-image-classification.html</guid>
+        <link>http://machinememos.com/python/keras/artificial%20intelligence/machine%20learning/transfer%20learning/dog%20breed/neural%20networks/convolutional%20neural%20network/tensorflow/image%20classification/imagenet/2017/07/11/dog-breed-image-classification.html</link>
+        <guid isPermaLink="true">http://machinememos.com/python/keras/artificial%20intelligence/machine%20learning/transfer%20learning/dog%20breed/neural%20networks/convolutional%20neural%20network/tensorflow/image%20classification/imagenet/2017/07/11/dog-breed-image-classification.html</guid>
         
         
         <category>python</category>
@@ -677,8 +677,8 @@ Epoch 10/10
 
 </description>
         <pubDate>Sat, 20 May 2017 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/catdog/apache%20kafka/real-time/java/javascript/springboot/websockets/html/stomp/kafka/event%20pipeline/2017/05/20/catdog-web-application.html</link>
-        <guid isPermaLink="true">http://localhost:4000/catdog/apache%20kafka/real-time/java/javascript/springboot/websockets/html/stomp/kafka/event%20pipeline/2017/05/20/catdog-web-application.html</guid>
+        <link>http://machinememos.com/catdog/apache%20kafka/real-time/java/javascript/springboot/websockets/html/stomp/kafka/event%20pipeline/2017/05/20/catdog-web-application.html</link>
+        <guid isPermaLink="true">http://machinememos.com/catdog/apache%20kafka/real-time/java/javascript/springboot/websockets/html/stomp/kafka/event%20pipeline/2017/05/20/catdog-web-application.html</guid>
         
         
         <category>catdog</category>
@@ -834,8 +834,8 @@ Prediction made. Probabilities: cat 100.0% dog 0.0%
 &lt;p&gt;The cycle call “for message in consumer” is blocking and will wait for an event. The DTO is then created by parsing from the json content that is in the message. The image data is decoded from base64 and feeded to the InceptionV3 neural network. The neural network produces the probabilities vector (with size 1001). Xgboost is used through the function defined above to create the final label. The label is then set into the DTO. The image just processed is removed from the DTO, as there is no need to send it back. The kafka producer is invoked - it sends the event with the “catdoglabel” topic. That’s it. You have a real-time prediction service waiting for requests. In the final post of this series of three, I will create a small web application with spring boot that utilizes this service and allows users to classify images in real time. As always you can checkout the whole git repo here: &lt;a href=&quot;https://github.com/n-kostadinov/catdog-realtime-classification-kafka-service&quot;&gt;catdog-realtime-classification-kafka-service&lt;/a&gt;.&lt;/p&gt;
 </description>
         <pubDate>Fri, 19 May 2017 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/python/catdog/artificial%20intelligence/machine%20learning/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/apache%20kafka/real-time/2017/05/19/catdog-kafka-microservice.html</link>
-        <guid isPermaLink="true">http://localhost:4000/python/catdog/artificial%20intelligence/machine%20learning/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/apache%20kafka/real-time/2017/05/19/catdog-kafka-microservice.html</guid>
+        <link>http://machinememos.com/python/catdog/artificial%20intelligence/machine%20learning/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/apache%20kafka/real-time/2017/05/19/catdog-kafka-microservice.html</link>
+        <guid isPermaLink="true">http://machinememos.com/python/catdog/artificial%20intelligence/machine%20learning/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/apache%20kafka/real-time/2017/05/19/catdog-kafka-microservice.html</guid>
         
         
         <category>python</category>
@@ -1338,8 +1338,8 @@ Accuracy DNNClassifier 0.991
 &lt;p&gt;In the second part of this series I will use the small stack consisting of InceptionV3 and xgboost to create a micro service. The micro service will be subscribed to the Apache Kafka event bus and will be used for real-time image classification. As always you can checkout out the whole repo here: &lt;a href=&quot;https://github.com/n-kostadinov/catdog-realtime-classification-kafka-service&quot;&gt;catdog-realtime-classification-kafka-service&lt;/a&gt;&lt;/p&gt;
 </description>
         <pubDate>Thu, 18 May 2017 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/python/catdog/artificial%20intelligence/machine%20learning/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/apache%20kafka/real-time/2017/05/18/catdog-stacked-classification.html</link>
-        <guid isPermaLink="true">http://localhost:4000/python/catdog/artificial%20intelligence/machine%20learning/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/apache%20kafka/real-time/2017/05/18/catdog-stacked-classification.html</guid>
+        <link>http://machinememos.com/python/catdog/artificial%20intelligence/machine%20learning/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/apache%20kafka/real-time/2017/05/18/catdog-stacked-classification.html</link>
+        <guid isPermaLink="true">http://machinememos.com/python/catdog/artificial%20intelligence/machine%20learning/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/apache%20kafka/real-time/2017/05/18/catdog-stacked-classification.html</guid>
         
         
         <category>python</category>
@@ -2100,8 +2100,8 @@ Accuracy with XGB as second level classifier 0.8176
 &lt;p&gt;It may seem counterintuitive that the classifier stack produced better results than the fine-tuning approach shown in &lt;a href=&quot;http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html&quot;&gt;Image classification with pre-trained CNN InceptionV3&lt;/a&gt; An explanation is given in the chapter &lt;a href=&quot;http://cs231n.github.io/transfer-learning/&quot;&gt;Transfer Learning&lt;/a&gt; in Andrej Karpathy’s lecture &lt;a href=&quot;http://cs231n.github.io/&quot;&gt;CS231n: Convolutional Neural Networks for Visual Recognition&lt;/a&gt;. “New dataset is small and similar to original dataset. Since the data is small, it is not a good idea to fine-tune the ConvNet due to overfitting concerns. Since the data is similar to the original data, we expect higher-level features in the ConvNet to be relevant to this dataset as well. Hence, the best idea might be to train a linear classifier on the CNN codes.” Well, the Cifar-10 is indeed similar to the ImageNet dataset, but is it small? With 50,000 images in the training set, it does not seem so. But in comparison to the massive &lt;a href=&quot;http://image-net.org/index&quot;&gt;ImageNet&lt;/a&gt; with over 10,000,000 images, it is rather tiny. So what is next? Deploying both stacked models into a web application and making it possible to actually upload and classify a picture. As always feel free to checkout the whole github repository: &lt;a href=&quot;https://github.com/n-kostadinov/cnn-image-classification-stacked-inception3&quot;&gt;cnn-image-classification-stacked-inception3&lt;/a&gt;.&lt;/p&gt;
 </description>
         <pubDate>Thu, 11 May 2017 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/2017/05/11/cnn-image-classification-cifar-10-stacked-inceptionV3.html</link>
-        <guid isPermaLink="true">http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/2017/05/11/cnn-image-classification-cifar-10-stacked-inceptionV3.html</guid>
+        <link>http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/2017/05/11/cnn-image-classification-cifar-10-stacked-inceptionV3.html</link>
+        <guid isPermaLink="true">http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/2017/05/11/cnn-image-classification-cifar-10-stacked-inceptionV3.html</guid>
         
         
         <category>python</category>
@@ -2781,8 +2781,8 @@ Use `tf.local_variables_initializer` instead.
 &lt;p&gt;Indeed, the accuracy is much better. Evaluated over the whole test set of 10,000 images it is 79,85%. However, there is plenty of room for improvements. While this fine-tuned network will not be at the very bottom of the leaderboard &lt;a href=&quot;http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html&quot;&gt;“state of the art in objects classification”&lt;/a&gt;, the best model achieves 96.53%. At this point best model is actually better than a human that would achieve an accuracy of only 94%. Look at the fourth image from above that gets incorrectly classified as deer, but is actually a bird. I thought it was a white horse. Here is a link to the whole git repo: &lt;a href=&quot;https://github.com/n-kostadinov/cnn-image-classification-cifar-10-inceptionv3&quot;&gt;cnn-image-classification-cifar-10-inceptionv3&lt;/a&gt;.&lt;/p&gt;
 </description>
         <pubDate>Thu, 04 May 2017 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html</link>
-        <guid isPermaLink="true">http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html</guid>
+        <link>http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html</link>
+        <guid isPermaLink="true">http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html</guid>
         
         
         <category>python</category>
@@ -3632,8 +3632,8 @@ batch_accuracy accuracy is : 0.5784
 &lt;p&gt;This post gives a general idea how one could build and train a convolutional neural network. Nonetheless, more than a few details were not discussed. So, dear reader, as always feel free to contact me and let me know if you have any questions. The whole Python Notebook can be found here: &lt;a href=&quot;https://github.com/n-kostadinov/cnn-image-classification-cifar-10-from-scratch/blob/master/cnn-image-classification-cifar-10-from-scratch.ipynb&quot;&gt;cnn-image-classification-cifar-10-from-scratch.ipynb&lt;/a&gt;.&lt;/p&gt;
 </description>
         <pubDate>Sun, 23 Apr 2017 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html</link>
-        <guid isPermaLink="true">http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html</guid>
+        <link>http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html</link>
+        <guid isPermaLink="true">http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html</guid>
         
         
         <category>python</category>
@@ -3749,8 +3749,8 @@ batch_accuracy accuracy is : 0.5784
 &lt;p&gt;As you can see on the video, the algorithm is making quite a few unsuccessful attempts and consequent steps back. One thing is sure - an AI engineer will be faster at writing the code that solves a sudoku than actually solving a puzzle that hard.&lt;/p&gt;
 </description>
         <pubDate>Mon, 27 Feb 2017 00:00:00 -0800</pubDate>
-        <link>http://localhost:4000/python/artificial%20intelligence/depth%20search/sudoku/diagonal%20sudoku/naked%20twins/2017/02/27/cracking-the-worlds-hardest-sudoku.html</link>
-        <guid isPermaLink="true">http://localhost:4000/python/artificial%20intelligence/depth%20search/sudoku/diagonal%20sudoku/naked%20twins/2017/02/27/cracking-the-worlds-hardest-sudoku.html</guid>
+        <link>http://machinememos.com/python/artificial%20intelligence/depth%20search/sudoku/diagonal%20sudoku/naked%20twins/2017/02/27/cracking-the-worlds-hardest-sudoku.html</link>
+        <guid isPermaLink="true">http://machinememos.com/python/artificial%20intelligence/depth%20search/sudoku/diagonal%20sudoku/naked%20twins/2017/02/27/cracking-the-worlds-hardest-sudoku.html</guid>
         
         
         <category>python</category>
@@ -3972,8 +3972,8 @@ batch_accuracy accuracy is : 0.5784
 &lt;p&gt;As you can see, you can easily implement a neural network from scratch that could get you pretty decent predictions for some real world problems. Nevertheless, there is a long way to go since Skynet is operational.&lt;/p&gt;
 </description>
         <pubDate>Sun, 29 Jan 2017 00:00:00 -0800</pubDate>
-        <link>http://localhost:4000/python/machine%20learning/deep%20learning/neural%20networks/sigmoid/hidden%20layer/activation%20function/tensorflow/2017/01/29/implementing-neural-network-from-scratch.html</link>
-        <guid isPermaLink="true">http://localhost:4000/python/machine%20learning/deep%20learning/neural%20networks/sigmoid/hidden%20layer/activation%20function/tensorflow/2017/01/29/implementing-neural-network-from-scratch.html</guid>
+        <link>http://machinememos.com/python/machine%20learning/deep%20learning/neural%20networks/sigmoid/hidden%20layer/activation%20function/tensorflow/2017/01/29/implementing-neural-network-from-scratch.html</link>
+        <guid isPermaLink="true">http://machinememos.com/python/machine%20learning/deep%20learning/neural%20networks/sigmoid/hidden%20layer/activation%20function/tensorflow/2017/01/29/implementing-neural-network-from-scratch.html</guid>
         
         
         <category>python</category>
@@ -4190,8 +4190,8 @@ batch_accuracy accuracy is : 0.5784
 
 </description>
         <pubDate>Tue, 29 Nov 2016 00:00:00 -0800</pubDate>
-        <link>http://localhost:4000/python/machine%20learning/reinforcement%20learning/xgboost/cart%20pole/open%20gym/openai/artificial%20intelligence/2016/11/29/solving-cartpole-xgboost.html</link>
-        <guid isPermaLink="true">http://localhost:4000/python/machine%20learning/reinforcement%20learning/xgboost/cart%20pole/open%20gym/openai/artificial%20intelligence/2016/11/29/solving-cartpole-xgboost.html</guid>
+        <link>http://machinememos.com/python/machine%20learning/reinforcement%20learning/xgboost/cart%20pole/open%20gym/openai/artificial%20intelligence/2016/11/29/solving-cartpole-xgboost.html</link>
+        <guid isPermaLink="true">http://machinememos.com/python/machine%20learning/reinforcement%20learning/xgboost/cart%20pole/open%20gym/openai/artificial%20intelligence/2016/11/29/solving-cartpole-xgboost.html</guid>
         
         
         <category>python</category>
