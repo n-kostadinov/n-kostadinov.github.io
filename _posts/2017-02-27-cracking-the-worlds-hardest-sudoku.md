@@ -1,9 +1,17 @@
 ---
 layout: post
 title: Cracking the world hardest sudoku
+author: Nikolay Kostadinov
 categories: [python, artificial intelligence, depth search, sudoku, diagonal sudoku, naked twins]
 ---
+
+Before powerful GPUs and multi-core processors made it possible for machines to learn from data, AI was about coding a deterministic algorithm. Thе old and well-explored principles of graph trees, constraint propagation and search still find many applications today.
+
+# Constraint Propagation and Search
+
 Artificial intelligence is all about designing computer systems able to perform tasks that normally require human intelligence. We already know computers can do some arithmetic tasks like multiplying large numbers much faster than any human will ever do. But what about non-arithmetic tasks? Well, by now everyone knows that Tesla, Google, Apple and many other tech companies are working on autonomous driving. And yet, they haven't completely cracked it yet. On the other side, it is now 20 years since IBM's Deep Blue won both a chess game and a chess match against Garry Kasparov - the reigning world champion at the time. To sum it up - driving a car is obviously an easy task for humans, two billion people are driving to work every day, but it is very hard for a computer system to manage. At the same time, computer systems can beat the world champion at chess - a task that hardly any human can achieve. Makes you wonder, doesn't it?
+
+## Coding a Sudoku Environment
 
 Another non-arithmetic and seemingly human task at which computers excel is solving a sudoku. The use of constraint propagation and search is illustrated in this great <a href="http://norvig.com/sudoku.html" target="_blank">blog post by Peter Norvig</a>. In this post I will go one step further by introducing a small, but powerful optimization for Norvig's solution. My whole sudoku solver implementation can be found in this repo: <a href="https://github.com/n-kostadinov/AIND-Sudoku" target="_blank">AIND-Sudoku</a>. 
 
@@ -42,6 +50,8 @@ def get_units_peers(mode):
     return unitlist, units, peers
 {% endhighlight %}
 
+## Naked twins strategy
+
 In solution_performance_test.py I added a small performance test to measure the time needed to solve 20 hard sudoku puzzles. I furthermore modified the code to print the amount of search attempts the solver needs for solving each sudoku puzzle. A search attempt is made whenever the potential of constraint propagation is exhausted and the algorithm has to try different digits for the same box. When executed the test output looks like this:
 
 ![Sudoku original solution](/assets/images/sudoku_1.png){:class="img-responsive"}
@@ -78,6 +88,8 @@ def naked_twins(values):
 
     return values
 {% endhighlight %}
+
+## Putting it all together
 
 Adding just this single constraint led to the significant performance boost. The time needed to solve twenty sudoku puzzles was cut in half. You can clearly see the algorithm is making far fewer attempts than before:
 

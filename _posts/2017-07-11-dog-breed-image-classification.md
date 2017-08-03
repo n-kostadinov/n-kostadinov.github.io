@@ -1,8 +1,11 @@
 ---
 layout: post
 title: Dog breed image classification with Keras
+author: Nikolay Kostadinov
 categories: [python, keras, artificial intelligence, machine learning, transfer learning, dog breed, neural networks, convolutional neural network, tensorflow, image classification, imagenet]
 ---
+
+What if you have a very small dataset of only a few thousand images and a hard classification problem at hand? Training a network from scratch might not work that well, but how about [transfer learning](http://cs231n.github.io/transfer-learning/). 
 
 # Dog Breed Classification with Keras
 
@@ -42,14 +45,12 @@ print('There are %d test dog images.'% len(test_files))
 
     Using TensorFlow backend.
 
-
     There are 133 total dog categories.
     There are 8351 total dog images.
     
     There are 6680 training dog images.
     There are 835 validation dog images.
     There are 836 test dog images.
-
 
 The dataset is already split into train, validation and test parts. As the training set consists of 6680 images, there are only 50 dogs per breed on average. That is really a rather small dataset and an ambitious task to do. The [cifar 10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html) for example contains 60000 images and only 10 categories. The categories are airplane, automobile, bird, cat, etc. Thus, objects to be classified are very different and therefore easier to classify. In my post [Image classification with pre-trained CNN InceptionV3](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html) I managed to achieve an accuracy of around 80%. Hence, it is now my goal to achieve similar accuracy with the dog breed dataset, that has much more categories, while it is much much smaller.
 
@@ -278,33 +279,18 @@ model.fit(train_tensors, train_targets,
     6656/6680 [============================>.] - ETA: 1s - loss: 3.1783 - acc: 0.2160Epoch 00009: val_loss did not improve
     6680/6680 [==============================] - 300s - loss: 3.1793 - acc: 0.2156 - val_loss: 4.2501 - val_acc: 0.1006
 
-
-
-
-
-    <keras.callbacks.History at 0x7fb63e614eb8>
-
-
-
 Running the model for 10 epochs took less than an hour, when running on 8-Core CPU. Meanwhile, I am using [Floyd Hub](https://www.floydhub.com/) to rent a GPU when considerably more power is required. In mostly works fine, once you manage to upload your dataset (their upload pipeline is currently buggy). Let's load the weights of the model that had the best validation loss and measure the accuracy.
-
 
 ```python
 model.load_weights('saved_models/weights.best.from_scratch.hdf5')
-```
-
-
-```python
 # get index of predicted dog breed for each image in test set
 dog_breed_predictions = [np.argmax(model.predict(np.expand_dims(tensor, axis=0))) for tensor in test_tensors]
-
 # report test accuracy
 test_accuracy = 100*np.sum(np.array(dog_breed_predictions)==np.argmax(test_targets, axis=1))/len(dog_breed_predictions)
 print('Test accuracy: %.4f%%' % test_accuracy)
 ```
 
     Test accuracy: 11.1244%
-
 
 That is not a bad performance. Probably as good as someone that is not an expert, but really likes dogs would manage to achieve.
 
@@ -334,7 +320,6 @@ def extract_Resnet50(file_paths):
 
 Extracting the features may take a few minutes...
 
-
 ```python
 train_vgg19 = extract_VGG19(train_files)
 valid_vgg19 = extract_VGG19(valid_files)
@@ -350,9 +335,7 @@ print("Resnet50 shape", train_resnet50.shape[1:])
     VGG19 shape (7, 7, 512)
     Resnet50 shape (1, 1, 2048)
 
-
 For the second level model, [Batch Normalization](https://arxiv.org/abs/1502.03167) yet again proved to be very important. Without batch normalization the model will not reach 80% accuracy for 10 epochs. Dropout is also important as it allows for the model to train more epochs before starting to overfit. However a Dropout of 50% leads to a model that trains all 20 epochs without overfitting, yet does not reach 82% accuracy. I've found Dropout of 30% to be just right for the model below. Another important hyper parameter was the batch size. A bigger batch size leads to a model that learns faster, the accuracy increases very rapidly, but the maximum accuracy is a bit lower. A smaller batch size leads to a model that learns slower between epochs but reaches higher accuracy.
-
 
 ```python
 from keras.layers.pooling import GlobalAveragePooling2D
@@ -475,22 +458,12 @@ model.fit([train_vgg19, train_resnet50], train_targets,
     6680/6680 [==============================] - 47s - loss: 0.9076 - acc: 0.7433 - val_loss: 0.7365 - val_acc: 0.8228
 
 
-
-
-
-    <keras.callbacks.History at 0x7fb5add69940>
-
-
-
 Training the model takes only a few minutes... Let's load the weights of the model that had the best validation loss and measure the accuracy.
 
 
 ```python
 model.load_weights('saved_models/bestmodel.hdf5')
-```
 
-
-```python
 from sklearn.metrics import accuracy_score
 
 predictions = model.predict([test_vgg19, test_resnet50])
@@ -501,12 +474,6 @@ print('Test accuracy: %.4f%%' % (accuracy_score(breed_true_labels, breed_predict
 
     Test accuracy: 82.2967%
 
-
 The accuracy, when tested on the test set, is 82.3%. I find it really impressive compared to the 11% accuracy achieved by the model that was trained from scratch. The reason the accuracy is so much higher is that both VGG-19 and Resnet-50 were trained on [ImageNet](http://www.image-net.org/), which is not only huge (1.2 million images), but also contains a considerable amount of dog images. As a result, the accuracy achieved by using models pre-trained on ImageNet is much higher than the accuracy that could possibly be achieved by training a model from scratch. Well, [Andrew Ng](http://www.andrewng.org/), the founder of [Coursera](http://coursera.org/) and one of the biggest names in the ML realm said during his widely popular NIPS 2016 tutorial that transfer learning will be the next driver of ML commercial success. I can imagine, that in the future, models pre-trained on massive datasets would be made available by Google, Apple, Amazon, and others in exchange for some kind of subscription fee or some other form of payment. As a result, data scientists would be able to achieve remarkable results even when only provided with a limited set of data to use for training. 
 
 As always feel free to contact me or check out and execute the whole jupyter notebook: [Dog Breed Github Repo](https://github.com/n-kostadinov/keras-dogbreed)
-
-
-```python
-
-```

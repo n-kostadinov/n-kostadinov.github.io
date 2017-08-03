@@ -1,14 +1,17 @@
 ---
 layout: post
 title: Image classification with pre-trained CNN InceptionV3
+author: Nikolay Kostadinov
 categories: [python, artificial intelligence, machine learning, cifar10, neural networks, convolutional neural network, GoogleLeNet, Inception, tensorflow, dropout, image classification]
 ---
+
+Google, Microsoft, and other vendors have been training very complex, state of the art Convolutional Neural Networks on massive datasets. In this post, I will explore "Transfer learning" - a very powerful bundle of techniques for reusing these already fully-trained neural networks for classification of images that can be more or less different from the images that have been used in the process of training those networks.
 
 # Image Classification with fine-tuned GoogleLeNet 
 
 In my previous post [Convolutional neural network for image classification from scratch](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html) I built a small convolutional neural network (CNN) to classify images from the [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html). My goal was to demonstrate how easy one can construct a neural network with decent accuracy (around 67%). However, for many real word problems building CNNs from scratch might not be practical. For instance, in a recent [kaggle](http://kaggle.com/) challenge called [Dog vs Cat](https://www.kaggle.com/c/dogs-vs-cats) the competitors were asked to correctly classify images of dogs and cats. In an insightful [interview](http://blog.kaggle.com/2017/04/03/dogs-vs-cats-redux-playground-competition-winners-interview-bojan-tunguz/) the winner of that challenge explained that he didn't rely solely on a CNN that he built from scratch. Instead, he got his hands on multiple models already trained with large datasets and applied some "fine-tuning" in order to make these fit for the specific goal of classifying cats and dogs. So how does this work? The idea is simple. There are hundreds of models already trained on a specific dataset. The largest repository I know is the [Model Zoo Github Repo](https://github.com/BVLC/caffe/wiki/Model-Zoo). There are also the models from the [Tensorflow Slim Project](https://github.com/tensorflow/models/tree/master/slim). So the goal is to select a model that is already trained on a dataset that is similar to the one you are interested in. After selecting the model one has to apply some "fine-tuning" on it. Interested? Well, continue reading, as this is exactly what I am going to do in this post.  
 
-# Cifar-10 Image Dataset
+## Cifar-10 Image Dataset
 
 If you are already familiar with my previous post [Convolutional neural network for image classification from scratch](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html), you might want to skip the next sections and go directly to **Converting datasets to .tfrecord**.
 
@@ -18,7 +21,7 @@ The [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html) consists of 
 
 The classes are completely mutually exclusive. There is no overlap between automobiles and trucks. "Automobile" includes sedans, SUVs, things of that sort. "Truck" includes only big trucks. Neither includes pickup trucks.
 
-# Download the dataset
+## Download the dataset
 First, few lines of code will download the [CIFAR-10 dataset for python](https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz).
 
 
@@ -50,7 +53,7 @@ if not os.path.isdir('cifar-10-batches-py'):
         tar.close()
 ```
 
-# Data Overview
+## Data Overview
 The dataset is broken into batches - this is especially useful if one is to train the network on a laptop as it will probably prevent it from running out of memory. I only had 12 GB on mine and a single batch used around 3.2 GB - it wouldn't be possible to load everything at once. Nevertheless, the CIFAR-10 dataset consists of 5 batches, named `data_batch_1`, `data_batch_2`, etc.. Each batch contains the labels and images that are one of the following:
 
 * airplane
@@ -298,7 +301,7 @@ del features, labels # free memory
 ![png](/assets/images/output_7_19.png)
 
 
-# Converting datasets to .tfrecord
+## Converting datasets to .tfrecord
 Next, we convert the datasets to tfrecords. This would allow for the easier further processing by Tensorflow. While the neural network constructed in [Convolutional neural network for image classification from scratch](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html) expected images with size 32x32, the CNN we are going to use here expects an input size of 299x299. Nevertheless, it is not necessary to convert all 60000 images to the target size of 299x299 as this would require much more of your disk space. Converting the data to tfrecord would actually shrink the dataset size (lossless compression) and allow for the use of tensorflow's preprocessing pipeline and a dynamic conversion to the desired target size of 299x299 at training time.
 
 
@@ -369,7 +372,7 @@ if not os.path.isdir('tfrecord'):
             f.write('%d:%s\n' % (label, class_name))
 ```
 
-# Downloading GoogleLeNet
+## Downloading GoogleLeNet
 As previously elaborated, selecting a proper network to "finetune" is very important. For this post I chose GoogleLeNet and more specifically the InceptionV3 convolutional neural network. An overview on other fully trained neural networks by Google is available in the [Tensorflow Slim Project](https://github.com/tensorflow/models/tree/master/slim). All four versions of Inception (V1, V2, V3, v4) were trained on part of the [ImageNet](http://www.image-net.org/challenges/LSVRC/2012/) dataset, which consists of more than 10,000,000 images and over 10,000 categories. The ten categories in Cifar-10 are covered in ImageNet to some extent. Hence, the Inception models should be capable of recognizing images from Cifar-10 after we apply some fine-tuning. For this post I chose InceptionV3. As a matter of fact, the latest Inception network - InceptionV4 deemed the best results when tested against [ImageNet](http://www.image-net.org/challenges/LSVRC/2012/). However, InceptionV4 is much larger than InceptionV3 and would require much more computational resources when fine-tuning. Therefore I selected the second best Inception i.e. InceptionV3. The remaining code could be very easily modified to use the other versions of Inception. Given you have time and several GPUs to your disposal, I would rather recommend InceptionV4. InceptionV1 is the smallest and very suitable for some proof-of-concept-like projects.
 
 
@@ -400,7 +403,7 @@ if not os.path.isdir('model'):
         tar.close()
 ```
 
-### Finetuning InceptionV3
+## Finetuning InceptionV3
 First, we define a couple of functions for loading a batch and loading the dataset. 
 
 
@@ -575,7 +578,7 @@ print('Finished training. Last batch loss %f' % final_loss)
     Finished training. Last batch loss 0.641681
 
 
-# Evaluation
+## Evaluation
 The neural networks I trained in my last post [Convolutional neural network for image classification from scratch](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html) was classifying 67% of the images correctly. As there are 10 categories, a random guess would classify 10% of the images correctly. Hence, 67% is quite good. Let's see...
 
 
@@ -685,5 +688,6 @@ print('Overall accuracy', np.mean(all_batch_accuracy))
 
     Overall accuracy 0.7985
 
+## Outlook
 
 Indeed, the accuracy is much better. Evaluated over the whole test set of 10,000 images it is 79,85%. However, there is plenty of room for improvements. While this fine-tuned network will not be at the very bottom of the leaderboard ["state of the art in objects classification"](http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html), the best model achieves 96.53%. At this point best model is actually better than a human that would achieve an accuracy of only 94%. Look at the fourth image from above that gets incorrectly classified as deer, but is actually a bird. I thought it was a white horse. Here is a link to the whole git repo: [cnn-image-classification-cifar-10-inceptionv3](https://github.com/n-kostadinov/cnn-image-classification-cifar-10-inceptionv3).

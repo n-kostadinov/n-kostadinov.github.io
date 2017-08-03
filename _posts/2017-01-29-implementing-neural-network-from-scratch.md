@@ -1,8 +1,14 @@
 ---
 layout: post
 title: Implementing a neural network from scratch
+author: Nikolay Kostadinov
 categories: [python, machine learning, deep learning, neural networks, sigmoid, hidden layer, activation function, tensorflow]
 ---
+
+If you want to truly understand something, you build it from scratch. This post is highly recommended to every software engineer already anticipating Skynet and perceiving AI as some kind of sorcery.
+
+# Neural Netowrk from scratch
+
 When designing a neural network machine learning engineers will usually use a high-level library like <a href="https://www.tensorflow.org/" target="_blank">tensorflow</a> (my personal favorite) or a wrapper on top of tensorflow like <a href="https://keras.io/" target="_blank">keras</a>. And yes, old school ML engineers are still using <a href="http://deeplearning.net/software/theano/index.html" target="_blank">theano</a>. Having all these tools at your disposal it is rather tempting to view neural networks as a black box and not spend too much time thinking about low-level implementation details like backpropagation, the chain rule, weights initialization, etc. However understanding these concepts might be crucial when fine tuning a neural network. Choosing the optimal count of the hidden layers, the optimal size of each layer, the right activation function, the learning rate, the regularization weights, dropout rate, etc. is not an easy task. Knowing how deep learning works will certainly help you debug and optimize your network. Otherwise, you will be left shooting in the dark, trying to guess the optimal configuration. 
 
 In this post I will discuss the my solution to the first assignment in the excellent <a href="https://www.udacity.com/" target="_blank">Udacity</a> program "Deep Learning Nanodegree Foundation". Before reading any further I strongly recommend watching the video below. It is a very well structured Stanford Lecture on Neural Networks, which is discussing backpropagation and the chain rule:
@@ -11,7 +17,10 @@ In this post I will discuss the my solution to the first assignment in the excel
 
 At <a href="https://youtu.be/59Hbtz7XgjM?t=59m7s" target="_blank">59:07</a> you can see a very small implementation of a neural network. It is as simple as it gets, it has only an input and an output layer and a single hidden layer between them. Without restricting us to 11 codes of python code, let's implement a neural network from scratch and run it.
 
+## The Data
+
 First, we need some data. Start by downloading the <a href="https://archive.ics.uci.edu/ml/machine-learning-databases/00275" target="_blank">Bike Sharing Dataset</a>. Let's take a look at the data:
+
 {% highlight python %}
 import numpy as np
 import pandas as pd
@@ -70,6 +79,8 @@ target_fields = ['cnt', 'casual', 'registered']
 features, targets = data.drop(target_fields, axis=1), data[target_fields]
 test_features, test_targets = test_data.drop(target_fields, axis=1), test_data[target_fields]
 {% endhighlight %}
+
+## The Neural Network (pure magic)
 
 Usually, you would like to make one more split and create a validation set in order to observe and control the bias and variance of the neural network. Although this is EXTREMELY important, I will skip this step here, as I want to focus on the network implementation. If you want to learn more about identifying and controlling bias and variance you can take a look at Andrew NG's lecture <a href="https://youtu.be/tTSssB9OuI4" target="_blank">Machine learning W6 4 Diagnosing Bias vs Variance</a>.
 
@@ -208,4 +219,4 @@ _ = ax.set_xticklabels(dates[12::24], rotation=45)
 
 ![Neural Network Predictions](/assets/images/bike_share_data_predictions.jpg){:class="img-responsive"}
 
-As you can see, you can easily implement a neural network from scratch that could get you pretty decent predictions for some real world problems.
+As you can see, you can easily implement a neural network from scratch that could get you pretty decent predictions for some real world problems. Nevertheless, there is a long way to go since Skynet is operational.

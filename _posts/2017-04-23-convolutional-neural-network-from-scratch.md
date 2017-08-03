@@ -1,12 +1,15 @@
 ---
 layout: post
 title: Convolutional neural network for image classification from scratch
+author: Nikolay Kostadinov
 categories: [python, artificial intelligence, machine learning, cifar10, neural networks, convolutional neural network, dropout, image classification]
 ---
 
+Why are Convolutional Neural Networks (CNN) so incredibly good at image classification tasks? CNN architectures make the explicit assumption that the inputs are images, which allows us to encode certain properties into the architecture. These then make the forward function more efficient to implement and vastly reduce the amount of parameters in the network.
+
 # Image Classification with CNN
 
-In this project we will build a convolutional neural network (CNN) to classify images from the [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html). My goal is to demonstrate how easy one can construct a neural network with descent accuracy (around 70%). Thereby, I used only my laptop's i7 processor and a couple of hours training time.
+In this project we will build a CNN to classify images from the [CIFAR-10 dataset](https://www.cs.toronto.edu/~kriz/cifar.html). My goal is to demonstrate how easy one can construct a neural network with descent accuracy (around 70%). Thereby, I used only my laptop's i7 processor and a couple of hours training time.
 
 # Image Dataset
 

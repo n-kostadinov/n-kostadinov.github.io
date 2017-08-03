@@ -1,8 +1,11 @@
 ---
 layout: post
-title: Cat vs Dog Real-time classification&#58 Model Stack (Part 1)
+author: Nikolay Kostadinov
+title: Model Stack, Part 1 of Cat vs Dog Real-Time Classification Series
 categories: [python, catdog, artificial intelligence, machine learning, neural networks, convolutional neural network, GoogleLeNet, Inception, xgboost, ridgeregression, sklearn, tensorflow, image classification, imagenet, apache kafka, real-time]
 ---
+
+This post is the first of a series of three. The goal is to embed a neural network into a real time web application for image classification. In this first part, I will go through the data and create the machine learning model.
 
 # Real-time prediction
 In my previous posts I showed different approaches on classifying images through neural networks. You may choose to create a neural network from scratch [Convolutional neural network for image classification from scratch](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html) or you prefer to use a pre-trained neural network like [Google's Inception](https://arxiv.org/abs/1409.4842) as demonstrated in [Image classification with pre-trained CNN InceptionV3](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html) and [Image classification with stacked InceptionV3](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/2017/05/11/cnn-image-classification-cifar-10-stacked-inceptionV3.html). Anyway, shortly after blogging about using stacked models for image classification I received a comment from a friend working in the Big Data department of a commercial bank in the Netherlands. What he wanted to see is how the machine learning scripts could be integrated into their existing Big Data infrastructure that is largely based on real-time communication with [Apache Kafka](https://kafka.apache.org/). A few days later, a friend working for the hedge fund industry in London called. He is currently prototyping different trading models with [R Statistics](https://www.r-project.org/). He was interested in how one could combine the predictive power of tens, possibly hundreds of R scripts und use these for real-time trading. Well, coming from the software engineering part of the computer science word and having worked in the Java Enterprise domain for several years now, I decided to write a series of posts and demonstrate how one could integrate a model stack and use it in real-time. 
@@ -11,7 +14,7 @@ In this first post of the series, I will create a model stack consisting of [Goo
 
 The smart pipeline that I am going to build here can be used in finance and many other industries. However, comprehensive financial data is not very visually appealing and not that fun. So I will be building an online real-time Cat vs Dog image classifier. In this first post we will train the models and build the classifier.
 
-# Preparing the cat & dog dataset
+## Preparing the cat & dog dataset
 
 I am going to use the training set provided in the last [Cat vs Dog Kaggle competition](https://www.kaggle.com/c/dogs-vs-cats-redux-kernels-edition). It consists of 25,000 images of cats and dogs. Downloading the dataset from script is a bit problematic, as you have to agree with the competition's rules to be able to download. Assuming, you manually downloaded the training set and unzipped it in a directory called image_data you start by reading all image paths like this:
 
@@ -21,10 +24,10 @@ from random import shuffle
 import glob
 import numpy as np
 
-# read addresses and labels from the 'train' folder
+## read addresses and labels from the 'train' folder
 image_paths = glob.glob('image_data/*.jpg')
 
-# Create labels 0 = Cat and 1 = Dog
+## Create labels 0 = Cat and 1 = Dog
 labels = [0 if 'cat' in image_path else 1 for image_path in image_paths]  
 
 training_set = list(zip(image_paths, labels))
@@ -86,7 +89,7 @@ def create_tfrecord(dataset, tfrecrod_file_name):
 
         with tf.Session() as sess:
 
-            # Initializing the variables
+            ## Initializing the variables
             sess.run(tf.global_variables_initializer())
 
             for i in tqdm(range(TRAINING_SET_SIZE)):                
@@ -95,7 +98,7 @@ def create_tfrecord(dataset, tfrecrod_file_name):
                 example = to_example(png_image_string, label)
                 
                 tfrecord_writer.write(example.SerializeToString())
-                # Show first 10 images
+                ## Show first 10 images
                 if i < 10:
                     log_image(png_image_string)
 
@@ -169,12 +172,12 @@ if not os.path.isdir('tfrecord'):
     100%|██████████| 25000/25000 [21:13<00:00, 19.63it/s]  
 
 
-# Preparing InceptionV3
+## Preparing InceptionV3
 In my previous post I was able to reach fairly good results when classifying images from the Cifar-10 dataset by using the InceptionV3 convolutional neural network (CNN). Here are few lines of code to directly download the InceptionV3 weights of the neural network.
 
 
 ```python
-# DOWNLOAD DATASET 
+## DOWNLOAD DATASET 
 from urllib.request import urlretrieve
 import os
 from tqdm import tqdm
@@ -191,12 +194,12 @@ class DLProgress(tqdm):
         self.last_block = block_num
 
 if not os.path.isdir('model'):
-    # create directory to store model
+    ## create directory to store model
     os.mkdir('model')
-    # download the model
+    ## download the model
     with DLProgress(unit='B', unit_scale=True, miniters=1, desc='InceptionV3') as pbar:
         urlretrieve(
-            # I hope this url stays there
+            ## I hope this url stays there
             'http://download.tensorflow.org/models/inception_v3_2016_08_28.tar.gz',
             inceptionv3_archive,
             pbar.hook)
@@ -209,7 +212,7 @@ if not os.path.isdir('model'):
     InceptionV3: 101MB [00:55, 1.83MB/s]                              
 
 
-# Using InceptionV3 as first level classifier
+## Using InceptionV3 as first level classifier
 Here are a couple of functions for preparing the dataset and loading a batch. 
 
 
@@ -221,16 +224,16 @@ def load_batch(dataset, batch_size, height, width, is_training=False):
         dataset, common_queue_capacity=32, common_queue_min=8)
     image_raw, label = data_provider.get(['image', 'label'])
     
-    # Preprocess image for usage by Inception.
+    ## Preprocess image for usage by Inception.
     image = inception_preprocessing.preprocess_image(
         image_raw, height, width, is_training=is_training)
     
-    # Preprocess the image for display purposes.
+    ## Preprocess the image for display purposes.
     image_raw = tf.expand_dims(image_raw, 0)
     image_raw = tf.image.resize_images(image_raw, [height, width])
     image_raw = tf.squeeze(image_raw)
 
-    # Batch it up.
+    ## Batch it up.
     images, images_raw, labels = tf.train.batch(
           [image, image_raw, label],
           batch_size=batch_size,
@@ -266,7 +269,7 @@ def get_dataset(dataset_file_name, train_sample_size):
           decoder=decoder,
           num_samples=train_sample_size,
           items_to_descriptions=ITEMS_TO_DESCRIPTIONS,
-          num_classes=2, # cat and dog
+          num_classes=2, ## cat and dog
           labels_to_names={0:'cat', 1:'dog'})
 ```
 
@@ -297,7 +300,7 @@ train_dataset = get_dataset(TRAIN_SET_FILE, TRAINING_SET_SIZE)
 images, images_raw, labels = load_batch(
       train_dataset, BATCH_SIZE, IMAGE_SIZE, IMAGE_SIZE)
     
-# Create the model, use the default arg scope to configure the batch norm parameters.
+## Create the model, use the default arg scope to configure the batch norm parameters.
 with slim.arg_scope(inception_v3_arg_scope()):
     logits, _ = inception_v3(images, num_classes=INCEPTION_OUTPUT_SIZE, is_training=False)
 
@@ -335,7 +338,7 @@ with open('meta_data_train_inceptionV3.p', 'rb') as handle:
     meta_data_train_X, meta_data_train_Y = pickle.load(handle)
 ```
 
-# Selecting second level classifier
+## Selecting second level classifier
 Once the training data set goes through the InceptionV3 network, you are all set to use the output vectors that have been produced as a training set for a second level classifier, Hence, the next task is to choose the second level classifier. As an input it receives the output vectors created by the unmodified InceptionV3 neural network. Its output, however, is the actual label - 0 for a cat and 1 for a dog. As in the [Image classification with stacked InceptionV3](http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/2017/05/11/cnn-image-classification-cifar-10-stacked-inceptionV3.html) I will train three different second level classifiers in order to compare their performance. I will start with the most simple classifier possible, linear regression with L2 regularization, that is also known as ridge regression classifier. It is not a bad idea to use a 5-fold cross validation in order to evaluate the classifier’s accuracy without actually using the test set.
 
 
@@ -458,7 +461,7 @@ And once again xgboost did not disappoint and reached the best accuracy of 99,22
 
 
 ```python
-# Prepare classifier
+## Prepare classifier
 xgb_classifier = xgboost.XGBClassifier(
     learning_rate=0.1,
     n_estimators=100,

@@ -1,9 +1,9 @@
 ---
 layout: page
-title: About
-permalink: /about/
+title: About Me
+menu: about
+                            
+css: ['about.css', 'sidebar-popular-repo.css', '../../bower_components/flag-icon-css/css/flag-icon.min.css']
 ---
 
-I am a freelance developer currently doing more in Java EE. I am passionate about AI and machine learning, always looking for new and exciting projects. Feel free to contant me.
-
-email: info[at]machinememos.com
+{% include about.html %}

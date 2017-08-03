@@ -1,145 +1,135 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="shortcut icon" href="/static/img/favicon.ico" />
-        <title>Image classification with stacked InceptionV3 - MACHINE MEMOS</title>
-        <meta name="author" content="Nikolay Kostadinov" />
-        <meta name="description" content="Image classification with stacked InceptionV3" />
-        <meta name="keywords" content="Image classification with stacked InceptionV3, MACHINE MEMOS, python, artificial intelligence, machine learning, cifar10, neural networks, convolutional neural network, GoogleLeNet, Inception, xgboost, ridgeregression, sklearn, tensorflow, image classification, imagenet" />
-        <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <meta content="" property="fb:app_id">
-        <meta content="MACHINE MEMOS" property="og:site_name">
-        
-          <meta content="Image classification with stacked InceptionV3" property="og:title">
-        
-        
-          <meta content="article" property="og:type">
-        
-        
-          <meta content="description" property="og:description">
-        
-        
-          <meta content="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/2017/05/11/cnn-image-classification-cifar-10-stacked-inceptionV3.html" property="og:url">
-        
-        
-          <meta content="2017-05-11T00:00:00-07:00" property="article:published_time">
-          <meta content="http://localhost:4000/about/" property="article:author">
-        
-        
-          <meta content="http://localhost:4000/static/img/logo-high-resolution.png" property="og:image">
-        
-        
-          
-          <meta content="python" property="article:section">
-          
-        
-        
-          
-        
+    <!-- Favicon Icon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.png">
 
-        <meta name="twitter:card" content="summary">
-        <meta name="twitter:site" content="@NKKostadinov">
-        <meta name="twitter:creator" content="@NKKostadinov">
-        
-          <meta name="twitter:title" content="Image classification with stacked InceptionV3">
-        
-        
-          <meta name="twitter:url" content="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/2017/05/11/cnn-image-classification-cifar-10-stacked-inceptionV3.html">
-        
-        
-          <meta name="twitter:description" content="description">
-        
-        
+    <title>Image classification with stacked InceptionV3</title>
+    <meta name="description"
+          content="Google, Microsoft, and other vendors have been training very complex, state of the art Convolutional Neural Networks on massive datasets. “Transfer learning”...">
 
-        <!-- Font awesome icons -->
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+    <link rel="canonical" href="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/2017/05/11/cnn-image-classification-cifar-10-stacked-inceptionV3.html">
+    <link rel="alternate" type="application/rss+xml" title="Blog" href="http://localhost:4000/feed.xml">
 
-        <!-- syntax highlighting CSS -->
-        <link rel="stylesheet" href="/static/css/syntax.css">
+    <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
 
-        <!-- Bootstrap core CSS -->
-        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Third-Party CSS -->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bower_components/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/bower_components/hover/css/hover-min.css">
+    <link rel="stylesheet" href="/bower_components/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
 
-        <!-- Fonts -->
-        <link href="//fonts.googleapis.com/css?family=Roboto+Condensed:400,300italic,300,400italic,700&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <!-- My CSS -->
+    <link rel="stylesheet" href="/assets/css/common.css">
 
-        <!-- Custom CSS -->        
-        <link rel="stylesheet" href="/static/css/super-search.css">
-        <link rel="stylesheet" href="/static/css/thickbox.css">
-        <link rel="stylesheet" href="/static/css/projects.css">
-        <link rel="stylesheet" href="/static/css/main.css">
+    <!-- CSS set in page -->
+    
 
-        <!-- Google Analytics -->
-        <script>
-          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-          
-          ga('create', 'UA-26182347-1', 'auto');
-          ga('send', 'pageview');
-        </script>
-    </head>
+    <!-- CSS set in layout -->
+    
+    <link rel="stylesheet" href="/assets/css/sidebar-post-nav.css">
+    
+
+    <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+</head>
+
 
     <body>
-	
-        <div class="container-fluid" style="padding-left: 190px; padding-right: 270px;">
-	 <div class="row justify-content-md-center">
-            <div class="col-sm-3">
-              <div class="fixed-condition" >
-                <h1 class="author-name">Nikolay Kostadinov</h1>
+
+    <header class="site-header">
+    <div class="container">
+        <a id="site-header-brand" href="/" title="MACHINE MEMOS">
+			<div class="media">
+    			<span class="media-left">
+        			<img src="/assets/images/machine_memos_logo.svg" onerror="this.onerror=null; this.src='/assets/images/machine_memos_logo.png'" class="img-responsive" style="max-width: 1em;">
+    			</span>
+    			<div class="media-body" style="max-width:9em; vertical-align: middle;">
+        			MACHINE MEMOS
+				</div>
+			</div>
+			</a>
+        <nav class="site-header-nav" role="navigation">
+            
+            <a href="/"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="BLOG">
+                BLOG
+            </a>
+            
+            <a href="/code"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="CODE">
+                CODE
+            </a>
+            
+            <a href="/timeline"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="TIMELINE">
+                TIMELINE
+            </a>
+            
+            <a href="/about"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="ABOUT">
+                ABOUT
+            </a>
+            
+        </nav>
+    </div>
+</header>
+
+
+        <div class="content">
+            <section class="jumbotron geopattern" data-pattern-id="Image classification with stacked InceptionV3">
+    <div class="container">
+        <div id="jumbotron-meta-info">
+            <h1>Image classification with stacked InceptionV3</h1>
+            <span class="meta-info">
                 
-                <div id="about">
-                    I am freelance developer passionate about machine learning and AI.
-                </div>
+                 
+                <span class="octicon octicon-calendar"></span> 2017/05/11
                 
+				
+					by Nikolay Kostadinov
+				
+            </span>
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function(){
 
-                <div class="social">
-                    <ul>
-                        
-                            <li><a href="https://twitter.com/NKKostadinov" target="_blank"><i class="fa fa-twitter"></i></a></li>
-                        
-                            <li><a href="https://www.linkedin.com/in/nikolay-kostadinov-27a15975" target="_blank"><i class="fa fa-linkedin"></i></a></li>
-                        
-                    </ul>
-                </div>
+        $('.geopattern').each(function(){
+            $(this).geopattern($(this).data('pattern-id'), {color:"#337ab7"});
+        });
 
-                <div class="search" id="js-search">
-                  <input type="text" placeholder="(sitemap)~$ type to search" class="search__input form-control" id="js-search__input">
-                  <ul class="search__results" id="js-search__results"></ul>
-                </div>
-                <hr />
+    });
+</script>
+<article class="post container" itemscope itemtype="http://schema.org/BlogPosting">
 
-                <strong>Navigation</strong><br />
-                    &nbsp;&raquo; <a href="/">Home</a> <br />
-                
-                    &nbsp;&raquo; <a class="about" href="/about/">About Me</a><br />
-                
-                    &nbsp;&raquo; <a class="about" href="https://github.com/n-kostadinov">Github</a><br />
-                
-              </div><!-- end /.fixed-condition -->
-            </div>
+    <div class="row">
 
-            <div class="col-sm-7">
-                <h1>Image classification with stacked InceptionV3</h1>
-<span class="time">11 May 2017</span>
+        
+        <div class="col-md-8 markdown-body">
 
-<span class="categories">
-    &raquo; <a href="/category/python">python</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/cifar10">cifar10</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/convolutional neural network">convolutional neural network</a>, <a href="/category/GoogleLeNet">GoogleLeNet</a>, <a href="/category/Inception">Inception</a>, <a href="/category/xgboost">xgboost</a>, <a href="/category/ridgeregression">ridgeregression</a>, <a href="/category/sklearn">sklearn</a>, <a href="/category/tensorflow">tensorflow</a>, <a href="/category/image classification">image classification</a>, <a href="/category/imagenet">imagenet</a>
-</span>
+            <p>Google, Microsoft, and other vendors have been training very complex, state of the art Convolutional Neural Networks on massive datasets. “Transfer learning” is a very powerful bundle of techniques for reusing these already fully-trained neural networks for classification of images that can be more or less different from the images that have been used in the process of training those networks.  While I explored “fine-tuning” of a neural network in my previous post, in this post I will take a CNN pre-trained on ImageNet, treat it as a fixed feature extractor for the new dataset. The features can be then fed to another, second level classifier.</p>
 
-
-<div class="content">
-    <div class="post"><h1 id="image-classification-with-stacked-googlelenet">Image Classification with stacked GoogleLeNet</h1>
+<h1 id="image-classification-with-stacked-googlelenet">Image Classification with stacked GoogleLeNet</h1>
 
 <p>This post builds on my two previous posts: <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a> and <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pre-trained CNN InceptionV3</a>. In <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a> I built a small convolutional neural network (CNN) to classify images from the <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR-10 dataset</a>. My goal was to demonstrate how easy one can construct a neural network with decent accuracy (around 67%). Achieving an accuracy higher than that would require a deeper and wider neural network. Unfortunately, deeper and wider networks are often trained on multiple GPUs for several weeks. Hence, instead of training such a CNN from scratch in <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pre-trained CNN InceptionV3</a> I showed how one could reuse an existing already pre-trained one. Indeed, I used GoogleLeNet and more specifically the InceptionV3 neural network and applied some “finetuning” by training only the last few layers of the neural network. As a matter of fact, I was able to reach an accuracy that is significantly higher - 79,85%. In this post I want to try another approach. The goal is to achieve similar and possibly higher accuracy in much less time and without applying any fine-tuning. So, instead of retraining the last few layers, the neural network can be put in a classifier stack as a first level classifier, so that its output is the input of a second level classifier. Continue reading below for more details.</p>
 
-<h1 id="cifar-10-image-dataset">Cifar-10 Image Dataset</h1>
+<h2 id="cifar-10-image-dataset">Cifar-10 Image Dataset</h2>
 
 <p>If you are already familiar with any of my previous posts about convolutional neural networks - <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a> or <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pre-trained CNN InceptionV3</a>, you might want to skip the next sections and go directly to <strong>Stacking InceptionV3</strong>.</p>
 
@@ -152,7 +142,7 @@
 <h2 id="download-the-dataset">Download the dataset</h2>
 <p>First, few lines of code will download the <a href="https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz">CIFAR-10 dataset for python</a>.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># DOWNLOAD DATASET </span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c"># DOWNLOAD DATASET </span>
 <span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlretrieve</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
@@ -198,7 +188,7 @@
 
 <p>Understanding a dataset is part of making predictions on the data. Following functions can be used to view different images by changing the <code class="highlighter-rouge">batch_id</code> and <code class="highlighter-rouge">sample_id</code>. The <code class="highlighter-rouge">batch_id</code> is the id for a batch (1-5). The <code class="highlighter-rouge">sample_id</code> is the id for an image and label pair in the batch.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pickle</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 
 <span class="c"># The names of the classes in the dataset.</span>
@@ -254,7 +244,7 @@
 
 <p>Let’s check the first couple of images of each batch. The lines below can be easily modified to show an arbitrary image from any batch.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 <span class="o">%</span><span class="n">config</span> <span class="n">InlineBackend</span><span class="o">.</span><span class="n">figure_format</span> <span class="o">=</span> <span class="s">'retina'</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
@@ -411,7 +401,7 @@ Label - Label Id: 8 Name: ship
 <h1 id="converting-datasets-to-tfrecord">Converting datasets to .tfrecord</h1>
 <p>Next, we convert the datasets to tfrecords. This would allow for the easier further processing by Tensorflow. While the neural network constructed in <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a> expected images with size 32x32, the CNN we are going to use here expects an input size of 299x299. Nevertheless, it is not necessary to convert all 60000 images to the target size of 299x299 as this would require much more of your disk space. Converting the data to tfrecord would actually shrink the dataset size (lossless compression) and allow for the use of tensorflow’s preprocessing pipeline and a dynamic conversion to the desired target size of 299x299 at training time.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sys</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">dataset_utils</span>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
 
@@ -478,10 +468,10 @@ Label - Label Id: 8 Name: ship
 </code></pre>
 </div>
 
-<h1 id="downloading-googlelenet">Downloading GoogleLeNet</h1>
+<h2 id="downloading-googlelenet">Downloading GoogleLeNet</h2>
 <p>Check my previous post <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pre-trained CNN InceptionV3</a> for information on why InceptionV3 has been selected.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">inceptionv3_archive</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'model'</span><span class="p">,</span> <span class="s">'inception_v3_2016_08_28.tar.gz'</span><span class="p">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">inceptionv3_archive</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">'model'</span><span class="p">,</span> <span class="s">'inception_v3_2016_08_28.tar.gz'</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">DLProgress</span><span class="p">(</span><span class="n">tqdm</span><span class="p">):</span>
     <span class="n">last_block</span> <span class="o">=</span> <span class="mi">0</span>
@@ -510,7 +500,7 @@ Label - Label Id: 8 Name: ship
 
 <p>Next, we define a couple of utility functions for loading a batch and loading the dataset…</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">inception_preprocessing</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">inception_preprocessing</span>
 
 <span class="k">def</span> <span class="nf">load_batch</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">is_training</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="n">data_provider</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">dataset_data_provider</span><span class="o">.</span><span class="n">DatasetDataProvider</span><span class="p">(</span>
@@ -571,10 +561,10 @@ Label - Label Id: 8 Name: ship
 </code></pre>
 </div>
 
-<h1 id="stacking-inceptionv3">Stacking InceptionV3</h1>
+<h2 id="stacking-inceptionv3">Stacking InceptionV3</h2>
 <p>So instead of fine-tuning the neural network like we did in <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pre-trained CNN InceptionV3</a>, we are going to use it as a first level classifier in a stack of classifiers consisting of two levels. In the code below the InceptionV3 model is loaded and without any training whatsoever it is used to make a prediction for all images in the training set. Note that the unmodified InceptionV3 model has an output that is a vector of length 1001. For each image this output vector is saved to be later used as un input for the second level classifier.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">inception_v3</span> <span class="kn">import</span> <span class="n">inception_v3</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">inception_v3</span> <span class="kn">import</span> <span class="n">inception_v3</span>
 <span class="kn">from</span> <span class="nn">inception_v3</span> <span class="kn">import</span> <span class="n">inception_v3_arg_scope</span>
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
@@ -624,7 +614,7 @@ Label - Label Id: 8 Name: ship
 
 <p>It does not hurt to save the outputs to the disk in case the python notebook kernel crashes…</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pickle</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pickle</span>
 
 <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">meta_data_train_X</span><span class="p">)</span> <span class="o">==</span> <span class="n">TRAIN_SAMPLES</span>
 <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">meta_data_train_Y</span><span class="p">)</span> <span class="o">==</span> <span class="n">TRAIN_SAMPLES</span>
@@ -639,7 +629,7 @@ Label - Label Id: 8 Name: ship
 
 <p>Once training data set goes through the InceptionV3 network, you are all set to use the output vectors that have been produced as a training set for a second level classifier, Hence, your next task is to choose the second level classifier. As an input it receives the output vectors created by the unmodified InceptionV3 neural network. Its output, however, is the actual label - an integer from 1 to 10 for the 10 categories in the cifar-10 dataset. Below I will train three different second level classifiers in order to compare their performance. I will start with the most simple classifier possible, linear regression with L2 regularization, that is also known as <a href="http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RidgeClassifier.html">ridge regression classifier</a>. It is not a bad idea to use a 5-fold cross validation in order to evaluate the classifier’s accuracy without actually using the test set.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">RidgeClassifier</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">RidgeClassifier</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
 
 <span class="n">ridge_classifier</span> <span class="o">=</span> <span class="n">RidgeClassifier</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
@@ -655,13 +645,13 @@ Label - Label Id: 8 Name: ship
 
 <p>With an accuracy of over 74%, it is already better than the accuracy achieved in my homemade, small and simple CNN described in <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a>. Let’s train the ridge regression on the whole training set, it only takes a few seconds…</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">ridge_classifier</span> <span class="o">=</span> <span class="n">RidgeClassifier</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">meta_data_train_X</span><span class="p">,</span> <span class="n">meta_data_train_Y</span><span class="p">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">ridge_classifier</span> <span class="o">=</span> <span class="n">RidgeClassifier</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">meta_data_train_X</span><span class="p">,</span> <span class="n">meta_data_train_Y</span><span class="p">)</span>
 </code></pre>
 </div>
 
 <p>The second second-level classifier I want to evaluate is a small fully connected neural network. We can split the training set into training (90%) and validation (10%) parts in order to test the classifier’s performance without actually using the test set. To keep it short and simple, I will use the <a href="https://www.tensorflow.org/get_started/tflearn">TensorFlow’s high-level machine learning API (tf.contrib.learn)</a>. The neural network below has an input layer of 1001 nodes (that is the output of Inception3), and three hidden layers of 2048, 512 and 64 nodes.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">train_X</span><span class="p">,</span> <span class="n">train_Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">meta_data_train_X</span><span class="p">[:</span><span class="mi">45000</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">meta_data_train_Y</span><span class="p">[:</span><span class="mi">45000</span><span class="p">]</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">train_X</span><span class="p">,</span> <span class="n">train_Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">meta_data_train_X</span><span class="p">[:</span><span class="mi">45000</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">meta_data_train_Y</span><span class="p">[:</span><span class="mi">45000</span><span class="p">]</span>
 <span class="n">validation_X</span><span class="p">,</span> <span class="n">validation_Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">meta_data_train_X</span><span class="p">[</span><span class="mi">45000</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">meta_data_train_Y</span><span class="p">[</span><span class="mi">45000</span><span class="p">:]</span>
 
 <span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
@@ -733,7 +723,7 @@ Accuracy DNNClassifier 0.808
 
 <p>The accuracy goes up to almost 81%. However, a little more than a few seconds are needed. It took almost 2 hours on my laptop. And then we need another two hours to train it on the whole training set… I will be gearing up with several GPUs in the next few weeks.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
 <span class="n">feature_columns</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">infer_real_valued_columns_from_input</span><span class="p">(</span><span class="n">train_X</span><span class="p">)</span>
 <span class="n">dnnClassifier</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">DNNClassifier</span><span class="p">(</span><span class="n">hidden_units</span><span class="o">=</span><span class="p">[</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span>
                                             <span class="n">feature_columns</span><span class="o">=</span><span class="n">feature_columns</span><span class="p">,</span>  
@@ -752,7 +742,7 @@ Accuracy DNNClassifier 0.808
 
 <p>At last, I want to also evaluate one more classifier. This one is actually one of mine and many AI engineers favorite - the Boosted Trees classifier and its implementation <a href="http://xgboost.readthedocs.io/en/latest/model.html">xgboost</a>. It became widely popular as it was consistently used in the winning solutions for many of the challenges posted on <a href="http://xgboost.readthedocs.io/en/latest/model.html">kaggle</a>. Interesting enough, several challenges has been won by using only feature engineering and stacking xgboost classifier on top of each other… Sadly, you can not really classify images with Boosted Trees, but you can sure use them as a second level classifier.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">xgboost</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">xgboost</span>
 
 <span class="n">xgb_classifier</span> <span class="o">=</span> <span class="n">xgboost</span><span class="o">.</span><span class="n">XGBClassifier</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
  <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
@@ -774,7 +764,7 @@ Accuracy DNNClassifier 0.808
 
 <p>In a 5-fold cross validation set it yields the best accuracy so far more than 82%. It also needs a little less time than the fully connected neural network above. Let’s train it on the whole training set.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># Prepare classifier</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c"># Prepare classifier</span>
 <span class="n">xgb_classifier</span> <span class="o">=</span> <span class="n">xgboost</span><span class="o">.</span><span class="n">XGBClassifier</span><span class="p">(</span>
     <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
     <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
@@ -782,10 +772,10 @@ Accuracy DNNClassifier 0.808
 </code></pre>
 </div>
 
-<h1 id="evaluation">Evaluation</h1>
+<h2 id="evaluation">Evaluation</h2>
 <p>At last, it is time to evaluate our two level stack. First, we move all the images from the test set through the neural network to create the output of the first layer of our two layer stack. That output we are then to feed into each of the second level classifiers in order to get the final predictions.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">TEST_SAMPLES</span> <span class="o">=</span> <span class="mi">10000</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">TEST_SAMPLES</span> <span class="o">=</span> <span class="mi">10000</span>
 <span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="n">NUMBER_OF_STEPS</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">TEST_SAMPLES</span> <span class="o">/</span> <span class="n">BATCH_SIZE</span><span class="p">)</span>
 
@@ -826,7 +816,7 @@ Accuracy DNNClassifier 0.808
 
 <p>Ok, now the outputs are used as inputs in the three classifiers - ridge regression, fully connected NN and xgboost. The final accuracy is then calculated for each of the three classifiers.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
 <span class="c"># Accuracy of Ridge Regression as second level classifier, evaluated on the test set</span>
 <span class="n">predictions_ridge</span> <span class="o">=</span> <span class="n">ridge_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">meta_data_test_X</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s">'Accuracy with RidgeRegression as second level classifier'</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">predictions_ridge</span><span class="p">,</span> <span class="n">meta_data_test_Y</span><span class="p">))</span>
@@ -845,3460 +835,166 @@ Accuracy with XGB as second level classifier 0.8176
 
 <p>Yet again, xgboost did not disappoint and yield the best accuracy of three classifiers. Let’s save it for later use.</p>
 
-<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'xgboost_model.p'</span><span class="p">,</span> <span class="s">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'xgboost_model.p'</span><span class="p">,</span> <span class="s">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
     <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">xgb_classifier</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
 </code></pre>
 </div>
 
+<h2 id="outlook">Outlook</h2>
+
 <p>It may seem counterintuitive that the classifier stack produced better results than the fine-tuning approach shown in <a href="http://machinememos.com/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pre-trained CNN InceptionV3</a> An explanation is given in the chapter <a href="http://cs231n.github.io/transfer-learning/">Transfer Learning</a> in Andrej Karpathy’s lecture <a href="http://cs231n.github.io/">CS231n: Convolutional Neural Networks for Visual Recognition</a>. “New dataset is small and similar to original dataset. Since the data is small, it is not a good idea to fine-tune the ConvNet due to overfitting concerns. Since the data is similar to the original data, we expect higher-level features in the ConvNet to be relevant to this dataset as well. Hence, the best idea might be to train a linear classifier on the CNN codes.” Well, the Cifar-10 is indeed similar to the ImageNet dataset, but is it small? With 50,000 images in the training set, it does not seem so. But in comparison to the massive <a href="http://image-net.org/index">ImageNet</a> with over 10,000,000 images, it is rather tiny. So what is next? Deploying both stacked models into a web application and making it possible to actually upload and classify a picture. As always feel free to checkout the whole github repository: <a href="https://github.com/n-kostadinov/cnn-image-classification-stacked-inception3">cnn-image-classification-stacked-inception3</a>.</p>
+
+
+            <!-- Comments -->
+            
+<div class="comments">
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+         * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+         * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+         */
+        /*
+         var disqus_config = function () {
+         this.page.url = PAGE_URL; // Replace PAGE_URL with your page's canonical URL variable
+         this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+         };
+         */
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+
+            s.src = '//machinememos-com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 </div>
-    <div class="share-page">
-    <span style="float: left;">Share this on &rarr;&nbsp;&nbsp;</span>
-    
-    <!-- Twitter -->
-     <a href="https://twitter.com/share" class="twitter-share-button" data-via="NKKostadinov">Tweet</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
-    <!-- Google + -->
-    <div class="g-plus" data-action="share" data-annotation="bubble"></div>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
 
-    <!-- Facebook -->
-    <div class="fb-share-button" data-href="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/2017/05/11/cnn-image-classification-cifar-10-stacked-inceptionV3.html" data-layout="button_count" style="position: relative; top: -8px; left: 3px;"></div>
-</div>
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+        </div>
+
+        <div class="col-md-4">
+            <h3>Post Directory</h3>
+<div id="post-directory-module">
+<section class="post-directory">
+    <!-- Links that trigger the jumping -->
+    <!-- Added by javascript below -->
+    <dl></dl>
+</section>
 </div>
 
+<script type="text/javascript">
 
+    $(document).ready(function(){
+        $( "article h2" ).each(function( index ) {
+            $(".post-directory dl").append("<dt><a class=\"jumper\" hre=#" +
+                    $(this).attr("id")
+                    + ">"
+                    + $(this).text()
+                    + "</a></dt>");
 
-    
-    
-        
-            
-                
-                <div class="panel-body">
-                <h4>Related Posts</h4>
-                <ul>
-                
-                <li class="relatedPost">
-                    <a href="http://localhost:4000/python/keras/artificial%20intelligence/machine%20learning/transfer%20learning/dog%20breed/neural%20networks/convolutional%20neural%20network/tensorflow/image%20classification/imagenet/2017/07/11/dog-breed-image-classification.html">Dog breed image classification with Keras</a>
-                    
-                        (Categories: <a href="/category/python">python</a>, <a href="/category/keras">keras</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/transfer learning">transfer learning</a>, <a href="/category/dog breed">dog breed</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/convolutional neural network">convolutional neural network</a>, <a href="/category/tensorflow">tensorflow</a>, <a href="/category/image classification">image classification</a>, <a href="/category/imagenet">imagenet</a>)
-                    
-                </li>
-                
-                
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
+            var children = $(this).nextUntil("h2", "h3")
 
-    
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
+            children.each(function( index ) {
+                $(".post-directory dl").append("<dd><a class=\"jumper\" hre=#" +
+                        $(this).attr("id")
+                        + ">"
+                        + "&nbsp;&nbsp;- " + $(this).text()
+                        + "</a></dd>");
+            });
+        });
 
-    
-    
-        
-            
-                
-                <li class="relatedPost">
-                    <a href="http://localhost:4000/python/catdog/artificial%20intelligence/machine%20learning/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/apache%20kafka/real-time/2017/05/19/catdog-kafka-microservice.html">Cat vs Dog Real-time classification&#58 Kafka Micro Service (Part 2)</a>
-                    
-                        (Categories: <a href="/category/python">python</a>, <a href="/category/catdog">catdog</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/convolutional neural network">convolutional neural network</a>, <a href="/category/GoogleLeNet">GoogleLeNet</a>, <a href="/category/Inception">Inception</a>, <a href="/category/xgboost">xgboost</a>, <a href="/category/ridgeregression">ridgeregression</a>, <a href="/category/sklearn">sklearn</a>, <a href="/category/tensorflow">tensorflow</a>, <a href="/category/image classification">image classification</a>, <a href="/category/imagenet">imagenet</a>, <a href="/category/apache kafka">apache kafka</a>, <a href="/category/real-time">real-time</a>)
-                    
-                </li>
-                
-                
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
+        var fixmeTop = $('#post-directory-module').offset().top - 100;       // get initial position of the element
 
-    
-    
-        
-            
-                
-                <li class="relatedPost">
-                    <a href="http://localhost:4000/python/catdog/artificial%20intelligence/machine%20learning/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/apache%20kafka/real-time/2017/05/18/catdog-stacked-classification.html">Cat vs Dog Real-time classification&#58 Model Stack (Part 1)</a>
-                    
-                        (Categories: <a href="/category/python">python</a>, <a href="/category/catdog">catdog</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/convolutional neural network">convolutional neural network</a>, <a href="/category/GoogleLeNet">GoogleLeNet</a>, <a href="/category/Inception">Inception</a>, <a href="/category/xgboost">xgboost</a>, <a href="/category/ridgeregression">ridgeregression</a>, <a href="/category/sklearn">sklearn</a>, <a href="/category/tensorflow">tensorflow</a>, <a href="/category/image classification">image classification</a>, <a href="/category/imagenet">imagenet</a>, <a href="/category/apache kafka">apache kafka</a>, <a href="/category/real-time">real-time</a>)
-                    
-                </li>
-                
-                
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
+        $(window).scroll(function() {                  // assign scroll event listener
 
-    
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
+            var currentScroll = $(window).scrollTop(); // get current position
 
-    
-    
-        
-            
-                
-                <li class="relatedPost">
-                    <a href="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">Image classification with pre-trained CNN InceptionV3</a>
-                    
-                        (Categories: <a href="/category/python">python</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/cifar10">cifar10</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/convolutional neural network">convolutional neural network</a>, <a href="/category/GoogleLeNet">GoogleLeNet</a>, <a href="/category/Inception">Inception</a>, <a href="/category/tensorflow">tensorflow</a>, <a href="/category/dropout">dropout</a>, <a href="/category/image classification">image classification</a>)
-                    
-                </li>
-                
-                
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
+            if (currentScroll >= fixmeTop) {           // apply position: fixed if you
+                $('#post-directory-module').css({      // scroll to that element or below it
+                    top: '100px',
+                    position: 'fixed',
+                    width: 'inherit'
+                });
+            } else {                                   // apply position: static
+                $('#post-directory-module').css({      // if you scroll above it
+                    position: 'inherit',
+                    width: 'inherit'
+                });
+            }
 
-    
-    
-        
-            
-                
-                <li class="relatedPost">
-                    <a href="http://localhost:4000/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/dropout/image%20classification/2017/04/23/convolutional-neural-network-from-scratch.html">Convolutional neural network for image classification from scratch</a>
-                    
-                        (Categories: <a href="/category/python">python</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/machine learning">machine learning</a>, <a href="/category/cifar10">cifar10</a>, <a href="/category/neural networks">neural networks</a>, <a href="/category/convolutional neural network">convolutional neural network</a>, <a href="/category/dropout">dropout</a>, <a href="/category/image classification">image classification</a>)
-                    
-                </li>
-                
-                
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
+        });
 
-    
-    
-        
-            
-                
-                <li class="relatedPost">
-                    <a href="http://localhost:4000/python/artificial%20intelligence/depth%20search/sudoku/diagonal%20sudoku/naked%20twins/2017/02/27/cracking-the-worlds-hardest-sudoku.html">Cracking the world hardest sudoku</a>
-                    
-                        (Categories: <a href="/category/python">python</a>, <a href="/category/artificial intelligence">artificial intelligence</a>, <a href="/category/depth search">depth search</a>, <a href="/category/sudoku">sudoku</a>, <a href="/category/diagonal sudoku">diagonal sudoku</a>, <a href="/category/naked twins">naked twins</a>)
-                    
-                </li>
-                
-                
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
+        $("a.jumper").on("click", function( e ) {
 
-    
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
+            e.preventDefault();
 
-    
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    
+            $("body, html").animate({
+                scrollTop: ($( $(this).attr('hre') ).offset().top - 100)
+            }, 600);
 
+        });
+    });
 
-    </ul>
+</script>
+        </div>
+        
+
     </div>
 
+</article>
 
-<div class="PageNavigation">
-  
-    <a class="prev" href="/python/artificial%20intelligence/machine%20learning/cifar10/neural%20networks/convolutional%20neural%20network/googlelenet/inception/tensorflow/dropout/image%20classification/2017/05/04/cnn-image-classification-cifar-10-inceptionV3.html">&laquo; Image classification with pre-trained CNN InceptionV3</a>
-  
-  
-    <a class="next" href="/python/catdog/artificial%20intelligence/machine%20learning/neural%20networks/convolutional%20neural%20network/googlelenet/inception/xgboost/ridgeregression/sklearn/tensorflow/image%20classification/imagenet/apache%20kafka/real-time/2017/05/18/catdog-stacked-classification.html">Cat vs Dog Real-time classification&#58 Model Stack (Part 1) &raquo;</a>
-  
-</div>
+        </div>
+
+    <footer class="container">
+
+    <div class="site-footer">
+
+        <div class="copyright pull-left">
+            <!-- 请不要更改这一行 方便其他人知道模板的来源 谢谢 -->
+            <!-- Please keep this line to let others know where this theme comes from. Thank you :D -->
+            Power by <a href="https://github.com/DONGChuan/Yummy-Jekyll">Yummy Jekyll</a>
+        </div>
+
+        <a href="https://github.com/DONGChuan" target="_blank" aria-label="view source code">
+            <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+        </a>
+
+        <div class="pull-right">
+            <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+        </div>
+
+    </div>
+
+    <!-- Third-Party JS -->
+    <script type="text/javascript" src="/bower_components/geopattern/js/geopattern.min.js"></script>
+
+    <!-- My JS -->
+    <script type="text/javascript" src="/assets/js/script.js"></script>
+
+    
+
+    
+    <!-- Google Analytics -->
+    <div style="display:none">
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-26182347-1', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+    </div>
+    
+
+</footer>
 
 
-<div class="disqus-comments">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        /* <![CDATA[ */
-
-        var disqus_shortname = "machinememos-com";
-        var disqus_identifier = "http://localhost:4000_Image classification with stacked InceptionV3";
-        var disqus_title = "Image classification with stacked InceptionV3";
-
-        /* * * DON'T EDIT BELOW THIS LINE * * */
-        (function() {
-            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    /* ]]> */
-    </script>
-</div>
-
-                <footer>
-                    &copy; Nikolay Kostadinov
-                     
-                    - <a href="https://github.com/n-kostadinov">https://github.com/n-kostadinov</a> - Powered by Jekyll.
-                    
-                </footer>
-            </div><!-- end /.col-sm-8 -->
-	    <div class="col-sm-2">
-		<div class="fixed-condition">
-		 <a href="/"><img id="about" src="/static/img/logo.png" height="760px" width="380px"/></a>
-		</div>
-	    </div>
-	 </div>
-        </div><!-- end /.container -->
-
-        <!-- Bootstrap core JavaScript
-        ================================================== -->
-        <!-- Placed at the end of the document so the pages load faster -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-        <script src="/static/js/bootstrap.min.js"></script>
-        <script src="/static/js/super-search.js"></script>
-        <script src="/static/js/thickbox-compressed.js"></script>
-        <script src="/static/js/projects.js"></script>
     </body>
+
 </html>

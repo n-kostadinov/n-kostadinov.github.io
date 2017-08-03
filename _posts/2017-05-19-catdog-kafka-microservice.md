@@ -1,10 +1,13 @@
 ---
 layout: post
-title: Cat vs Dog Real-time classification&#58 Kafka Micro Service (Part 2)
+title: Kafka Micro Service, Part 2 of Cat vs Dog Real-Time Classification Series
+author: Nikolay Kostadinov
 categories: [python, catdog, artificial intelligence, machine learning, neural networks, convolutional neural network, GoogleLeNet, Inception, xgboost, ridgeregression, sklearn, tensorflow, image classification, imagenet, apache kafka, real-time]
 ---
+This post is the second of a series of three. The goal is to embed a neural network into a real time web application for image classification. In this second part, I will put the machine learning model build in part one into use, by making it available through Apache Kafka - an open sources real-time event bus, widely adopted by the Big Data industry.
 
-# Micro service for image prediction
+## Micro service for image prediction
+
 In the first post of this series of three, I trained a second level classifier to be used on top of [Google's InceptionV3](https://arxiv.org/abs/1512.00567). In this second post I will embed the small model stack into a micro service that can be used for real-time image classification. The micro service will be both an event consumer and an event producer. Hence, it will listen for classification request events that contain the image to be classified and will respond by sending events that contain the classification label for the given image. Other than a simple REST service,[Apache Kafka](https://kafka.apache.org/) allows for the asynchronous communication between components. In a more complex setup, one may imagine that an event is processed by multiple components each containing a different stack of models. All responses are then aggregated and a decision is made based on the information gathered.
 
 Let's start by importing all python dependencies that are necessary for the micro service to run. The [python client for kafka](https://github.com/dpkp/kafka-python) is fairly easy to install if you are running Ubuntu x64. All I had to run was " pip install kafka-python". 

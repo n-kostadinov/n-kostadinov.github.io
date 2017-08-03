@@ -1,0 +1,24 @@
+<header class="site-header">
+    <div class="container">
+        <a id="site-header-brand" href="/" title="{{ site.name }}">
+			<div class="media">
+    			<span class="media-left">
+        			<img src="/assets/images/machine_memos_logo.svg" onerror="this.onerror=null; this.src='/assets/images/machine_memos_logo.png'" class="img-responsive" style="max-width: 1em;">
+    			</span>
+    			<div class="media-body" style="max-width:9em; vertical-align: middle;">
+        			{{ site.name }}
+				</div>
+			</div>
+			</a>
+        <nav class="site-header-nav" role="navigation">
+            {% for nav in site.navs %}
+            <a href="{{ nav.href }}"
+               class="{% if page.menu == nav.label %} selected {% endif %} site-header-nav-item hvr-underline-from-center"
+               target="{{ nav.target | default: _self }}"
+               title="{{ nav.label }}">
+                {{ nav.label }}
+            </a>
+            {% endfor %}
+        </nav>
+    </div>
+</header>

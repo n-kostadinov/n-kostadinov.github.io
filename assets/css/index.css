@@ -1,0 +1,34 @@
+/** Only for index.html **/
+
+.site-header{
+    color: #4183c4;
+    background: #fff;
+}
+
+.site-header #site-header-brand {
+    color: #000;
+}
+
+.site-header .site-header-nav-item {
+    color: #000;
+}
+
+.site-header a:hover {
+    color: #9acfea;
+}
+
+.jumbotron h1, .jumbotron .meta-info {
+    color: #fff;
+}
+
+.site-header.site-header-nav-scrolled a {
+    color: #2e2e2e;
+}
+
+.site-header.site-header-nav-scrolled #site-header-brand {
+    color: #2e2e2e !important;
+}
+
+.site-header.site-header-nav-scrolled a:hover {
+    color: #4183c4;
+}
