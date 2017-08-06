@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Favicon Icon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.png">
+
+    <title>NLP The Basics of Sentiment Analysis</title>
+    <meta name="description"
+          content="Natural language processing (NLP) is a field of computer science, artificial intelligence and computational linguistics concerned with the interactions betwe...">
+
+    <link rel="canonical" href="http://machinememos.com/natural%20language%20processing/sentiment%20analysis/python/keras/tensorflow/artificial%20intelligence/machine%20learning/neural%20networks/tfidf/word2vec/word%20embeddings/2017/08/06/basics-sentiment-analysis.html">
+    <link rel="alternate" type="application/rss+xml" title="Blog" href="http://machinememos.com/feed.xml">
+
+    <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Third-Party CSS -->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bower_components/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/bower_components/hover/css/hover-min.css">
+    <link rel="stylesheet" href="/bower_components/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
+
+    <!-- My CSS -->
+    <link rel="stylesheet" href="/assets/css/common.css">
+
+    <!-- CSS set in page -->
+    
+
+    <!-- CSS set in layout -->
+    
+    <link rel="stylesheet" href="/assets/css/sidebar-post-nav.css">
+    
+
+    <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+    <div class="container">
+        <a id="site-header-brand" href="/" title="MACHINE MEMOS">
+			<div class="media">
+    			<span class="media-left">
+        			<img src="/assets/images/machine_memos_logo.svg" onerror="this.onerror=null; this.src='/assets/images/machine_memos_logo.png'" class="img-responsive" style="max-width: 1em;">
+    			</span>
+    			<div class="media-body" style="max-width:9em; vertical-align: middle;">
+        			MACHINE MEMOS
+				</div>
+			</div>
+			</a>
+        <nav class="site-header-nav" role="navigation">
+            
+            <a href="/"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="BLOG">
+                BLOG
+            </a>
+            
+            <a href="/code"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="CODE">
+                CODE
+            </a>
+            
+            <a href="/timeline"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="TIMELINE">
+                TIMELINE
+            </a>
+            
+            <a href="/about"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="ABOUT">
+                ABOUT
+            </a>
+            
+        </nav>
+    </div>
+</header>
+
+
+        <div class="content">
+            <section class="jumbotron geopattern" data-pattern-id="NLP The Basics of Sentiment Analysis">
+    <div class="container">
+        <div id="jumbotron-meta-info">
+            <h1>NLP The Basics of Sentiment Analysis</h1>
+            <span class="meta-info">
+                
+                 
+                <span class="octicon octicon-calendar"></span> 2017/08/06
+                
+				
+					by Nikolay Kostadinov
+				
+            </span>
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function(){
+
+        $('.geopattern').each(function(){
+            $(this).geopattern($(this).data('pattern-id'), {color:"#337ab7"});
+        });
+
+    });
+</script>
+<article class="post container" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <div class="row">
+
+        
+        <div class="col-md-8 markdown-body">
+
+            <p>Natural language processing (NLP) is a field of computer science, artificial intelligence and computational linguistics concerned with the interactions between computers and human (natural) languages. In my first NLP post I will create a simple, yet effective sentiment analysis model that can classify a movie review on <a href="http://www.imdb.com/">IMDB</a> as being either positive or negative.</p>
+
+<h1 id="nlp-the-basics-of-sentiment-analysis">NLP: The Basics of Sentiment Analysis</h1>
+<p>If you have been reading AI related news in the last few years, you were probably reading about Reinforcement Learning. However,  next to Google’s <a href="https://deepmind.com/research/alphago/">AlphaGo</a> and the poker AI called <a href="https://www.wired.com/2017/02/libratus/">Libratus</a> that out-bluffed some of the best human players, there have been a lot of chat bots that made it into the news. For instance, there is the <a href="https://www.theverge.com/2016/3/24/11297050/tay-microsoft-chatbot-racist">Microsoft’s chatbot</a> that turned racist in less than a day. And there is the chatbot that made news when it convinced 10 out 30 judges at the University of <a href="http://www.reading.ac.uk/news-and-events/releases/PR583836.aspx">Reading’s 2014 Turing Test</a> that it was human, thus winning the contest. NLP is the exciting field in AI that aims at enabling machines to understand and speak human language. One of the most popular commercial products is the IBM Watson. And while I am already planning a post regarding IBM’s NLP tech, with this first NLP post, I will start with the some very basic NLP.</p>
+
+<h2 id="the-data-reviews-and-labels">The Data: Reviews and Labels</h2>
+<p>The data consists of 25000 IMDB reviews. Each review is stored as a single line in the file reviews.txt. The reviews have already been preprocessed a bit and contain only lower case characters. The labels.txt file contains the corresponding labels. Each review is either labeled as POSITIVE or NEGATIVE. Let’s read the data and print some of it.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'data/reviews.txt'</span><span class="p">,</span><span class="s">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handler</span><span class="p">:</span>
+    <span class="n">reviews</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">file_handler</span><span class="o">.</span><span class="n">readlines</span><span class="p">())))</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'data/labels.txt'</span><span class="p">,</span><span class="s">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handler</span><span class="p">:</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">file_handler</span><span class="o">.</span><span class="n">readlines</span><span class="p">())))</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">unique</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'Reviews'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">reviews</span><span class="p">),</span> <span class="s">'Labels'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">unique</span><span class="p">,</span> <span class="n">counts</span><span class="p">)))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="s">"</span><span class="se">\t</span><span class="s">:</span><span class="se">\t</span><span class="s">"</span> <span class="o">+</span> <span class="n">reviews</span><span class="p">[</span><span class="n">i</span><span class="p">][:</span><span class="mi">80</span><span class="p">]</span> <span class="o">+</span> <span class="s">"..."</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Reviews 25000 Labels 25000 {'POSITIVE': 12500, 'NEGATIVE': 12500}
+POSITIVE    :    bromwell high is a cartoon comedy . it ran at the same time as some other progra...
+NEGATIVE    :    story of a man who has unnatural feelings for a pig . starts out with a opening ...
+POSITIVE    :    homelessness  or houselessness as george carlin stated  has been an issue for ye...
+NEGATIVE    :    airport    starts as a brand new luxury    plane is loaded up with valuable pain...
+POSITIVE    :    brilliant over  acting by lesley ann warren . best dramatic hobo lady i have eve...
+NEGATIVE    :    this film lacked something i couldn  t put my finger on at first charisma on the...
+POSITIVE    :    this is easily the most underrated film inn the brooks cannon . sure  its flawed...
+NEGATIVE    :    sorry everyone    i know this is supposed to be an  art  film   but wow  they sh...
+POSITIVE    :    this is not the typical mel brooks film . it was much less slapstick than most o...
+NEGATIVE    :    when i was little my parents took me along to the theater to see interiors . it ...
+</code></pre>
+</div>
+
+<p>The dataset is perfectly balanced across the two categories POSITIVE and NEGATIVE.</p>
+
+<h2 id="counting-words">Counting words</h2>
+<p>Let’s build up a simple sentiment theory. It is common sense that some of the words are more common in positive reviews and some are more frequently found in negative reviews. For example, I expect words like “superb”, “impressive”, “magnificent”, etc. to be common in positive reviews, while words like “miserable”, “bad”, “horrible”, etc. to appear in negative reviews. Let’s count the words in order to see what words are most common and what words appear most frequently the positive and the negative reviews.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="n">positive_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+<span class="n">negative_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+<span class="n">total_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">reviews</span><span class="p">)):</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s">'POSITIVE'</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">reviews</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">):</span>
+            <span class="n">positive_counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">total_counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">reviews</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">):</span>
+            <span class="n">negative_counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">total_counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c"># Examine the counts of the most common words in positive reviews</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'Most common words:'</span><span class="p">,</span> <span class="n">total_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="mi">30</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">Most common words in NEGATIVE reviews:'</span><span class="p">,</span> <span class="n">negative_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="mi">30</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">Most common words in POSITIVE reviews:'</span><span class="p">,</span> <span class="n">positive_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="mi">30</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Most common words: [('', 1111930), ('the', 336713), ('.', 327192), ('and', 164107), ('a', 163009), ('of', 145864), ('to', 135720), ('is', 107328), ('br', 101872), ('it', 96352), ('in', 93968), ('i', 87623), ('this', 76000), ('that', 73245), ('s', 65361), ('was', 48208), ('as', 46933), ('for', 44343), ('with', 44125), ('movie', 44039), ('but', 42603), ('film', 40155), ('you', 34230), ('on', 34200), ('t', 34081), ('not', 30626), ('he', 30138), ('are', 29430), ('his', 29374), ('have', 27731)]
+
+Most common words in NEGATIVE reviews: [('', 561462), ('.', 167538), ('the', 163389), ('a', 79321), ('and', 74385), ('of', 69009), ('to', 68974), ('br', 52637), ('is', 50083), ('it', 48327), ('i', 46880), ('in', 43753), ('this', 40920), ('that', 37615), ('s', 31546), ('was', 26291), ('movie', 24965), ('for', 21927), ('but', 21781), ('with', 20878), ('as', 20625), ('t', 20361), ('film', 19218), ('you', 17549), ('on', 17192), ('not', 16354), ('have', 15144), ('are', 14623), ('be', 14541), ('he', 13856)]
+
+Most common words in POSITIVE reviews: [('', 550468), ('the', 173324), ('.', 159654), ('and', 89722), ('a', 83688), ('of', 76855), ('to', 66746), ('is', 57245), ('in', 50215), ('br', 49235), ('it', 48025), ('i', 40743), ('that', 35630), ('this', 35080), ('s', 33815), ('as', 26308), ('with', 23247), ('for', 22416), ('was', 21917), ('film', 20937), ('but', 20822), ('movie', 19074), ('his', 17227), ('on', 17008), ('you', 16681), ('he', 16282), ('are', 14807), ('not', 14272), ('t', 13720), ('one', 13655)]
+</code></pre>
+</div>
+
+<p>Well, at a first glance, that seems disappointing. As expected, the most common words are some linking words like “the”, “of”, “for”, “at”, etc. Counting the words for POSITIVE and NEGATIVE reviews separately might appear pointless at first, as the same linking words are found among the most common for both the POSITIVE and NEGATIVE reviews.</p>
+
+<h2 id="sentiment-ratio">Sentiment Ratio</h2>
+
+<p>However, counting the words that way would allow us to build a far more meaningful metric, called the sentiment ratio. A word with a sentiment ratio of 1 is used only in POSITIVE reviews. A word with a sentiment ratio of -1 is used only in NEGATIVE reviews. A word with sentiment ratio of 0 is neither POSITIVE, nor NEGATIVE, but are neutral. Hence, linking words like the one shown above are expected to be close to the neutral 0. Let’s draw the sentiment ratio for all words. I am expecting to see figure showing a beautiful normal distribution.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+
+<span class="n">sentiment_ratio</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">total_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">()):</span>
+    <span class="n">sentiment_ratio</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">positive_counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_counts</span><span class="p">[</span><span class="n">word</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.5</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'Total words in sentiment ratio'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentiment_ratio</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">sentiment_ratio</span><span class="o">.</span><span class="n">values</span><span class="p">()));</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Total words in sentiment ratio 74074
+</code></pre>
+</div>
+
+<p><img src="/assets/images/output_12_1.png" alt="png" /></p>
+
+<p>Well, that looks like a normal distribution with a considerable amount of words that were used only in POSITIVE and only in NEGATIVE reviews. Could it be, those are words that occur only once or twice in the review corpus? They are not necessarily useful when identifying the sentiment, as they occur only in one of few reviews. If that is the case it would be better to exclude these words. We want our models to generalize well instead of overfitting on some very rare words. Let’s exclude all words that occur less than ‘min_occurance’ times in the whole review corpus.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">min_occurance</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="n">sentiment_ratio</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">total_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">()):</span>
+    <span class="k">if</span> <span class="n">total_counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_occurance</span><span class="p">:</span> <span class="c"># only consider words </span>
+        <span class="n">sentiment_ratio</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">positive_counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_counts</span><span class="p">[</span><span class="n">word</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.5</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'Total words in sentiment ratio'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentiment_ratio</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">sentiment_ratio</span><span class="o">.</span><span class="n">values</span><span class="p">()));</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Total words in sentiment ratio 4276
+</code></pre>
+</div>
+
+<p><img src="/assets/images/output_14_1.png" alt="png" /></p>
+
+<p>And that is the beautiful normal distribution that I was expecting. The total word count shrank from 74074 to 4276. Hence, there are many words that have been used only a few times. Looking at the figure, there are a lot of neutral words in our new sentiment selection, but there are also some words that are used almost exclusively in POSITIVE or NEGATIVE reviews. You can try different values for ‘min_occurance’ and observe how the number of total words and the plot is changing. Let’s check out the words for min_occurance = 100.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="s">'Words with the most POSITIVE sentiment'</span> <span class="p">,</span><span class="n">sentiment_ratio</span><span class="o">.</span><span class="n">most_common</span><span class="p">()[:</span><span class="mi">30</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">Words with the most NEGATIVE sentiment'</span> <span class="p">,</span><span class="n">sentiment_ratio</span><span class="o">.</span><span class="n">most_common</span><span class="p">()[</span><span class="o">-</span><span class="mi">30</span><span class="p">:])</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Words with the most POSITIVE sentiment [('edie', 1.0), ('paulie', 0.9831932773109244), ('felix', 0.9338842975206612), ('polanski', 0.9056603773584906), ('matthau', 0.8980891719745223), ('victoria', 0.8798283261802575), ('mildred', 0.8782608695652174), ('gandhi', 0.8688524590163935), ('flawless', 0.8560000000000001), ('superbly', 0.8253968253968254), ('perfection', 0.8055555555555556), ('astaire', 0.803030303030303), ('voight', 0.7837837837837838), ('captures', 0.7777777777777777), ('wonderfully', 0.771604938271605), ('brosnan', 0.765625), ('powell', 0.7652582159624413), ('lily', 0.7575757575757576), ('bakshi', 0.7538461538461538), ('lincoln', 0.75), ('lemmon', 0.7431192660550459), ('breathtaking', 0.7380952380952381), ('refreshing', 0.7378640776699028), ('bourne', 0.736842105263158), ('flynn', 0.727891156462585), ('homer', 0.7254901960784315), ('soccer', 0.7227722772277227), ('delightful', 0.7226277372262773), ('andrews', 0.7218543046357615), ('lumet', 0.72)]
+
+Words with the most NEGATIVE sentiment [('insult', -0.755868544600939), ('uninspired', -0.7560975609756098), ('lame', -0.7574123989218329), ('sucks', -0.7580071174377224), ('miserably', -0.7580645161290323), ('boredom', -0.7588652482269503), ('existent', -0.7763975155279503), ('remotely', -0.798941798941799), ('wasting', -0.8), ('poorly', -0.803921568627451), ('awful', -0.8052173913043479), ('laughable', -0.8113207547169812), ('worst', -0.8155197657393851), ('lousy', -0.8181818181818181), ('drivel', -0.8240000000000001), ('prom', -0.8260869565217391), ('redeeming', -0.8282208588957055), ('atrocious', -0.8367346938775511), ('pointless', -0.8415841584158416), ('horrid', -0.8448275862068966), ('blah', -0.8571428571428572), ('waste', -0.8641043239533288), ('unfunny', -0.8726591760299626), ('incoherent', -0.8985507246376812), ('mst', -0.9), ('stinker', -0.9215686274509804), ('unwatchable', -0.9252336448598131), ('seagal', -0.9487179487179487), ('uwe', -0.9803921568627451), ('boll', -0.9861111111111112)]
+</code></pre>
+</div>
+
+<p>There are a lot of names among the words with positive sentiment. For example, edie (probably from edie falco, who won 2 Golden Globes and another 21 wins &amp; 70 nominations), polanski (probably from roman polanski, who won 1 oscar and another 83 wins &amp; 75 nominations). But there are also words like “superbly”, “breathtaking”, “refreshing”, etc. Those are exactly the positive sentiment loaded words I was looking for. Similarly, there are words like “insult”, “uninspired”, “lame”, “sucks”, “miserably”, “boredom” that no director would be happy to read in the reviews regarding his movie. One name catches the eye - that is “seagal”, (probably from Steven Seagal). Well, I won’t comment on that.</p>
+
+<h2 id="naive-sentiment-classifier">Naive Sentiment Classifier</h2>
+<p>Let’s build a naive machine learning classifier. This classifier is very simple and does not utilize any special kind of models like linear regression, trees or neural networks. However, it is still a machine LEARNING classifier as you need data that it fits on in order to use it for predictions. It is largely based on the sentiment radio that we previously discussed and has only two parameters ‘min_word_count’ and ‘sentiment_threshold’. Here it is:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">NaiveSentimentClassifier</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_word_count</span><span class="p">,</span> <span class="n">sentiment_threshold</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_word_count</span> <span class="o">=</span> <span class="n">min_word_count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sentiment_threshold</span> <span class="o">=</span> <span class="n">sentiment_threshold</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reviews</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+        <span class="n">positive_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+        <span class="n">total_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">reviews</span><span class="p">)):</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s">'POSITIVE'</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">reviews</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">):</span>
+                    <span class="n">positive_counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">total_counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">reviews</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">):</span>
+                    <span class="n">total_counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">sentiment_ratios</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+        
+        <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">total_counts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">count</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_word_count</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sentiment_ratios</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="p">((</span><span class="n">positive_counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">/</span> <span class="n">count</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.5</span>
+        
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reviews</span><span class="p">):</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">review</span> <span class="ow">in</span> <span class="n">reviews</span><span class="p">:</span>
+            <span class="n">sum_review_sentiment</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">review</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sentiment_ratios</span><span class="p">[</span><span class="n">word</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sentiment_threshold</span><span class="p">:</span>
+                    <span class="n">sum_review_sentiment</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sentiment_ratios</span><span class="p">[</span><span class="n">word</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">sum_review_sentiment</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">'POSITIVE'</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">'NEGATIVE'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">predictions</span>
+</code></pre>
+</div>
+
+<p>The classifier has only two parameters - ‘min_word_count’ and ‘sentiment_threshold’. A min_word_count of 20 means the classifier will only consider words that occur at least 20 times in the review corpus. The ‘sentiment_threshhold’ allows you to ignore words with arather neutral sentiment. A ‘sentiment_threshhold’ of 0.3 means that only words with sentiment ratio of more than 0.3 or less than -0.3 would be considered in the prediction process. What the classifier does is creating the sentiment ratio like previously shown. When predicting the sentiment, the classifier uses the sentiment ratio dict, to sum up all sentiment ratios of all the words used in the review. If the overall sum is positive the sentiment is also positive. If the overall sum is negative the sentiment is also negative. It is pretty simple, isn’t it? Let’s measure the performance in a 5 fold cross-validation setting:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+
+<span class="n">all_predictions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">all_true_labels</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">train_index</span><span class="p">,</span> <span class="n">validation_index</span> <span class="ow">in</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+    <span class="n">trainX</span><span class="p">,</span> <span class="n">trainY</span> <span class="o">=</span> <span class="n">reviews</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">labels</span><span class="p">[</span><span class="n">train_index</span><span class="p">]</span>
+    <span class="n">validationX</span><span class="p">,</span> <span class="n">validationY</span> <span class="o">=</span> <span class="n">reviews</span><span class="p">[</span><span class="n">validation_index</span><span class="p">],</span> <span class="n">labels</span><span class="p">[</span><span class="n">validation_index</span><span class="p">]</span>
+    
+    <span class="n">classifier</span> <span class="o">=</span> <span class="n">NaiveSentimentClassifier</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainX</span><span class="p">,</span> <span class="n">trainY</span><span class="p">)</span>
+    
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">validationX</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Fold accuracy'</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">validationY</span><span class="p">,</span> <span class="n">predictions</span><span class="p">))</span>
+    <span class="n">all_predictions</span> <span class="o">+=</span> <span class="n">predictions</span>
+    <span class="n">all_true_labels</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">validationY</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'CV accuracy'</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">all_true_labels</span><span class="p">,</span> <span class="n">all_predictions</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Fold accuracy 0.8576
+Fold accuracy 0.8582
+Fold accuracy 0.8546
+Fold accuracy 0.858
+Fold accuracy 0.859
+CV accuracy 0.85748
+</code></pre>
+</div>
+
+<p>A cross-validation accuracy of 85.7% is not bad for this naive approach and a classifier that trains in only a few seconds. At this point you will be asking yourself, can this score be easily beaten with the use of a neural network. Let’s see.</p>
+
+<h2 id="neural-networks-can-do-better">Neural Networks can do better</h2>
+
+<p>To train a neural network you should transform the data to a format the neural network can understand. Hence, first you need to convert the reviews to numerical vectors. Let’s assume the neural network would be only interested in the words: “breathtaking”, “refreshing”, “sucks” and “lame”. Thus, we have an input vector of size 4. If the review does not contain any of these words the input vector would contain only zeros: [0, 0, 0, 0]. If the review is “Wow, that was such a refreshing experience. I was impressed by the breathtaking acting and the breathtaking visual effects.”, the input vector would look like this: [1, 2, 0, 0]. A negative review such as “Wow, that was some lame acting and a lame music. Totally, lame. Sad.” would be transformed to an input vector like this [0, 0, 0, 3]. Anyway, you need to create a word2index dictionary that points to an index of the vector for a given word:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">create_word2index</span><span class="p">(</span><span class="n">min_occurance</span><span class="p">,</span> <span class="n">sentiment_threshold</span><span class="p">):</span>
+    
+    <span class="n">word2index</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="n">sentiment_ratio</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">total_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">()):</span>
+        <span class="n">sentiment_ratio</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">positive_counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_counts</span><span class="p">[</span><span class="n">word</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.5</span>
+    
+    <span class="n">is_word_eligable</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">word</span><span class="p">:</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">word2index</span> <span class="ow">and</span> \
+                <span class="n">total_counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_occurance</span> <span class="ow">and</span> \
+                <span class="nb">abs</span><span class="p">(</span><span class="n">sentiment_ratio</span><span class="p">[</span><span class="n">word</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="n">sentiment_threshold</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">reviews</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">reviews</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">is_word_eligable</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
+                <span class="n">word2index</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="n">index</span>
+                <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>  
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Word2index contains"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">word2index</span><span class="p">),</span> <span class="s">'words.'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">word2index</span>
+</code></pre>
+</div>
+
+<p>Same as before, the create_word2index has the two parameters ‘min_occurance’ and ‘sentiment_threshhold’ Check the explanation of those two in the previous section. Anyway, once you have the word2index dict, you can encode the reviews with the function below:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">encode_reviews_by_word_count</span><span class="p">(</span><span class="n">word2index</span><span class="p">):</span>    
+    <span class="n">encoded_reviews</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">reviews</span><span class="p">)):</span>
+        <span class="n">review_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">word2index</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">reviews</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">" "</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">word2index</span><span class="p">:</span>
+                <span class="n">review_array</span><span class="p">[</span><span class="n">word2index</span><span class="p">[</span><span class="n">word</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">encoded_reviews</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">review_array</span><span class="p">)</span>
+    <span class="n">encoded_reviews</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">encoded_reviews</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Encoded reviews matrix shape'</span><span class="p">,</span> <span class="n">encoded_reviews</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">encoded_reviews</span>
+</code></pre>
+</div>
+
+<p>Labels are easily one-hot encoded. Check out <a href="http://www.cs.toronto.edu/~guerzhoy/321/lec/W04/onehot.pdf">this explanation</a> on why one-hot encoding is needed:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">encode_labels</span><span class="p">():</span>
+    <span class="n">encoded_labels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="s">'POSITIVE'</span><span class="p">:</span>
+            <span class="n">encoded_labels</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">encoded_labels</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">encoded_labels</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>At this point, you can transform both the reviews and the labels into data that the neural network can understand. Let’s do that:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">word2index</span> <span class="o">=</span> <span class="n">create_word2index</span><span class="p">(</span><span class="n">min_occurance</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">sentiment_threshold</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">encoded_reviews</span> <span class="o">=</span> <span class="n">encode_reviews_by_word_count</span><span class="p">(</span><span class="n">word2index</span><span class="p">)</span>
+<span class="n">encoded_labels</span> <span class="o">=</span> <span class="n">encode_labels</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Word2index contains 11567 words.
+Encoded reviews matrix shape (25000, 11567)
+</code></pre>
+</div>
+
+<p>You are good to go and train the neural network. In the example below, I am using a simple neural network consisting of two fully connected layers. Trying different things out, I found Dropout before the first layer can reduce overfitting. Dropout between the first and the second layer, however, made the performance worse. Increasing the number of the hidden units in the two layers did not lead to better performance, but to more overfitting. Increasing the number of layers made no difference.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span> <span class="nn">keras.callbacks</span> <span class="kn">import</span> <span class="n">ModelCheckpoint</span>
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Dropout</span><span class="p">,</span> <span class="n">Input</span>
+<span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">metrics</span>
+
+<span class="n">all_predictions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">all_true_labels</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">model_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">for</span> <span class="n">train_index</span><span class="p">,</span> <span class="n">validation_index</span> <span class="ow">in</span> \
+    <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">encoded_labels</span><span class="p">):</span>
+
+    <span class="n">model_index</span> <span class="o">+=</span><span class="mi">1</span>
+    <span class="n">model_path</span><span class="o">=</span> <span class="s">'models/model_'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">model_index</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Training model: '</span><span class="p">,</span> <span class="n">model_path</span><span class="p">)</span>
+
+    <span class="n">train_X</span><span class="p">,</span> <span class="n">train_Y</span> <span class="o">=</span> <span class="n">encoded_reviews</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">encoded_labels</span><span class="p">[</span><span class="n">train_index</span><span class="p">]</span>
+    <span class="n">validation_X</span><span class="p">,</span> <span class="n">validation_Y</span> <span class="o">=</span> <span class="n">encoded_reviews</span><span class="p">[</span><span class="n">validation_index</span><span class="p">],</span> <span class="n">encoded_labels</span><span class="p">[</span><span class="n">validation_index</span><span class="p">]</span>
+
+    <span class="n">save_best_model</span> <span class="o">=</span> <span class="n">ModelCheckpoint</span><span class="p">(</span>
+        <span class="n">model_path</span><span class="p">,</span>
+        <span class="n">monitor</span><span class="o">=</span><span class="s">'val_loss'</span><span class="p">,</span>
+        <span class="n">save_best_only</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">save_weights_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">word2index</span><span class="p">),)))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">"relu"</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">"relu"</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">"softmax"</span><span class="p">))</span>
+        
+    <span class="n">model</span><span class="o">.</span><span class="nb">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s">'rmsprop'</span><span class="p">,</span>
+                  <span class="n">loss</span><span class="o">=</span><span class="s">'categorical_crossentropy'</span><span class="p">,</span>
+                  <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">metrics</span><span class="o">.</span><span class="n">categorical_accuracy</span><span class="p">])</span>
+    
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_X</span><span class="p">,</span> <span class="n">train_Y</span><span class="p">,</span> 
+              <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">validation_X</span><span class="p">,</span> <span class="n">validation_Y</span><span class="p">),</span>
+              <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[</span><span class="n">save_best_model</span><span class="p">],</span>
+              <span class="n">epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        
+    <span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+        
+    <span class="n">all_true_labels</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">validation_Y</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">all_predictions</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">validation_X</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'CV accuracy'</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">all_true_labels</span><span class="p">,</span> <span class="n">all_predictions</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Training model:  models/model_1
+Training model:  models/model_2
+Training model:  models/model_3
+Training model:  models/model_4
+Training model:  models/model_5
+CV accuracy 0.90196
+</code></pre>
+</div>
+
+<p>A performance of 90,2% is a significant improvement towards the naive classifier that has been previously built. Without a doubt, the architecture above can be tuned and a bit better performance can be reached. Nevertheless, there are points in this NLP approach that when bettered can lead to much bigger performance gains. One of the most important aspects when approaching a NLP task are the data preprocessing and the feature engineering. I will discuss many interesting techniques such as e.g. <a href="https://nlp.stanford.edu/IR-book/html/htmledition/tf-idf-weighting-1.html">TF-IDF</a> in my future posts. Until then make sure you check out this repo and run the code on your own:</p>
+
+
+            <!-- Comments -->
+            
+<div class="comments">
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+         * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+         * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+         */
+        /*
+         var disqus_config = function () {
+         this.page.url = PAGE_URL; // Replace PAGE_URL with your page's canonical URL variable
+         this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+         };
+         */
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+
+            s.src = '//machinememos-com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
+
+        </div>
+
+        <div class="col-md-4">
+            <h3>Post Directory</h3>
+<div id="post-directory-module">
+<section class="post-directory">
+    <!-- Links that trigger the jumping -->
+    <!-- Added by javascript below -->
+    <dl></dl>
+</section>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $( "article h2" ).each(function( index ) {
+            $(".post-directory dl").append("<dt><a class=\"jumper\" hre=#" +
+                    $(this).attr("id")
+                    + ">"
+                    + $(this).text()
+                    + "</a></dt>");
+
+            var children = $(this).nextUntil("h2", "h3")
+
+            children.each(function( index ) {
+                $(".post-directory dl").append("<dd><a class=\"jumper\" hre=#" +
+                        $(this).attr("id")
+                        + ">"
+                        + "&nbsp;&nbsp;- " + $(this).text()
+                        + "</a></dd>");
+            });
+        });
+
+        var fixmeTop = $('#post-directory-module').offset().top - 100;       // get initial position of the element
+
+        $(window).scroll(function() {                  // assign scroll event listener
+
+            var currentScroll = $(window).scrollTop(); // get current position
+
+            if (currentScroll >= fixmeTop) {           // apply position: fixed if you
+                $('#post-directory-module').css({      // scroll to that element or below it
+                    top: '100px',
+                    position: 'fixed',
+                    width: 'inherit'
+                });
+            } else {                                   // apply position: static
+                $('#post-directory-module').css({      // if you scroll above it
+                    position: 'inherit',
+                    width: 'inherit'
+                });
+            }
+
+        });
+
+        $("a.jumper").on("click", function( e ) {
+
+            e.preventDefault();
+
+            $("body, html").animate({
+                scrollTop: ($( $(this).attr('hre') ).offset().top - 100)
+            }, 600);
+
+        });
+    });
+
+</script>
+        </div>
+        
+
+    </div>
+
+</article>
+
+        </div>
+
+    <footer class="container">
+
+    <div class="site-footer">
+
+        <div class="copyright pull-left">
+            <!-- 请不要更改这一行 方便其他人知道模板的来源 谢谢 -->
+            <!-- Please keep this line to let others know where this theme comes from. Thank you :D -->
+            Power by <a href="https://github.com/DONGChuan/Yummy-Jekyll">Yummy Jekyll</a>
+        </div>
+
+        <a href="https://github.com/DONGChuan" target="_blank" aria-label="view source code">
+            <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+        </a>
+
+        <div class="pull-right">
+            <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+        </div>
+
+    </div>
+
+    <!-- Third-Party JS -->
+    <script type="text/javascript" src="/bower_components/geopattern/js/geopattern.min.js"></script>
+
+    <!-- My JS -->
+    <script type="text/javascript" src="/assets/js/script.js"></script>
+
+    
+
+    
+    <!-- Google Analytics -->
+    <div style="display:none">
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-26182347-1', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+    </div>
+    
+
+</footer>
+
+
+    </body>
+
+</html>
