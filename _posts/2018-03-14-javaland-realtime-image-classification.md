@@ -5,10 +5,9 @@ author: Nikolay Kostadinov
 categories: [java, javaland, neural networks, python, keras, tensorflow, artificial intelligence, machine learning, imagenet, inception, classification]
 ---
 
-This post could be very well considered a sequel to my talk at the JavaLand conference on 14th March 2018. It was my goal to 
+This post could be very well considered a sequel to my talk at the JavaLand conference on 14th March 2018. The goal of this post is to guide you through the code of the real-time image classification service that was demonstrated in my JavaLand talk. 
 
-
-## The Real-Time Image Classification Application
+# The Real-Time Image Classification Application
 
 ![png](/assets/images/real_time_classification_three_layers.png)
 
@@ -205,3 +204,7 @@ To run the image classification service you will need Python 3.5 and also quite 
 
 ## Transfer Learning
 
+If you have made it so far to run the Kafka cluster, the Spring Boot application and the image classification service, you may want to continue with this a little more advanced example of transfer learning. Download the [dog images](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip) and unpack these in the [generic-realtime-image-classification-webapp](https://github.com/n-kostadinov/generic-realtime-image-classification-webapp) repo. Run the Train_Dog_Breed_Model.py script to train your own neural network that accepts the output of InceptionV3 as its input. Running this script takes more than an hour when running on my laptop. After the script has terminated you will see the newly created dogbreed_model.hdf5 file in the repo. This file contains the weights of the neural network. Now you can run Real_Time_Dog_Breed_Classification_Kafka_Service.py script to start the "Dog Breed" image classification service. 
+
+## Need help?
+if you need some help running the above code, feel free to contact me! Also make sure you check this page in the following few days, as the information in this post will be updated...
