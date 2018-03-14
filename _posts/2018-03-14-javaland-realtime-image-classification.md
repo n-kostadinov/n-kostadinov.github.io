@@ -6,6 +6,7 @@ categories: [java, javaland, neural networks, python, keras, tensorflow, artific
 ---
 
 The real-time image classification application is constructed as a minimal example of integrating a Deep Learning service into Spring Boot application. This post could be very well considered a sequel to my talk at the JavaLand conference on 14th March 2018. The goal of this post is to guide you through the code and enable you installing, modifying and running the real-time image classification application that was demonstrated in my JavaLand talk.
+
 # The Real-Time Image Classification Application
 
 ![png](/assets/images/real_time_classification_three_layers.png)
