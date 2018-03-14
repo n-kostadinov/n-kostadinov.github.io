@@ -5,8 +5,7 @@ author: Nikolay Kostadinov
 categories: [java, javaland, neural networks, python, keras, tensorflow, artificial intelligence, machine learning, imagenet, inception, classification]
 ---
 
-This post could be very well considered a sequel to my talk at the JavaLand conference on 14th March 2018. The goal of this post is to guide you through the code of the real-time image classification service that was demonstrated in my JavaLand talk. 
-
+The real-time image classification application is constructed as a minimal example of integrating a Deep Learning service into Spring Boot application. This post could be very well considered a sequel to my talk at the JavaLand conference on 14th March 2018. The goal of this post is to guide you through the code and enable you installing, modifying and running the real-time image classification application that was demonstrated in my JavaLand talk.
 # The Real-Time Image Classification Application
 
 ![png](/assets/images/real_time_classification_three_layers.png)
@@ -20,7 +19,7 @@ The source code is divided into two GitHub repositories: The [generic-realtime-i
 
 ![png](/assets/images/real_time_classification_gui.png)
 
-As you can see from the image above, the frontend logic that is executed by your browser is written in JavaScript. You will find the source under: generic-realtime-image-classification-webapp/src/main/resources/static/assets/app.js. After loading the web page your machine's web camera will start capturing images. Using Google's [ImageCapture](https://developers.google.com/web/updates/2016/12/imagecapture) library this could be achieved by only a few lines of code. Caution: while [ImageCapture](https://developers.google.com/web/updates/2016/12/imagecapture) is natively supported by Google Chrome, it might not work in other browsers. ImageCapture is easiliy initialized:
+As you can see from the image above, the frontend logic that is executed by your browser is written in JavaScript. You will find the source under generic-realtime-image-classification-webapp/src/main/resources/static/assets/app.js. After loading the web page your machine's web camera will start capturing images. Using Google's [ImageCapture](https://developers.google.com/web/updates/2016/12/imagecapture) library this could be achieved by only a few lines of code. Caution: while [ImageCapture](https://developers.google.com/web/updates/2016/12/imagecapture) is natively supported by Google Chrome, it might not work in other browsers. ImageCapture is easily initialized:
 
 ```javascript
 function initImageCapture(){
@@ -33,7 +32,7 @@ function initImageCapture(){
 }
 ```
 
-The image is drawn into a HTML 5 Canvas and then sent to the backend given that the [STOMP](http://jmesnil.net/stomp-websocket/doc/) client is also started. 
+The image is drawn into a HTML5 Canvas and then sent to the backend given that the [STOMP](http://jmesnil.net/stomp-websocket/doc/) client is also started. 
 
 ```javascript
 function updateCanvasAndSendImage() {
@@ -112,7 +111,7 @@ public class RealTimeClassificationController {
 			
 }
 ```
-The controller has to process the JPEG image and convert it to PNG image with size 299x299 - the size that is expected by the neural network deployed as a kafka service. A minimal Kafka Producer is responsible for publishing the image to the "classificationimage"-Topic:
+The controller has to process the JPEG image and convert it to PNG image with size 299x299 - the size that is expected by the neural network deployed as a Kafka service. A minimal Kafka Producer is responsible for publishing the image to the "classificationimage"-Topic:
 
 ```java
 @Component
@@ -162,7 +161,7 @@ public class KafkaMessageProducer {
 
 At the same time, a Kafka Consumer is subscribed to the "classificationlabel"-Topic and is waiting for labels published by image classification service. As you can see from the code above, the labels are rerouted to the JavaScript frontend without being altered in any way.
 
-To run the Spring Boot application, navigate to the [generic-realtime-image-classification-webapp](https://github.com/n-kostadinov/generic-realtime-image-classification-webapp) and run from Maven by typing "mvn spring-boot:run". However, it is IMPORTANT - before running the Spring Boot application you should start the Apache Kafka Broker.
+To run the Spring Boot application, navigate to the [generic-realtime-image-classification-webapp](https://github.com/n-kostadinov/generic-realtime-image-classification-webapp) and run from Maven by typing "mvn spring-boot:run". However, you should start Apache Kafka before running the Spring Boot application, otherwise, the Spring Boot application won't find a Kafka broker to subscribe to.
 
 ## Starting Apache Kafka
 
@@ -200,7 +199,7 @@ for message in consumer:
 
 ```
 
-To run the image classification service you will need Python 3.5 and also quite a lot of python libraries installed on your computer. Yet again, docker provides a short cut. Just follow the instructions from this [Kaggle blog post](http://blog.kaggle.com/2016/02/05/how-to-get-started-with-data-science-in-containers/). However, instead running "docker pull kaggle/python" you should navigate to the generic-realtime-image-classification-webapp/python_install directory and run "sudo docker build -t "kaggleandkafka/python:dockerfile" ." This way you will also install the apache kafka client for python in addition to all the machine learning dependencies in the kaggle dockerfile. To run the service you can execute the Real_Time_Classification_Kafka_Service.py script. However, I prefer running the service from the [Jupyter Notebook](http://jupyter.org/). In the [generic-realtime-image-classification-webapp](https://github.com/n-kostadinov/generic-realtime-image-classification-webapp) repo you will also find the service code in the Real_Time_Classification_Kafka_Service.ipynb.
+To run the image classification service you will need Python 3.5 and also quite a lot of python libraries installed on your computer. Yet again, docker provides a shortcut. Just follow the instructions from this [Kaggle blog post](http://blog.kaggle.com/2016/02/05/how-to-get-started-with-data-science-in-containers/). However, instead running "docker pull kaggle/python" you should navigate to the generic-realtime-image-classification-webapp/python_install directory and run "sudo docker build -t "kaggleandkafka/python:dockerfile" ." This way you will also install the apache kafka client for python in addition to all the machine learning dependencies on the kaggle dockerfile. To run the service you can execute the Real_Time_Classification_Kafka_Service.py script. However, I prefer running the service from the [Jupyter Notebook](http://jupyter.org/). In the [generic-realtime-image-classification-webapp](https://github.com/n-kostadinov/generic-realtime-image-classification-webapp) repo you will also find the service code in the Real_Time_Classification_Kafka_Service.ipynb.
 
 ## Transfer Learning
 
