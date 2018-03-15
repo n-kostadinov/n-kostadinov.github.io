@@ -13,9 +13,11 @@ POST WILL BE UPDATED WITH VIDEOS AND MORE INFORMATION ABOUT THE CODE BY 18:00 CE
 
 ## How does a Neural Network work?
 
-The following slides explain the mechanics behind a Neural Network by simplifying and summarizing the online lectures of Andrew Ng. Find the full lecture here: [4.3.1 Neural Networks - Examples and Intuitions I](https://www.youtube.com/watch?v=1PZdrgWak8Y), [4.3.2 Neural Networks - Examples and Intuitions II](https://www.youtube.com/watch?v=uySg3nBbkYg)
+The following slides explain the mechanics behind a Neural Network by simplifying and summarizing the online lectures of Andrew Ng. Find the full lecture here: [4.3.1 Neural Networks - Examples and Intuitions I](https://www.youtube.com/watch?v=1PZdrgWak8Y) and [4.3.2 Neural Networks - Examples and Intuitions II](https://www.youtube.com/watch?v=uySg3nBbkYg)
 
 <iframe src="//www.slideshare.net/slideshow/embed_code/key/1CM8xtdHEWlkpJ" width="595" height="485" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="//www.slideshare.net/NikolayKostadinov/how-does-a-neural-network-work" title="How does a Neural Network work?" target="_blank">How does a Neural Network work?</a> </strong> from <strong><a href="https://www.slideshare.net/NikolayKostadinov" target="_blank">Nikolay Kostadinov</a></strong> </div>
+
+## Some thoughts on the Architecture
 
 ![png](/assets/images/real_time_classification_three_layers.png)
 
