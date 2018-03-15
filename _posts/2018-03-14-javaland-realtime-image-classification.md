@@ -9,7 +9,13 @@ The real-time image classification application is constructed as a minimal examp
 
 # The Real-Time Image Classification Application
 
-POST WILL BE UPDATED WITH VIDEOS AND MORE INFORMATION ABOUT THE CODE BY 18:00 CET, 15.03.18
+POST WILL BE UPDATED WITH MORE VIDEOS AND MORE INFORMATION SOON...
+
+## How to install and run the Application?
+
+On the video below you can observe the whole process of installing and running the Real-Time Image Classification Application on a freshly started Amazon AWS instance. If you are not interested in the installation process, you can skip it and only watch the classification part here: [JavaLand: Real-Time Image Classification Demo](https://youtu.be/zQsE1qojRRA?t=14m46s).  
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/zQsE1qojRRA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 ## How does a Neural Network work?
 
