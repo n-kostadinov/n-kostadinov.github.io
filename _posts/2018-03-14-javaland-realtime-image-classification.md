@@ -9,6 +9,8 @@ The real-time image classification application is constructed as a minimal examp
 
 # The Real-Time Image Classification Application
 
+POST WILL BE UPDATED WITH VIDEOS AND MORE INFORMATION ABOUT THE CODE BY 18:00 CET, 15.03.18
+
 ![png](/assets/images/real_time_classification_three_layers.png)
 
 The real-time image classification application consists of three layers, which are loosely coupled through event-driven asynchronous communication. Fulfilling a different purpose, each of this three layers is implemented in a different programming language. In the following sections, you will find a brief description of each of these three layers as well as some explanations for the most interesting parts of the code. 
