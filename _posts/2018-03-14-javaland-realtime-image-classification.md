@@ -17,6 +17,8 @@ On the video below you can observe the whole process of installing and running t
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/zQsE1qojRRA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
+If you are also interested in installing the Real-Time Dog Breed Classification Demo jump to [How to install and run the Real-Time Dog Breed Classification?].
+
 ## How does a Neural Network work?
 
 The following slides explain the mechanics behind a Neural Network by simplifying and summarizing the online lectures of Andrew Ng. Find the full lecture here: [4.3.1 Neural Networks - Examples and Intuitions I](https://www.youtube.com/watch?v=1PZdrgWak8Y) and [4.3.2 Neural Networks - Examples and Intuitions II](https://www.youtube.com/watch?v=uySg3nBbkYg)
@@ -222,5 +224,13 @@ To run the image classification service you will need Python 3.5 and also quite 
 
 If you have made it so far to run the Kafka cluster, the Spring Boot application and the image classification service, you may want to continue with this a little more advanced example of transfer learning. Download the [dog images](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip) and unpack these in the [generic-realtime-image-classification-webapp](https://github.com/n-kostadinov/generic-realtime-image-classification-webapp) repo. Run the Train_Dog_Breed_Model.py script to train your own neural network that accepts the output of InceptionV3 as its input. Running this script takes more than an hour when running on my laptop. After the script has terminated you will see the newly created dogbreed_model.hdf5 file in the repo. This file contains the weights of the neural network. Now you can run Real_Time_Dog_Breed_Classification_Kafka_Service.py script to start the "Dog Breed" image classification service. 
 
+## How to install and run the Real-Time Dog Breed Classification?
+
+On the videos below you can observe the whole process of installing and running the Real-Time Dog Breed Classification Demo on a freshly started Amazon AWS instance. If you are not interested in the installation process skip the first video and only watch the classification part in the second video.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/GER3AeGCZAg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/S36vT13iY9M" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
 ## Need help?
-if you need some help running the above code, feel free to contact me! Also make sure you check this page in the following few days, as the information in this post will be updated...
+If you need some help running the above code, feel free to contact me! Also make sure you check this page in the following few days, as the information in this post will be updated...
