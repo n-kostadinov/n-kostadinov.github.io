@@ -9,7 +9,7 @@ The real-time image classification application is constructed as a minimal examp
 
 # The Real-Time Image Classification Application
 
-POST WILL BE UPDATED WITH MORE VIDEOS AND MORE INFORMATION SOON...
+POST WILL BE UPDATED WITH MORE INFO ON TRANSFER LEARNING SOON...
 
 ## How to install and run the Application?
 
@@ -17,7 +17,7 @@ On the video below you can observe the whole process of installing and running t
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/zQsE1qojRRA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
-If you are also interested in installing the Real-Time Dog Breed Classification Demo jump to [How to install and run the Real-Time Dog Breed Classification?].
+If you are also interested in installing the Real-Time Dog Breed Classification Demo jump to [How to install and run the Real-Time Dog Breed Classification?](#how-to-install-and-run-the-real-time-dog-breed-classification).
 
 ## How does a Neural Network work?
 
