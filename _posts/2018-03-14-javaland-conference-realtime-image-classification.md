@@ -9,7 +9,7 @@ The real-time image classification application is constructed as a minimal examp
 
 # The Real-Time Image Classification Application
 
-The Real-Time Image Classification Application is a web app that will start your web camera and will classify whatever appears on the video feed. It has a stacked architecture consisting of frontend and backend logic. The image classification itself is encapsulated in a microservice that is consumed by the backend. At first, we use a pre-trained neural network for the classification. It can classify an image among [1000 labels]. (https://gist.github.com/yrevar/942d3a0ac09ec9e5eb3a) In this post, we will also apply transfer learning, train a neural network and thereby modify the microservice so that it is able to classify between 133 dog breeds.
+The Real-Time Image Classification Application is a web app that will start your web camera and will classify whatever appears on the video feed. It has a stacked architecture consisting of frontend and backend logic. The image classification itself is encapsulated in a microservice that is consumed by the backend. At first, we use a pre-trained neural network for the classification. It can classify an image among [1000 labels](https://gist.github.com/yrevar/942d3a0ac09ec9e5eb3a). In this post, we will also apply transfer learning, train a neural network and thereby modify the microservice so that it is able to classify between 133 dog breeds.
 
 ## How to install and run the Application?
 
